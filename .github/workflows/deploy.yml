@@ -5,7 +5,7 @@ on:
   workflow_run:
     workflows: ["VBWD CE - CI/CD Pipeline"]
     branches:
-      - production
+      - main
     types:
       - completed
   # Allow manual trigger (skips CI gate check)
