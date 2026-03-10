@@ -1,6 +1,76 @@
 # VBWD SDK
 
-**SaaS Subscription Platform** - User management, subscription billing, and admin dashboard.
+**Self-hosted SaaS subscription platform** — open-source, plugin-based, CC0 licensed.
+
+Deploy on your own server and get a complete subscription business out of the box: recurring billing, token economy, add-ons, invoicing, multi-gateway payments, user portal, and admin backoffice — all extensible via a plugin system without touching core code.
+
+---
+
+## What Is VBWD?
+
+VBWD is an infrastructure kit for building subscription-based products. It is not a hosted service — you own the server, the database, and every byte of user data.
+
+**Core capabilities:**
+
+| Capability | Details |
+|------------|---------|
+| Subscription billing | Tiered plans, billing periods, multi-currency, upgrade/downgrade/cancel |
+| Token economy | Credit bundles users purchase and spend on premium features |
+| Add-ons | One-time or recurring extras on top of base subscriptions |
+| Invoicing | Full invoice lifecycle with line-item detail and tax support |
+| Payments | Stripe, PayPal, YooKassa — swappable via plugins |
+| User portal | Dashboard, plans, checkout, subscription management, invoices, tokens |
+| Admin backoffice | Users, plans, subscriptions, invoices, analytics, webhooks, plugin management |
+| CMS | Content pages, categories, image uploads, slug routing |
+| AI chat | LLM-powered assistant with token-billed usage |
+| Embed widget | Pricing page embeddable on any external site via JS snippet |
+| Plugin system | Extend backend and frontend without modifying core files |
+| Webhooks | Outbound events for integration with any external system |
+| i18n | Multi-language support (EN/DE built-in, extensible) |
+
+---
+
+## What Can You Build With It?
+
+VBWD is the billing and subscriber management layer. You pick a vertical, deploy VBWD, add a niche-specific plugin, and have a production-ready SaaS product.
+
+**Examples:**
+
+- **Online coaching platform** — Kajabi alternative, self-hosted, 0% platform cut
+- **Newsletter / creator platform** — Ghost/Substack alternative, keep 100% of revenue
+- **Digital downloads marketplace** — Gumroad alternative, flat fee instead of 10% per sale
+- **Agency white-label billing OS** — GoHighLevel alternative for EU agencies (EU-hosted, GDPR-compliant by architecture)
+- **AI tool with metered billing** — token economy handles API call billing per user
+- **Subscription box management** — recurring billing + fulfillment webhooks + member content
+- **Adult content / creator platform** — self-hosted, no deplatforming risk, token pay-per-content
+- **Spiritual / tarot platform** — Taro plugin ships with the platform
+
+**Why self-hosted:**
+- No transaction fees (Substack 10%, Gumroad 10%, OnlyFans 20% — vs €0)
+- EU Data Act + GDPR compliance by architecture — data never leaves your server
+- CC0 license — no usage restrictions, no vendor lock-in, ever
+- No per-seat or revenue-based pricing from a vendor
+- Full control over features via the plugin system
+
+---
+
+## Architecture
+
+```
+vbwd-sdk/
+├── vbwd-backend/          # Python/Flask API, PostgreSQL, Redis
+├── vbwd-fe-core/          # Shared Vue 3 component library (git submodule)
+├── vbwd-fe-user/          # User-facing app (port 8080)
+├── vbwd-fe-admin/         # Admin backoffice (port 8081)
+├── recipes/               # Installation scripts
+└── docs/                  # Architecture documentation and devlogs
+```
+
+**Stack:** Python 3.11 · Flask 3.0 · PostgreSQL 16 · Redis 7 · Vue 3 · TypeScript · Vite · Pinia · Docker
+
+**Tests:** 1,851 passing (661 backend pytest + 316 core Vitest + 293 user Vitest/Playwright + 331 admin Vitest/Playwright + payment plugin suites)
+
+---
 
 ## Quick Start
 

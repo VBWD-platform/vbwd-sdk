@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — VBWD</title>
+</head>
+<body>
+
+<h1>About VBWD</h1>
+<p>
+  VBWD is an open-source, self-hosted subscription platform built by a developer,
+  for developers. We believe subscription infrastructure should be something you
+  own — not rent, not share with a vendor, and not pay a percentage of your revenue
+  to access. So we built it, tested it thoroughly, and released it to the public domain.
+</p>
+
+<h2>What We Do</h2>
+<p>
+  We build and maintain the VBWD platform — a complete SaaS billing and subscriber
+  management kit you deploy on your own server. It ships with a Python/Flask API,
+  a Vue 3 user-facing storefront, and a Vue 3 admin backoffice, all wired together
+  and ready to run with a single command. Subscription plans, token economy, add-ons,
+  invoicing, multi-currency payments, a plugin system, CMS, AI chat, and embeddable
+  pricing widgets — production-ready, 1,851 tests passing.
+</p>
+
+<h2>Our Story</h2>
+<p>
+  VBWD started as a frustration. Every time we needed to launch a subscription product,
+  we faced the same choice: pay Stripe 0.5–0.8% of revenue forever, hand Substack 10%
+  of every subscriber dollar, or spend months building billing infrastructure from scratch.
+  None of those options made sense for a solo developer or a small team.
+</p>
+<p>
+  So we built what we needed: a self-hosted platform with no transaction fees, no vendor
+  lock-in, and no ceiling on what you can do with it. The plugin system came from a
+  second frustration — vertical SaaS products always required forking the core and
+  maintaining diverging codebases. VBWD separates core (agnostic) from plugins (gnostic),
+  so you extend without breaking anything.
+</p>
+<p>
+  Today VBWD supports eight payment gateways, has plugins for AI chat, CMS, tarot readings,
+  analytics, Stripe, PayPal, and YooKassa, and is used to power coaching platforms,
+  newsletter businesses, creator economies, and agency billing tools across Europe and beyond.
+</p>
+
+<h2>Why Self-Hosted?</h2>
+<ul>
+  <li>
+    <strong>Zero platform fees</strong> — Substack takes 10%. Gumroad takes 10%.
+    OnlyFans takes 20%. VBWD takes nothing. You pay for your VPS (€12/month) and
+    keep everything else.
+  </li>
+  <li>
+    <strong>EU Data Act &amp; GDPR compliance by architecture</strong> — Your data
+    lives on your server, in your jurisdiction. No US CLOUD Act exposure. No vendor
+    DPA needed. Compliant by default, not by contract.
+  </li>
+  <li>
+    <strong>No vendor lock-in, ever</strong> — VBWD is CC0 (public domain). You own
+    the source code unconditionally. If we disappear tomorrow, your business keeps running.
+  </li>
+  <li>
+    <strong>Full control</strong> — You decide which features exist via the plugin system.
+    No feature requests going into a backlog. No waiting for a SaaS vendor to prioritize
+    your niche.
+  </li>
+</ul>
+
+<h2>Our Values</h2>
+<ul>
+  <li>
+    <strong>Ownership</strong> — Software you run on your own server is software you
+    truly control. We design for operators, not for retention metrics.
+  </li>
+  <li>
+    <strong>Zero hidden costs</strong> — No transaction fees, no per-seat pricing,
+    no enterprise tiers gatekeeping core features. The platform is CC0. Infrastructure
+    is your only cost.
+  </li>
+  <li>
+    <strong>Agnostic core, gnostic plugins</strong> — The core platform never knows
+    your business. Your business logic lives in plugins, isolated and replaceable,
+    without touching the foundation.
+  </li>
+  <li>
+    <strong>Quality over velocity</strong> — 1,851 tests across backend, frontend,
+    and E2E. We do not ship features without coverage. Stability is a feature.
+  </li>
+  <li>
+    <strong>Transparency</strong> — The entire codebase is public. The architecture
+    decisions are documented in the devlog. There are no hidden services, no telemetry,
+    no callbacks home.
+  </li>
+</ul>
+
+<h2>License</h2>
+<p>
+  VBWD is released under <strong>CC0 1.0 Universal (Public Domain Dedication)</strong>.
+  This means you can copy, modify, distribute, and use the software for any purpose —
+  commercial or non-commercial — without asking permission, without attribution, and
+  without any legal friction. It is the most permissive license that exists. We chose it
+  deliberately, because we believe infrastructure should be free in every sense of the word.
+</p>
+
+<h2>Tech Stack</h2>
+<ul>
+  <li><strong>Backend:</strong> Python 3.11, Flask 3.0, PostgreSQL 16, Redis 7, SQLAlchemy 2.0, Alembic</li>
+  <li><strong>Frontend:</strong> Vue 3, TypeScript, Vite, Pinia, Vue Router 4, Tailwind CSS</li>
+  <li><strong>Payments:</strong> Stripe, PayPal, YooKassa</li>
+  <li><strong>Testing:</strong> pytest, Vitest, Playwright — 1,851 tests passing</li>
+  <li><strong>Infrastructure:</strong> Docker, Docker Compose, Nginx, Gunicorn</li>
+</ul>
+
+<h2>Get Started</h2>
+<p>
+  Run one script. Get a production-ready subscription platform on your own server.
+</p>
+<pre><code>./recipes/dev-install-ce.sh --domain yourdomain.com --ssl</code></pre>
+<p>
+  Source code, documentation, and architecture notes are all in the repository.
+  No registration required. No API key. No account. Just clone and run.
+</p>
+
+</body>
+</html>

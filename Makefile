@@ -65,3 +65,4 @@ migrations:
 reset-db:
 	cd vbwd-backend && ./bin/reset-database.sh
 	cd vbwd-backend/plugins/taro && ./bin/populate-db.sh
+	cd vbwd-backend/plugins/cms && ./bin/populate-db.sh
