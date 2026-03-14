@@ -1,4 +1,4 @@
-.PHONY: up down up-build rebuild-backend rebuild-admin rebuild-user total-rebuild logs ps clean npm-install
+.PHONY: up down up-build rebuild-backend rebuild-admin rebuild-user total-rebuild code-rebuild logs ps clean npm-install unit integration styles
 
 # Install npm dependencies for all frontend packages
 npm-install:
@@ -67,6 +67,44 @@ reset-db:
 	cd vbwd-backend/plugins/taro && ./bin/populate-db.sh
 	cd vbwd-backend/plugins/cms && ./bin/populate-db.sh
 	cd vbwd-backend/plugins/ghrm && ./bin/populate-db.sh
+
+# Run unit tests across all packages
+unit:
+	@echo "=== Backend unit tests ==="
+	cd vbwd-backend && $(MAKE) test-unit
+	@echo "=== fe-core unit tests ==="
+	cd vbwd-fe-core && npm run test
+	@echo "=== fe-admin unit tests ==="
+	cd vbwd-fe-admin && npm run test
+	@echo "=== fe-user unit tests ==="
+	cd vbwd-fe-user && npm run test
+	@echo "All unit tests passed"
+
+# Run integration tests across all packages
+integration:
+	@echo "=== Backend integration tests ==="
+	cd vbwd-backend && $(MAKE) test-integration
+	@echo "All integration tests passed"
+
+# Run style/lint checks across all packages
+styles:
+	@echo "=== Backend lint ==="
+	cd vbwd-backend && $(MAKE) lint
+	@echo "=== fe-core lint ==="
+	cd vbwd-fe-core && npm run lint
+	@echo "=== fe-admin lint ==="
+	cd vbwd-fe-admin && npm run lint
+	@echo "=== fe-user lint ==="
+	cd vbwd-fe-user && npm run lint
+	@echo "All style checks passed"
+
+code-rebuild:
+	$(MAKE) down
+	$(MAKE) rebuild-core
+	$(MAKE) rebuild-admin
+	$(MAKE) rebuild-user
+	$(MAKE) rebuild-backend
+	@echo "Code rebuild complete"
 
 total-rebuild:
 	$(MAKE) down
