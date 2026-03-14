@@ -122,4 +122,5 @@ total-rebuild:
 	cd vbwd-backend/plugins/taro && ./bin/populate-db.sh
 	cd vbwd-backend/plugins/cms && ./bin/populate-db.sh
 	cd vbwd-backend/plugins/ghrm && ./bin/populate-db.sh
+	cd vbwd-backend/plugins/email && ./bin/populate-db.sh
 	@echo "Total rebuild complete"

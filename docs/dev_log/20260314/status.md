@@ -7,8 +7,8 @@
 | 01 | Code Quality — vbwd-backend | ✅ Done | `reports/02-backend-quality-sprint-report.md` |
 | 02 | Code Quality — vbwd-fe-admin | ✅ Done | `reports/03-fe-admin-quality-sprint-report.md` |
 | 03 | Code Quality — vbwd-fe-user | ✅ Done | `reports/04-fe-user-quality-sprint-report.md` |
-| 04 | Billing Gaps — recurring billing & subscription lifecycle | ⏳ Pending approval | — |
-| 05 | Email System — templates, SMTP, Mailchimp demo, Mailpit | ✅ Done | — |
+| 04 | Billing Gaps — recurring billing & subscription lifecycle | ✅ Done | `reports/07-billing-gaps-sprint-report.md` |
+| 05 | Email System — templates, SMTP, Mailchimp demo, Mailpit | ✅ Done | `reports/08-email-system-sprint-report.md` |
 | 06 | Fix "Get Package" button — wrong ID, no context, anonymous redirect | ⏳ Pending approval | `sprints/06-fix-get-package-button.md` |
 | 07 | GHRM Breadcrumb Widgets — CMS-style widgets, 3-tab admin config (General/CSS/Preview) | ⏳ Pending approval | `sprints/07-ghrm-breadcrumb-widgets.md` |
 | 08 | CMS Routing Rules — default page, language/IP/country routing, nginx hybrid, admin UI | ⏳ Pending approval | `sprints/08-cms-routing-rules.md` |
@@ -86,19 +86,30 @@
 
 ---
 
-## Sprint 04 — Billing Gaps ⏳ PENDING APPROVAL
+## Sprint 04 — Billing Gaps ✅ DONE
 
-**Sprint doc:** `sprints/04-billing-gaps.md`
+**Completed:** 2026-03-14
 
 ### Steps
 
 | Step | Description | Status |
 |------|-------------|--------|
-| 1 | Add `DAILY` billing period — enums, PERIOD_DAYS, Stripe + PayPal interval maps | ⏳ |
-| 2 | YooKassa auto-renewal — charge saved payment method on renewal | ⏳ |
-| 3 | YooKassa `payment.canceled` webhook handler — emit `PaymentFailedEvent` | ⏳ |
-| 4 | Auto-invoke `expire_subscriptions()` + `expire_trials()` via APScheduler | ⏳ |
-| 5 | Dunning email sequence — day 3 + day 7 follow-ups via `payment_failed_at` field | ⏳ |
+| 1 | Add `DAILY` billing period — `BillingPeriod.DAILY`, `PERIOD_DAYS[DAILY]=1`, `PERIOD_DAYS[WEEKLY]=7`, `BILLING_PERIOD_TO_STRIPE["DAILY"]`, `BILLING_PERIOD_TO_PAYPAL["daily"]` | ✅ |
+| 2 | YooKassa auto-renewal — `YooKassaRenewalService.charge_saved_method()` in `plugins/yookassa/src/services/` | ✅ |
+| 3 | YooKassa `payment.canceled` webhook — marks invoice `FAILED`, emits `PaymentFailedEvent` via container dispatcher | ✅ |
+| 4 | APScheduler (`APScheduler==3.10.4`) — `src/scheduler.py`, wired in `create_app()`, skipped when `TESTING=True` | ✅ |
+| 5 | Dunning — `payment_failed_at` column on Subscription, Alembic migration `f2g3h4i5j6k7`, `find_dunning_candidates()` repo method, `SubscriptionService.send_dunning_emails()`, `SubscriptionDunningEvent`, `PaymentFailedHandler` sets `payment_failed_at` | ✅ |
+
+### Tests Added
+- `tests/unit/services/test_subscription_service.py` — `TestBillingPeriodDays` (DAILY=1, WEEKLY=7, all covered), `TestSendDunningEmails` (5 tests)
+- `plugins/stripe/tests/test_recurring.py` — `TestBillingPeriodToStripeDaily` (2 tests)
+- `plugins/paypal/tests/test_recurring.py` — `TestBillingPeriodToPaypalDaily` (1 test)
+- `plugins/yookassa/tests/test_renewal_service.py` — `TestYooKassaRenewalService` (4 tests)
+- `plugins/yookassa/tests/test_webhook.py` — `TestPaymentCanceled` (4 tests: marks FAILED, emits event, unknown invoice no-op, no invoice_id no-op)
+- `tests/unit/test_scheduler.py` — `TestRunSubscriptionJobs` (4 tests)
+
+### Results
+- 733 unit tests passed, 4 skipped
 
 ---
 
