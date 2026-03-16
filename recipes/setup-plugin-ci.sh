@@ -341,7 +341,7 @@ done
 
 echo ""
 echo "=== fe-admin plugins ==="
-for slug in analytics-widget cms-admin email-admin ghrm-admin taro-admin; do
+for slug in analytics-widget; do
   echo ""
   echo "── $slug"
   write_and_push \
@@ -350,6 +350,42 @@ for slug in analytics-widget cms-admin email-admin ghrm-admin taro-admin; do
     "$slug" \
     "fe_admin"
 done
+
+# cms-admin: local dir is cms-admin, remote repo is vbwd-fe-admin-plugin-cms
+echo ""
+echo "── cms-admin"
+write_and_push \
+  "$FE_ADMIN/plugins/cms-admin" \
+  "$ORG/vbwd-fe-admin-plugin-cms" \
+  "cms-admin" \
+  "fe_admin"
+
+# email-admin: local dir is email-admin, remote repo is vbwd-fe-admin-plugin-email
+echo ""
+echo "── email-admin"
+write_and_push \
+  "$FE_ADMIN/plugins/email-admin" \
+  "$ORG/vbwd-fe-admin-plugin-email" \
+  "email-admin" \
+  "fe_admin"
+
+# ghrm-admin: local dir is ghrm-admin, remote repo is vbwd-fe-admin-plugin-ghrm
+echo ""
+echo "── ghrm-admin"
+write_and_push \
+  "$FE_ADMIN/plugins/ghrm-admin" \
+  "$ORG/vbwd-fe-admin-plugin-ghrm" \
+  "ghrm-admin" \
+  "fe_admin"
+
+# taro-admin: local dir is taro-admin, remote repo is vbwd-fe-admin-plugin-taro
+echo ""
+echo "── taro-admin"
+write_and_push \
+  "$FE_ADMIN/plugins/taro-admin" \
+  "$ORG/vbwd-fe-admin-plugin-taro" \
+  "taro-admin" \
+  "fe_admin"
 
 echo ""
 echo "Done. 25 plugins — workflow files written locally and synced to GitHub."
