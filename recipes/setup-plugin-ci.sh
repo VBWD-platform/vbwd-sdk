@@ -21,6 +21,7 @@ on:
     branches: ['*']
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   ci:
@@ -162,6 +163,7 @@ on:
     branches: ['*']
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -219,6 +221,7 @@ on:
     branches: ['*']
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   test:
