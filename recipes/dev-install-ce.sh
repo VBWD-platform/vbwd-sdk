@@ -192,6 +192,26 @@ else
     echo "Backend .env file already exists"
 fi
 
+# Install backend plugins (each hosted in its own repo)
+echo ""
+echo "=========================================="
+echo "Step 1.5: Installing backend plugins"
+echo "=========================================="
+
+for plugin in analytics chat cms email ghrm mailchimp paypal stripe taro yookassa; do
+    PLUGIN_DIR="$BACKEND_DIR/plugins/$plugin"
+    PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-plugin-${plugin}.git"
+    if [ -d "$PLUGIN_DIR/.git" ]; then
+        echo "Plugin $plugin already installed, pulling..."
+        cd "$PLUGIN_DIR" && git pull origin main || true
+    else
+        echo "Cloning plugin $plugin..."
+        rm -rf "$PLUGIN_DIR"
+        git clone --depth=1 "$PLUGIN_REPO" "$PLUGIN_DIR"
+    fi
+done
+echo "✓ Backend plugins installed"
+
 # Clone and setup frontend repositories (3 independent repos with submodules)
 echo ""
 echo "=========================================="
