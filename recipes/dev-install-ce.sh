@@ -283,6 +283,21 @@ cd "$FE_USER_DIR"
 npm install
 echo "✓ vbwd-fe-user dependencies installed"
 
+echo "Installing vbwd-fe-user plugins..."
+for plugin in chat checkout cms ghrm landing1 paypal-payment stripe-payment taro theme-switcher yookassa-payment; do
+    PLUGIN_DIR="$FE_USER_DIR/plugins/$plugin"
+    PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-fe-user-plugin-${plugin}.git"
+    if [ -d "$PLUGIN_DIR/.git" ]; then
+        echo "Plugin $plugin already installed, pulling..."
+        cd "$PLUGIN_DIR" && git pull origin main || true
+    else
+        echo "Cloning fe-user plugin $plugin..."
+        rm -rf "$PLUGIN_DIR"
+        git clone --depth=1 "$PLUGIN_REPO" "$PLUGIN_DIR"
+    fi
+done
+echo "✓ vbwd-fe-user plugins installed"
+
 # Step 2c: Clone vbwd-fe-admin with submodule
 echo ""
 echo "Step 2c: Setting up vbwd-fe-admin (admin backoffice)"
@@ -315,6 +330,21 @@ echo "Installing dependencies for vbwd-fe-admin..."
 cd "$FE_ADMIN_DIR"
 npm install
 echo "✓ vbwd-fe-admin dependencies installed"
+
+echo "Installing vbwd-fe-admin plugins..."
+for plugin in analytics-widget cms-admin email-admin ghrm-admin taro-admin; do
+    PLUGIN_DIR="$FE_ADMIN_DIR/plugins/$plugin"
+    PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-fe-admin-plugin-${plugin}.git"
+    if [ -d "$PLUGIN_DIR/.git" ]; then
+        echo "Plugin $plugin already installed, pulling..."
+        cd "$PLUGIN_DIR" && git pull origin main || true
+    else
+        echo "Cloning fe-admin plugin $plugin..."
+        rm -rf "$PLUGIN_DIR"
+        git clone --depth=1 "$PLUGIN_REPO" "$PLUGIN_DIR"
+    fi
+done
+echo "✓ vbwd-fe-admin plugins installed"
 
 # Setup frontend environment files
 echo ""
