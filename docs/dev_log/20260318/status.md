@@ -1,4 +1,4 @@
-# Dev Log — 2026-03-18
+# Dev Log — 2026-03-18 / 2026-03-19
 
 ## Reports
 
@@ -9,34 +9,42 @@
 | 03 | [Phase 2: Frontend App Factory](reports/03-phase2-frontend-app-factory.md) | Done |
 | 04 | [Phase 3/3b/3c/4: Platform Scaffolding](reports/04-phase3-platform-scaffolding.md) | Done |
 | 05 | [Metapackage Sprint Summary](reports/05-metapackage-sprint-summary.md) | Done |
-| 06 | [fe-user E2E Test Report](reports/06-fe-user-e2e-test-report.md) | Blocked |
+| 06 | [fe-user E2E Test Report](reports/06-fe-user-e2e-test-report.md) | Done |
 | 07 | [Plugin Imports Update: src. → vbwd.](reports/07-plugin-imports-update.md) | Done |
+| 08 | [All Green CI — Lessons Learned](reports/08-all-green-ci-lessons-learned.md) | Done |
+| 09 | [Booking for Transport Aggregator](reports/09-booking-plugin-transport-aggregator-analysis.md) | Research |
+| 10 | [Booking Sprint 02a/b/c Report](reports/10-booking-sprint-02abc-report.md) | Done |
 
 ## Sprints
 
 | # | Sprint | Status | Report |
 |---|--------|--------|--------|
 | 01 | [vbwd-platform Metapackage](sprints/done/01-vbwd-platform-metapackage.md) | Done | [05](reports/05-metapackage-sprint-summary.md) |
+| 02 | [Booking Plugin Bundle — Overview](sprints/02-booking-overview.md) | In Progress | [10](reports/10-booking-sprint-02abc-report.md) |
+| 02a | [Booking Backend Plugin](sprints/done/02a-booking-be.md) | Done | [10](reports/10-booking-sprint-02abc-report.md) |
+| 02b | [Booking Admin Frontend](sprints/done/02b-booking-fe-admin.md) | Done | [10](reports/10-booking-sprint-02abc-report.md) |
+| 02c | [Booking User Frontend](sprints/done/02c-booking-fe-user.md) | Done | [10](reports/10-booking-sprint-02abc-report.md) |
+| 02d | [Payment Authorize/Capture](sprints/done/02d-payment-authorize-capture.md) | Done | — |
+| 02e | [Booking Import/Export + Event Export](sprints/02e-booking-import-export.md) | Planned | — |
 
-## Done
+## Done (2026-03-19)
 
-- Sprint 01: vbwd-platform metapackage (Phases 1-6 complete)
-  - Backend: src/ → vbwd/, pyproject.toml, 735+506 tests pass
-  - Frontend: createVbwdUserApp() + createVbwdAdminApp() factories, 346+231 tests pass
-  - Platform: scaffolding, Makefile (30+ targets), pre-commit scripts, CI, install recipe
-  - Email: all-events Mailpit integration test (15/15 pass)
-- All 10 backend plugin repos updated: `from src.` → `from vbwd.` (92 files, 280 refs)
+- Sprint 02a: Backend plugin — 3 models, 3 repos, 3 services, 16 routes, 7 events, migration, populate_db.py (54 tests)
+- Sprint 02b: Admin frontend — 2 stores, 5 views, extension registry nav (14 tests)
+- Sprint 02c: User frontend — 1 store, 2 views, CMS widget registration (9 tests)
+- Core: CUSTOM LineItemType + extra_data JSON column (9 tests)
+- CI: --plugin flag, plugin-tests.yml with integration, platform CI split into 3 groups
+- CI: 9 fixes for mypy, eslint, vitest, bash syntax, test skipping, repo visibility
+- Total: 86 tests across 4 modules, all green
 
-## Blocked
+## Next
 
-- fe-user E2E tests: 222 tests, all failed due to missing Playwright browsers + backend not running
-  - Fix: `npx playwright install` + `make up` + `npm run dev`
+Sprint 02d done:
+- Core: InvoiceStatus.AUTHORIZED + PaymentProviderPlugin.capture_payment/release_authorization
+- Stripe: refactored to stripe/stripe/, Payment Intents with capture_method=manual
+- PayPal: refactored to paypal/paypal/, intent=AUTHORIZE, void_authorization
+- YooKassa: refactored to yookassa/yookassa/, capture flag configurable, release_authorization
+- All 3 payment plugins: tests pass, lint green
+- Booking plugins: config.json + admin-config.json added
 
-## Branches
-
-| Repo | Branch |
-|------|--------|
-| `vbwd-backend` | `feature/platform` |
-| `vbwd-fe-user` | `feature/platform` |
-| `vbwd-fe-admin` | `feature/platform` |
-| `VBWD-platform/vbwd-platform` | `main` |
+Next: Sprint 02e (Import/Export) or continue with booking integration tests.

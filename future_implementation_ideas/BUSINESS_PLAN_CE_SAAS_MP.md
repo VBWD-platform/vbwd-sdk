@@ -3,7 +3,7 @@
 **Document:** Business Analytical Plan for CE Launch & Product Line Strategy
 **Status:** Strategic Planning
 **Target:** Solo Developer → Small Team License Sales
-**License:** CC0 1.0 Universal (Public Domain)
+**License:** BSL 1.1 (Business Source Licence)
 **Version:** 2.0
 **Date:** December 2025
 

@@ -2,7 +2,7 @@
 
 **Project:** VBWD-SDK - Multi-Edition Digital Commerce Platform
 **Status:** Planning Phase
-**License:** CC0 1.0 Universal (Public Domain)
+**License:** BSL 1.1 (Business Source Licence)
 
 ---
 

@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **ME (Marketplace Edition)**: Cloud SaaS marketplace (planned)
 
 **Last Updated:** 2026-02-21
-**License:** CC0 1.0 Universal (Public Domain)
+**License:** BSL 1.1 (Business Source Licence)
 
 ## Repository Structure (Frontend Split into 3 Independent Repos)
 

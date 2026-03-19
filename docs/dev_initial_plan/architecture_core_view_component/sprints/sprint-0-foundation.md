@@ -94,7 +94,7 @@ npm install -D \
     "typescript"
   ],
   "author": "VBWD Team",
-  "license": "CC0-1.0",
+  "license": "BSL-1.1",
   "peerDependencies": {
     "vue": "^3.4.0",
     "vue-router": "^4.0.0",
@@ -437,7 +437,7 @@ See [Architecture Documentation](../../docs/architecture_core_view_sdk/README.md
 
 ## License
 
-CC0-1.0 Universal (Public Domain)
+BSL-1.1 Business Source License
 ```
 
 ---

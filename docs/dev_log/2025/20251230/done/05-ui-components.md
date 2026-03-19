@@ -191,7 +191,7 @@ vbwd-view-component/
     "url": "https://github.com/vbwd/view-component.git"
   },
   "keywords": ["vue", "components", "vbwd", "sdk", "typescript"],
-  "license": "CC0-1.0"
+  "license": "BSL-1.1"
 }
 ```
 

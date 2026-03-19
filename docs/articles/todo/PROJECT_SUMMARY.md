@@ -522,7 +522,7 @@ From the implementation:
 
 ## 📝 License
 
-**CC0 1.0 Universal (Public Domain)**
+**BSL 1.1 (Business Source Licence)**
 
 All materials (papers, code, diagrams) released under CC0 for maximum reuse.
 

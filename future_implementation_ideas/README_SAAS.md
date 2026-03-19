@@ -2,7 +2,7 @@
 
 **Document:** SaaS Implementation Architecture
 **Status:** Planning
-**License:** CC0 1.0 Universal (Public Domain)
+**License:** BSL 1.1 (Business Source Licence)
 
 ---
 

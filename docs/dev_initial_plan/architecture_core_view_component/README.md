@@ -3,7 +3,7 @@
 **Project:** VBWD-SDK - Shared Core Module for User & Admin Applications
 **Status:** Active Development
 **Last Updated:** 2026-01-05
-**License:** CC0 1.0 Universal (Public Domain)
+**License:** BSL 1.1 (Business Source Licence)
 
 ---
 
@@ -600,7 +600,7 @@ Core SDK is tested through both user and admin app E2E tests.
     "format": "prettier --write src"
   },
   "keywords": ["vbwd", "sdk", "vue", "typescript"],
-  "license": "CC0-1.0",
+  "license": "BSL-1.1",
   "peerDependencies": {
     "vue": "^3.4.0",
     "vue-router": "^4.2.0",

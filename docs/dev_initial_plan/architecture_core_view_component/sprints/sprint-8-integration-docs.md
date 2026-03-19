@@ -523,7 +523,7 @@ describe('Performance Benchmarks', () => {
 - [ ] ESLint passing with no warnings
 - [ ] API documentation generated
 - [ ] README.md complete
-- [ ] LICENSE file present (CC0-1.0)
+- [ ] LICENSE file present (BSL-1.1)
 - [ ] CHANGELOG.md updated
 - [ ] Version bumped in package.json
 - [ ] Git tag created

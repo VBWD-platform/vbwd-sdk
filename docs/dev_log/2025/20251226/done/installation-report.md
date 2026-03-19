@@ -226,4 +226,4 @@ For issues with the installation:
 
 **Generated**: 2025-12-26
 **VBWD Version**: Community Edition (CE)
-**License**: CC0 1.0 Universal (Public Domain)
+**License**: BSL 1.1 (Business Source Licence)

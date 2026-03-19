@@ -795,7 +795,7 @@ counts = result.get_counts()
 
 ---
 
-**License**: CC0 1.0 Universal (Public Domain)
+**License**: BSL 1.1 (Business Source Licence)
 
 **Acknowledgments**: We thank the quantum computing community, IBM Quantum team, and NLP researchers for foundational work enabling these explorations.
 

@@ -282,7 +282,7 @@ echo "Done! Figures saved to ../figures/"
 
 ## License
 
-CC0 1.0 Universal (Public Domain) - Same as research papers
+BSL 1.1 (Business Source Licence) - Same as research papers
 
 ---
 

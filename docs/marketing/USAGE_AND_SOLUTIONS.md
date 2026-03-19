@@ -315,7 +315,7 @@ Test credentials:
 | Auth | JWT (access + refresh), bcrypt |
 | Testing | pytest, Vitest, Playwright |
 | Infrastructure | Docker, Docker Compose, Nginx |
-| License | CC0 1.0 Universal (public domain) |
+| License | BSL 1.1 (Business Source Licence) |
 
 ---
 

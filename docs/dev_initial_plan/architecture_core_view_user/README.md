@@ -2,7 +2,7 @@
 
 **Project:** VBWD-SDK - Digital Subscriptions & SaaS Sales Platform (Frontend)
 **Status:** Initial Development
-**License:** CC0 1.0 Universal (Public Domain)
+**License:** BSL 1.1 (Business Source Licence)
 
 ---
 
