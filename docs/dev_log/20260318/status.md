@@ -25,7 +25,7 @@
 | 02b | [Booking Admin Frontend](sprints/done/02b-booking-fe-admin.md) | Done | [10](reports/10-booking-sprint-02abc-report.md) |
 | 02c | [Booking User Frontend](sprints/done/02c-booking-fe-user.md) | Done | [10](reports/10-booking-sprint-02abc-report.md) |
 | 02d | [Payment Authorize/Capture](sprints/done/02d-payment-authorize-capture.md) | Done | — |
-| 02e | [Booking Import/Export + Event Export](sprints/02e-booking-import-export.md) | Planned | — |
+| 02e | [Booking Import/Export + Event Export](sprints/done/02e-booking-import-export.md) | Done | — |
 
 ## Done (2026-03-19)
 
@@ -47,4 +47,18 @@ Sprint 02d done:
 - All 3 payment plugins: tests pass, lint green
 - Booking plugins: config.json + admin-config.json added
 
-Next: Sprint 02e (Import/Export) or continue with booking integration tests.
+Sprint 02e done:
+- ExportService: CSV/JSON export for categories, resources, bookings
+- ImportService: CSV/JSON import with upsert by slug
+- ExportRuleService: webhook (retry), csv_file, xml_file — event-driven
+- BookingExportRule model + repository + CRUD routes
+- 21 new tests (total booking: 75 unit tests)
+
+All sprints in Sprint 02 (Booking Plugin Bundle) COMPLETE:
+- 02a: Backend (54 tests)
+- 02b: FE-Admin (14 tests)
+- 02c: FE-User (9 tests)
+- 02d: Payment authorize/capture (3 plugins refactored)
+- 02e: Import/Export (21 tests)
+- Core: CUSTOM line item + AUTHORIZED status (9 tests)
+Total: 107 tests across the booking bundle

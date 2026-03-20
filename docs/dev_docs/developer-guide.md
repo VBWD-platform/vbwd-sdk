@@ -963,6 +963,19 @@ npm run test:e2e:ui          # with Playwright UI
 E2E_BASE_URL=http://localhost:8080 npm run test:e2e
 ```
 
+**Plugin E2E tests** (Playwright against the platform):
+```bash
+# Requires backend + fe-admin running (e.g. via vbwd-platform or docker compose)
+cd vbwd-fe-admin
+E2E_BASE_URL=http://localhost:8081 npx playwright test plugins/<name>/tests/e2e/ --config=playwright.platform.config.ts
+
+# Headed mode (visible browser):
+E2E_BASE_URL=http://localhost:8081 npx playwright test plugins/<name>/tests/e2e/ --config=playwright.platform.config.ts --headed
+
+# Single file:
+E2E_BASE_URL=http://localhost:8081 npx playwright test plugins/booking/tests/e2e/booking-resources-crud.spec.ts --config=playwright.platform.config.ts
+```
+
 Test credentials:
 - Admin: `admin@example.com` / `AdminPass123@`
 - User: `test@example.com` / `TestPass123@`

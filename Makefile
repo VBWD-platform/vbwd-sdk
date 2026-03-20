@@ -64,6 +64,7 @@ migrations:
 
 reset-db:
 	cd vbwd-backend && ./bin/reset-database.sh
+	cd vbwd-backend && docker compose exec -T api python plugins/booking/populate_db.py --force 2>/dev/null || true
 	cd vbwd-backend/plugins/taro && ./bin/populate-db.sh
 	cd vbwd-backend/plugins/cms && ./bin/populate-db.sh
 	cd vbwd-backend/plugins/ghrm && ./bin/populate-db.sh
