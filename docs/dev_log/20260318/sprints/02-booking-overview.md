@@ -14,6 +14,8 @@
 | Admin Frontend | [02b-booking-fe-admin.md](02b-booking-fe-admin.md) | `vbwd-fe-admin-plugin-booking` |
 | User Frontend | [02c-booking-fe-user.md](02c-booking-fe-user.md) | `vbwd-fe-user-plugin-booking` |
 | Import/Export + Event Export | [02e-booking-import-export.md](02e-booking-import-export.md) | `vbwd-plugin-booking` + admin plugin |
+| Custom Schemas | [02f-booking-custom-schemas.md](02f-booking-custom-schemas.md) | `vbwd-plugin-booking` + both frontend plugins |
+| Resource Image Gallery | [02g-booking-resource-image-gallery.md](02g-booking-resource-image-gallery.md) | `vbwd-plugin-booking` + admin + user plugins |
 
 ## Engineering Principles (all modules)
 
