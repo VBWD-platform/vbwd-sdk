@@ -68,6 +68,9 @@ reset-db:
 	cd vbwd-backend/plugins/taro && ./bin/populate-db.sh
 	cd vbwd-backend/plugins/cms && ./bin/populate-db.sh
 	cd vbwd-backend/plugins/ghrm && ./bin/populate-db.sh
+	cd vbwd-backend/plugins/booking && ./bin/populate-db.sh
+	cd vbwd-backend/plugins/subscription && ./bin/populate-db.sh
+	cd vbwd-backend/plugins/ecommerce && ./bin/populate-db.sh
 
 # Run unit tests across all packages
 unit:
@@ -124,4 +127,6 @@ total-rebuild:
 	cd vbwd-backend/plugins/cms && ./bin/populate-db.sh
 	cd vbwd-backend/plugins/ghrm && ./bin/populate-db.sh
 	cd vbwd-backend/plugins/email && ./bin/populate-db.sh
+	cd vbwd-backend/plugins/booking && ./bin/populate-db.sh
+	cd vbwd-backend/plugins/ecommerce && ./bin/populate-db.sh
 	@echo "Total rebuild complete"
