@@ -66,6 +66,7 @@ reset-db:
 	cd vbwd-backend && ./bin/reset-database.sh
 	cd vbwd-backend && ./plugins/taro/bin/populate-db.sh
 	cd vbwd-backend && ./plugins/cms/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/email/bin/populate-db.sh
 	cd vbwd-backend && ./plugins/ghrm/bin/populate-db.sh
 	cd vbwd-backend && ./plugins/booking/bin/populate-db.sh
 	cd vbwd-backend && ./plugins/subscription/bin/populate-db.sh 2>/dev/null || true
