@@ -43,6 +43,9 @@
 | 07c | [User: Catalog + Detail](done/07c-ecommerce-user-completion.md) | Done | — |
 | 07d | [CMS Integration](done/07d-ecommerce-cms-integration.md) | Done | — |
 | 07e | [E2E Playwright](done/07e-ecommerce-e2e-playwright.md) | Done | — |
+| 08 | [Unified Discount Plugin — Overview](sprints/08-unified-discount-plugin.md) | In Progress | — |
+| 08a | [Discount: Backend + Models + Registry](done/08a-discount-be-models.md) | Done | [09](reports/09-sprint-08a-discount-plugin.md) |
+| 09 | [Checkout to Core](sprints/09-checkout-to-core.md) | In Progress | — |
 
 ## Done (2026-03-27)
 
@@ -104,12 +107,29 @@ All 6 sub-sprints done:
 - `subscription-admin`: "Subscriptions" injected into Sales section via `sectionItems.sales`
 - 18 new tests, 320 total unit tests green, `pre-commit-check.sh --full` PASSED
 
+## Done (2026-03-30)
+
+### Sprint 08a — Discount Plugin Backend (COMPLETE)
+
+- `plugins/discount/` — unified discount & coupon system (IDiscountRule, DiscountRuleRegistry)
+- 4 models: Discount, Coupon, CouponUsage, DiscountApplication
+- Scopes: GLOBAL, ECOMMERCE, SUBSCRIPTION, BOOKING
+- DiscountService: validate, calculate, redeem, audit
+- 12 admin routes + 1 public coupon validation
+- 18 unit tests passing, migration applied, 5 demo discounts + 5 coupons seeded
+- Ecommerce old discount models removed from imports
+
+### E-commerce Fixes (2026-03-30)
+
+- Product image gallery: backend upload/delete/primary routes + admin component + user thumbnails
+- Categories panel restyled (PlanForm style — round buttons, uppercase headers)
+- Shop routes → CmsPage.vue (header/footer/breadcrumbs from CMS layout)
+- Cart checkout flow → checkout page with inline login (EmailBlock)
+- Missing `/dashboard/subscription/invoices` route added
+- Header cart icon: CmsWidgetRenderer renders CartBadge when menu has `show_cart: true`
+- ProductCatalog.vue restored, ProductDetail "Added!" feedback + View Cart link
+
 ## Next
 
-- Sprint 06: [E-commerce Plugin Bundle](sprints/06-ecommerce-plugin-bundle.md) — Products, categories, orders, cart
-  - Backend: Product, ProductCategory, Order, OrderItem models + `EcommerceLineItemHandler`
-  - fe-admin: Product/category/order management + Shop dashboard widgets
-  - fe-user: Product catalog, cart, checkout via standard checkout plugin, order history
-  - Uses core CUSTOM line items, line item registry, event bus — zero core changes
-- Follow-up: Apply extensible sidebar pattern to fe-user `UserLayout.vue`
-- Playwright E2E tests for sidebar nav (Sprint 05 step 9-10)
+- Sprint 09: [Checkout to Core](sprints/09-checkout-to-core.md) — Move checkout plugin to core, CMS widget pages, rich success page
+- Sprint 08b-f: Discount plugin frontend (admin + user) + plugin rules (ecommerce, subscription, booking)

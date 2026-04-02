@@ -64,13 +64,13 @@ migrations:
 
 reset-db:
 	cd vbwd-backend && ./bin/reset-database.sh
-	cd vbwd-backend && docker compose exec -T api python plugins/booking/populate_db.py --force 2>/dev/null || true
-	cd vbwd-backend/plugins/taro && ./bin/populate-db.sh
-	cd vbwd-backend/plugins/cms && ./bin/populate-db.sh
-	cd vbwd-backend/plugins/ghrm && ./bin/populate-db.sh
-	cd vbwd-backend/plugins/booking && ./bin/populate-db.sh
-	cd vbwd-backend/plugins/subscription && ./bin/populate-db.sh
-	cd vbwd-backend/plugins/ecommerce && ./bin/populate-db.sh
+	cd vbwd-backend && ./plugins/taro/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/cms/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/ghrm/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/booking/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/subscription/bin/populate-db.sh 2>/dev/null || true
+	cd vbwd-backend && ./plugins/shop/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/discount/bin/populate-db.sh
 
 # Run unit tests across all packages
 unit:
@@ -123,10 +123,11 @@ total-rebuild:
 	done
 	@echo "api is ready"
 	cd vbwd-backend && ./bin/reset-database.sh --force
-	cd vbwd-backend/plugins/taro && ./bin/populate-db.sh
-	cd vbwd-backend/plugins/cms && ./bin/populate-db.sh
-	cd vbwd-backend/plugins/ghrm && ./bin/populate-db.sh
-	cd vbwd-backend/plugins/email && ./bin/populate-db.sh
-	cd vbwd-backend/plugins/booking && ./bin/populate-db.sh
-	cd vbwd-backend/plugins/ecommerce && ./bin/populate-db.sh
+	cd vbwd-backend && ./plugins/taro/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/cms/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/ghrm/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/email/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/booking/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/shop/bin/populate-db.sh
+	cd vbwd-backend && ./plugins/discount/bin/populate-db.sh
 	@echo "Total rebuild complete"

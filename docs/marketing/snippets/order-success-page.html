@@ -1,0 +1,147 @@
+
+  <!-- Thank You -->
+  <div class="thank-you">
+      <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+
+    .success-page { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+
+    /* Thank You Header */
+    .thank-you { text-align: center; padding: 48px 24px; background: #fff; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .thank-you .checkmark { width: 64px; height: 64px; background: #22c55e; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .thank-you .checkmark svg { width: 32px; height: 32px; stroke: #fff; }
+    .thank-you h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .thank-you p { color: #666; font-size: 16px; margin-bottom: 4px; }
+    .thank-you .order-number { font-weight: 600; color: #1a1a1a; }
+
+    /* Invoice Card */
+    .invoice-card { background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .invoice-card h2 { font-size: 18px; font-weight: 600; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e5e5e5; }
+    .invoice-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 15px; }
+    .invoice-line.total { border-top: 2px solid #1a1a1a; margin-top: 12px; padding-top: 12px; font-weight: 700; font-size: 17px; }
+    .invoice-line .label { color: #666; }
+    .invoice-line .qty { color: #999; font-size: 13px; }
+    .invoice-meta { display: flex; gap: 24px; margin-top: 16px; padding-top: 12px; border-top: 1px solid #e5e5e5; font-size: 13px; color: #888; }
+
+    /* Login CTA */
+    .login-cta { text-align: center; padding: 32px 24px; background: #fff; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .login-cta p { color: #666; font-size: 15px; margin-bottom: 16px; }
+    .login-cta .button { display: inline-block; padding: 14px 40px; background: #1a1a1a; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; transition: background 0.2s; }
+    .login-cta .button:hover { background: #333; }
+
+    /* Marketing Blocks */
+    .marketing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    @media (max-width: 560px) { .marketing-grid { grid-template-columns: 1fr; } }
+
+    .marketing-block { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .marketing-block .icon { width: 40px; height: 40px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+    .marketing-block .icon svg { width: 20px; height: 20px; }
+    .marketing-block .icon.support { background: #eff6ff; }
+    .marketing-block .icon.support svg { stroke: #3b82f6; }
+    .marketing-block .icon.faq { background: #fef3c7; }
+    .marketing-block .icon.faq svg { stroke: #d97706; }
+    .marketing-block h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+
+    .support-channels { list-style: none; }
+    .support-channels li { padding: 6px 0; font-size: 14px; }
+    .support-channels li a { color: #3b82f6; text-decoration: none; }
+    .support-channels li a:hover { text-decoration: underline; }
+    .support-channels li span { color: #666; }
+
+    .faq-list { list-style: none; }
+    .faq-list li { padding: 0; }
+    .faq-list li a { display: block; padding: 8px 0; font-size: 14px; color: #1a1a1a; text-decoration: none; border-bottom: 1px solid #f0f0f0; transition: color 0.2s; }
+    .faq-list li a:hover { color: #3b82f6; }
+    .faq-list li a::after { content: ' →'; color: #ccc; }
+    .faq-list li:last-child a { border-bottom: none; }
+  </style>
+    <div class="checkmark">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <h1>Thank you for your order!</h1>
+    <p>Your order <span class="order-number">#ORD-20260402-0047</span> has been confirmed.</p>
+    <p>A confirmation email has been sent to <strong>customer@example.com</strong></p>
+  </div>
+
+  <!-- Invoice -->
+  <div class="invoice-card">
+    <h2>Invoice</h2>
+    <div class="invoice-line">
+      <span>Professional Plan <span class="qty">× 1 year</span></span>
+      <span>€1,499.00</span>
+    </div>
+    <div class="invoice-line">
+      <span>AI Chat Add-on <span class="qty">× 1 year</span></span>
+      <span>€299.00</span>
+    </div>
+    <div class="invoice-line">
+      <span>Token Bundle (500 credits) <span class="qty">× 1</span></span>
+      <span>€49.00</span>
+    </div>
+    <div class="invoice-line">
+      <span class="label">Subtotal</span>
+      <span>€1,847.00</span>
+    </div>
+    <div class="invoice-line">
+      <span class="label">VAT (19%)</span>
+      <span>€350.93</span>
+    </div>
+    <div class="invoice-line total">
+      <span>Total</span>
+      <span>€2,197.93</span>
+    </div>
+    <div class="invoice-meta">
+      <span>Invoice #INV-2026-0412</span>
+      <span>Paid via Stripe</span>
+      <span>April 2, 2026</span>
+    </div>
+  </div>
+
+  <!-- Login CTA -->
+  <div class="login-cta">
+    <p>Your account is ready. Log in to access your dashboard, manage your subscription, and start building.</p>
+    <a href="/login" class="button">Log in to your account</a>
+  </div>
+
+  <!-- Marketing Blocks -->
+  <div class="marketing-grid">
+
+    <!-- Support -->
+    <div class="marketing-block">
+      <div class="icon support">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <h3>Need help?</h3>
+      <ul class="support-channels">
+        <li><span>Email: </span><a href="mailto:support@example.com">support@example.com</a></li>
+        <li><span>Live chat: </span><a href="/support">Open support chat</a></li>
+        <li><span>Response time: </span><span>within 24 hours</span></li>
+        <li><span>Priority support: </span><a href="/dashboard/support">Included in your plan</a></li>
+      </ul>
+    </div>
+
+    <!-- FAQ -->
+    <div class="marketing-block">
+      <div class="icon faq">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </div>
+      <h3>Frequently asked</h3>
+      <ul class="faq-list">
+        <li><a href="/faq#delivery">Delivery and activation</a></li>
+        <li><a href="/faq#returns">Return and refund policy</a></li>
+        <li><a href="/faq#billing">Billing and invoices</a></li>
+        <li><a href="/faq#cancel">How to cancel or change plan</a></li>
+        <li><a href="/faq#data">Data privacy and security</a></li>
+      </ul>
+    </div>
+
+  </div>
