@@ -1,17 +1,17 @@
-# Ecommerce Developer Guide
+# Shop Developer Guide
 
-How the ecommerce plugin integrates with core, and how to extend it.
+How the shop plugin integrates with core, and how to extend it.
 
 ## Architecture Overview
 
-The ecommerce system spans three repositories:
+The shop system spans three repositories:
 
 | Repository | Plugin | Role |
 |-----------|--------|------|
-| `vbwd-backend` | `plugins/ecommerce/` | Products, orders, stock, discounts, API |
+| `vbwd-backend` | `plugins/shop/` | Products, orders, stock, discounts, API |
 | `vbwd-backend` | `plugins/shipping_flat_rate/` | Flat rate shipping provider |
-| `vbwd-fe-admin` | `plugins/ecommerce-admin/` | Admin product/order management UI |
-| `vbwd-fe-user` | `plugins/ecommerce/` | Catalog, cart, checkout, order history |
+| `vbwd-fe-admin` | `plugins/shop-admin/` | Admin product/order management UI |
+| `vbwd-fe-user` | `plugins/shop/` | Catalog, cart, checkout, order history |
 
 All code lives in plugin directories. Core files (`vbwd/`, `vue/src/`) are never modified.
 
@@ -19,13 +19,13 @@ All code lives in plugin directories. Core files (`vbwd/`, `vue/src/`) are never
 
 ### 1. Line Item Registry
 
-The ecommerce plugin uses **CUSTOM** line items to represent product purchases on invoices. Core does not know about products -- it delegates line item processing to registered handlers.
+The shop plugin uses **CUSTOM** line items to represent product purchases on invoices. Core does not know about products -- it delegates line item processing to registered handlers.
 
-**Registration** (in `EcommercePlugin.__init__.py`):
+**Registration** (in `ShopPlugin.__init__.py`):
 
 ```python
 def register_line_item_handlers(self, registry):
-    handler = EcommerceLineItemHandler(session_factory=db.session, event_bus=event_bus)
+    handler = ShopLineItemHandler(session_factory=db.session, event_bus=event_bus)
     registry.register(handler)
 ```
 
@@ -33,7 +33,7 @@ def register_line_item_handlers(self, registry):
 
 ```python
 line_item.item_type == LineItemType.CUSTOM
-and line_item.extra_data.get("plugin") == "ecommerce"
+and line_item.extra_data.get("plugin") == "shop"
 ```
 
 **Three operations:**
@@ -75,7 +75,7 @@ line_item = InvoiceLineItem(
     quantity=2,
     unit_price=Decimal("29.99"),
     extra_data={
-        "plugin": "ecommerce",
+        "plugin": "shop",
         "product_id": "uuid-here",
         "variant_id": "uuid-or-null",
         "warehouse_id": "uuid-or-null",
@@ -86,7 +86,7 @@ line_item = InvoiceLineItem(
 )
 ```
 
-After payment capture, core calls `LineItemHandlerRegistry.process_activation()`, which routes to `EcommerceLineItemHandler`.
+After payment capture, core calls `LineItemHandlerRegistry.process_activation()`, which routes to `ShopLineItemHandler`.
 
 ## Stock Blocking Flow
 
@@ -104,7 +104,7 @@ Checkout begins ──► StockService.block_stock()
     ▼
 Payment processing
     │
-    ├── SUCCESS ──► EcommerceLineItemHandler.activate_line_item()
+    ├── SUCCESS ──► ShopLineItemHandler.activate_line_item()
     │                   ├── StockService.commit_stock(session_id)
     │                   │       ├── StockBlock.status = COMMITTED
     │                   │       ├── warehouse_stock.reserved -= qty
@@ -251,7 +251,7 @@ After payment capture, call `DiscountService.redeem_coupon()` to:
 
 ## Extending the Product Model
 
-To add a new product type or custom fields, create a new model in your own plugin that references the ecommerce product:
+To add a new product type or custom fields, create a new model in your own plugin that references the shop product:
 
 ```python
 class DigitalProductMeta(BaseModel):
@@ -282,7 +282,7 @@ sdk.addCheckoutStep({
 
 ## Frontend Plugin Architecture
 
-### fe-admin (ecommerce-admin)
+### fe-admin (shop-admin)
 
 The admin plugin:
 1. Registers routes via `sdk.addRoute()` -- these become child routes under `/admin/`
@@ -292,7 +292,7 @@ The admin plugin:
 **extensionRegistry options used:**
 
 ```typescript
-extensionRegistry.register('ecommerce-admin', {
+extensionRegistry.register('shop-admin', {
   sectionItems: {
     sales: [
       {
@@ -309,13 +309,36 @@ extensionRegistry.register('ecommerce-admin', {
 });
 ```
 
-### fe-user (ecommerce)
+### fe-user (shop)
 
 The user plugin:
 1. Registers public routes via `sdk.addRoute()` with `meta.requiresAuth` flags
 2. Uses a Pinia store (`useCartStore`) backed by `localStorage`
-3. Named export: `export const ecommercePlugin: IPlugin`
+3. Named export: `export const shopPlugin: IPlugin`
 
 **Cart persistence strategy:**
 - Guest: localStorage only, no API calls
 - Authenticated: localStorage is the source of truth; synced to backend on login when `cart_sync_on_login` is enabled
+
+## Access Level Permissions
+
+The shop plugin declares these permissions for the access level system:
+
+| Permission | Action | Controls |
+|-----------|--------|----------|
+| `shop.products.view` | view | List products, open product detail/edit page (read-only) |
+| `shop.products.manage` | manage | Create, update, delete products. Save/Delete buttons visible |
+| `shop.orders.view` | view | List orders, view order details |
+| `shop.orders.manage` | manage | Ship order, complete order |
+| `shop.categories.manage` | manage | Create, edit, delete product categories |
+| `shop.stock.manage` | manage | View and update warehouse stock |
+| `shop.warehouses.manage` | manage | Manage warehouses |
+| `shop.configure` | configure | Configure shipping methods |
+
+**View vs Manage pattern:**
+- `view` permission lets the user open list and detail/edit pages in read-only mode
+- `manage` permission shows Save/Delete/Create buttons and allows API mutations
+- Edit pages require only `view` to open — the Save button is hidden without `manage`
+
+Backend enforcement: every admin route has `@require_permission("shop.xxx.yyy")`.
+Frontend enforcement: destructive buttons have `v-if="canManage"` guards.

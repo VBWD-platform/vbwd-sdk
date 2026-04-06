@@ -277,6 +277,85 @@ def register_line_item_handlers(self, registry):
     registry.register(handler)
 ```
 
+### Admin Permissions
+
+Declare admin permissions so they appear in the admin Access Level form:
+
+```python
+class MyPlugin(BasePlugin):
+    @property
+    def admin_permissions(self):
+        return [
+            {"key": "my_plugin.items.view", "label": "View items", "group": "My Plugin"},
+            {"key": "my_plugin.items.manage", "label": "Manage items", "group": "My Plugin"},
+            {"key": "my_plugin.configure", "label": "Configure plugin", "group": "My Plugin"},
+        ]
+```
+
+These permissions are checked by `@require_permission()` in admin routes.
+
+### User Permissions (fe-user Access Levels)
+
+Declare user-facing permissions so they appear in the User Access Level form:
+
+```python
+class MyPlugin(BasePlugin):
+    @property
+    def user_permissions(self):
+        return [
+            {
+                "key": "my_plugin.feature.view",
+                "label": "View feature",
+                "group": "My Plugin",
+            },
+            {
+                "key": "my_plugin.feature.manage",
+                "label": "Use feature",
+                "group": "My Plugin",
+            },
+        ]
+```
+
+These permissions are checked by `@require_user_permission()` in user routes:
+
+```python
+@my_bp.route("/api/v1/my-plugin/feature", methods=["GET"])
+@require_auth
+@require_user_permission("my_plugin.feature.view")
+def view_feature():
+    ...
+```
+
+In fe-user, protect routes with `meta.requiredUserPermission`:
+
+```typescript
+sdk.addRoute({
+  path: '/my-plugin/feature',
+  name: 'my-feature',
+  component: () => import('./views/Feature.vue'),
+  meta: { requiredUserPermission: 'my_plugin.feature.view' },
+});
+```
+
+### Access Level Auto-Assignment via Events
+
+Plugins can auto-assign user access levels by subscribing to events:
+
+```python
+def register_event_handlers(self, event_bus):
+    from vbwd.services.user_access_level_service import UserAccessLevelService
+
+    def on_something_happened(event_name, payload):
+        service = UserAccessLevelService()
+        level = service.find_by_slug("my-premium-level")
+        if level:
+            service.assign(UUID(payload["user_id"]), level.id)
+
+    event_bus.subscribe("my_plugin.upgraded", on_something_happened)
+```
+
+The subscription plugin already handles `subscription.activated` and `subscription.cancelled` events to auto-assign/revoke plan-linked levels. See the [access level management guide](access-level-management.md#auto-assignment-via-subscription-events) for details.
+
 ### Shipping Providers
 
 If your plugin provides shipping, implement `IShippingProvider`:
@@ -415,6 +494,7 @@ export const myAdminPlugin: IPlugin = {
       path: 'my-plugin/items',
       name: 'my-items',
       component: () => import('./src/views/Items.vue'),
+      meta: { requiredPermission: 'my_plugin.items.view' },
     });
 
     // Register dashboard widget
@@ -433,10 +513,11 @@ export const myAdminPlugin: IPlugin = {
             label: 'My Plugin',
             to: '/admin/my-plugin/items',
             id: 'my-plugin',
+            requiredPermission: 'my_plugin.items.view',
             position: 'after:invoices',  // or 'before:users', 'start', 'end'
             children: [
-              { label: 'Items', to: '/admin/my-plugin/items' },
-              { label: 'Settings', to: '/admin/my-plugin/settings' },
+              { label: 'Items', to: '/admin/my-plugin/items', requiredPermission: 'my_plugin.items.view' },
+              { label: 'Settings', to: '/admin/my-plugin/settings', requiredPermission: 'my_plugin.configure' },
             ],
           },
         ],
@@ -540,7 +621,10 @@ export const myPlugin: IPlugin = {
       path: '/my-plugin/dashboard',
       name: 'my-dashboard',
       component: () => import('./my_plugin/views/Dashboard.vue'),
-      meta: { requiresAuth: true },
+      meta: {
+        requiresAuth: true,
+        requiredUserPermission: 'my_plugin.feature.view',
+      },
     });
 
     // Translations
@@ -698,6 +782,8 @@ npm run test
 - [ ] Add repositories in `<name>/repositories/`
 - [ ] Add services in `<name>/services/`
 - [ ] Add routes in `<name>/routes.py`
+- [ ] Declare `admin_permissions` property (if plugin has admin routes)
+- [ ] Declare `user_permissions` property (if plugin has user-facing features)
 - [ ] Add Alembic migration in `alembic/versions/`
 - [ ] Register in `plugins/plugins.json`
 - [ ] Add config to `plugins/config.json` (if needed)
@@ -713,7 +799,8 @@ npm run test
 - [ ] Add `config.json` with defaults
 - [ ] Add `admin-config.json` with settings panel schema
 - [ ] Add locale files (8 languages)
-- [ ] Register sidebar nav via extensionRegistry
+- [ ] Register sidebar nav via extensionRegistry with `requiredPermission`
+- [ ] Set `meta.requiredPermission` on routes
 - [ ] Add dashboard widget if applicable
 - [ ] Write unit tests
 
@@ -726,4 +813,5 @@ npm run test
 - [ ] Add `admin-config.json` with settings panel schema
 - [ ] Add locale files (8 languages)
 - [ ] Set `meta.requiresAuth` on routes
+- [ ] Set `meta.requiredUserPermission` on routes (if feature is gated)
 - [ ] Write unit tests
