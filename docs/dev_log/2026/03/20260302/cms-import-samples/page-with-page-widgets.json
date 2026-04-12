@@ -1,0 +1,40 @@
+[
+  {
+    "slug": "about-with-widgets",
+    "name": "About Us (with page widgets)",
+    "language": "en",
+    "is_published": true,
+    "sort_order": 25,
+    "meta_title": "About Us",
+    "meta_description": "Learn about our team, our story, and our values.",
+    "robots": "index,follow",
+    "use_theme_switcher_styles": false,
+    "layout_slug": "content-page",
+    "style_slug": "light-clean",
+    "category_slug": "about",
+    "content_json": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "heading",
+          "attrs": { "level": 1 },
+          "content": [{ "type": "text", "text": "About Us" }]
+        },
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "We are a team of engineers building the next generation of subscription platforms." }]
+        }
+      ]
+    },
+    "content_html": "<h1>About Us</h1>\n<p>We are a team of engineers building the next generation of subscription platforms.</p>",
+    "_import_note": "This page demonstrates page-defined widgets (Sprint 19). The 'page_widget_assignments' array assigns a widget to the footer area, overriding the layout's default footer widget. The widget_slug must reference an existing widget.",
+    "page_widget_assignments": [
+      {
+        "widget_slug": "testimonials",
+        "area_name": "footer",
+        "sort_order": 0,
+        "required_access_level_ids": []
+      }
+    ]
+  }
+]
