@@ -12,6 +12,7 @@
 | 17 | [User Access Levels (fe-user)](sprints/17-user-access-levels.md) | Done | [Report](reports/09-sprint-17-final.md) |
 | 18 | [Access-Level-Driven Visibility](sprints/18-access-level-visibility.md) | Done | [Report](reports/11-sprint-18-final.md) |
 | 19 | [Page-Defined Widgets](sprints/19-page-defined-widgets.md) | Done | [Report](reports/12-sprint-19-page-defined-widgets.md) |
+| 20 | [CI Pipeline Fixes](sprints/20-ci-fixes.md) | Planned | — |
 
 ## Reports
 
@@ -30,17 +31,34 @@
 | 11 | [Sprint 18: Final](reports/11-sprint-18-final.md) | 2026-04-12 |
 | 12 | [Sprint 19: Page-Defined Widgets](reports/12-sprint-19-page-defined-widgets.md) | 2026-04-12 |
 
-## Test Status (2026-04-12)
+## Market Research
 
-| Module | Tests | Result |
-|--------|-------|--------|
-| Backend unit | 1409 passed, 5 skipped | PASS |
-| Backend integration (live API) | 327 passed, 2 skipped | PASS |
-| fe-admin ESLint | 0 errors | PASS |
-| fe-admin TypeScript | 0 errors | PASS |
-| fe-admin Vitest | 428 passed | PASS |
-| fe-user Vitest | 427 passed, 1 skipped | PASS |
-| fe-admin Playwright E2E | 37 passed | PASS |
+| Report | Path |
+|--------|------|
+| Payment Plugins ASEAN + JP + KR | [payment-plugins-asean.md](../../dev_docs/market-research/payment-plugins-asean.md) |
+| Payment Plugins EU | [payment-plugins-eu.md](../../dev_docs/market-research/payment-plugins-eu.md) |
+| Payment Plugins LATAM | [payment-plugins-latam.md](../../dev_docs/market-research/payment-plugins-latam.md) |
+| Travel Integrations | [travel-integrations.md](../../dev_docs/market-research/travel-integrations.md) |
+| Check-In Plugin HoReCa | [checkin-plugin-horeca.md](../../dev_docs/market-research/checkin-plugin-horeca.md) |
+
+## Pre-Commit Status (2026-04-12)
+
+All 3 modules pass `pre-commit-check.sh --full`:
+
+| Module | Static Analysis | Unit Tests | Integration Tests | Result |
+|--------|----------------|------------|-------------------|--------|
+| **Backend** | Black + Flake8 + Mypy | 1409 passed, 5 skipped | 179 passed, 150 skipped | **PASS** |
+| **fe-admin** | ESLint + TypeScript | 428 unit + 93 integration | — | **PASS** |
+| **fe-user** | ESLint + TypeScript | 340 passed, 1 skipped | — | **PASS** |
+
+## CI Status (2026-04-12)
+
+22 repos failing on GitHub Actions — all due to Sprint 14-19 code not yet pushed to standalone repos. See [Sprint 20: CI Fixes](sprints/20-ci-fixes.md) for detailed analysis and deployment plan.
+
+| Status | Count | Repos |
+|--------|-------|-------|
+| **Passing** | 13 | fe-core, fe-user-plugin-cms, fe-user-plugin-chat, fe-user-plugin-checkout, fe-user-plugin-ghrm, fe-user-plugin-stripe, fe-user-plugin-taro, fe-admin-plugin-cms, fe-admin-plugin-ghrm, fe-admin-plugin-taro, plugin-chat, plugin-mailchimp, vbwd-sdk |
+| **Failing** | 22 | All others — awaiting code push |
 
 ## Completed Since 2026-04-06
 
@@ -68,17 +86,25 @@ Server-side content filtering based on user access levels:
 New `page-widget` area type for per-page widget selection:
 - `CmsPageWidget` model + migration + API
 - Layout editor: `page-widget` area type in dropdown
-- Page editor: "Page Widgets" section — choose widget per slot
-- Saves with main Save button (no separate save)
+- Page editor: "Page Widgets" section — choose widget per slot, saves with main Save button
+- `CmsLayoutRenderer` merges page + layout widgets (page overrides for same area)
 - Import/export support for `page_widget_assignments`
-- Demo: "About Us" page gets testimonials widget
-- 9 E2E tests (4 page-defined + 5 page-widget-slots with access levels)
+- Populate script: `_set_page_widgets()` helper, demo "About Us" testimonials widget
+- 9 E2E tests (4 page-defined + 5 page-widget-slots with access level filtering)
+
+### Bug Fixes
+
+- **Taro session UUID error** — `UUID(UUID_object)` in `check_token_balance()` fixed with `isinstance` check
+- **Alembic migration conflicts** — all incremental migrations now use `IF NOT EXISTS` / `_table_exists` guards
+- **Legacy ADMIN permission fallback** — ADMIN users with no RBAC roles get all permissions
 
 ### Pre-Existing Test Fixes
 
 - 31 backend unit test failures fixed (mock `_get_access_levels` binding, ADMIN fallback)
 - 160 integration test skips reduced to 2 (API_BASE_URL, token field names, response shapes)
 - 49 fe-admin Vitest failures fixed (auth store configuration in all test files)
-- 7 tax test collisions fixed (unique codes)
-- 3 taro connection exhaustion errors fixed (session-scoped app fixture)
-- All incremental migrations made idempotent (IF NOT EXISTS guards)
+- 7 tax test collisions fixed (unique codes per test)
+- Taro/Booking/CMS DB connection exhaustion fixed (session-scoped app, engine dispose)
+- Black formatting on 10 backend files
+- Mypy: `Column[UUID]` → `UUID` cast
+- TypeScript: `CmsPage.vue` pageWidgetAssignments type
