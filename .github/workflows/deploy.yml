@@ -105,7 +105,7 @@ jobs:
           file: vbwd-backend/container/python/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/vbwd_backend:latest
+          tags: ghcr.io/vbwd-platform/vbwd_backend:latest
           cache-from: type=gha,scope=backend
           cache-to: type=gha,mode=max,scope=backend
 
@@ -146,7 +146,7 @@ jobs:
           file: vbwd-fe-user/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/vbwd_fe_user:latest
+          tags: ghcr.io/vbwd-platform/vbwd_fe_user:latest
           cache-from: type=gha,scope=fe-user
           cache-to: type=gha,mode=max,scope=fe-user
 
@@ -187,7 +187,7 @@ jobs:
           file: vbwd-fe-admin/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/vbwd_fe_admin:latest
+          tags: ghcr.io/vbwd-platform/vbwd_fe_admin:latest
           cache-from: type=gha,scope=fe-admin
           cache-to: type=gha,mode=max,scope=fe-admin
 
