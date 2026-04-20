@@ -82,7 +82,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Clone vbwd-backend
-        run: git clone --branch main https://github.com/dantweb/vbwd-backend.git vbwd-backend
+        run: git clone --branch main https://github.com/VBWD-platform/vbwd-backend.git vbwd-backend
 
       - name: Create .env file
         working-directory: vbwd-backend
@@ -138,7 +138,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Clone vbwd-backend
-        run: git clone --branch main https://github.com/dantweb/vbwd-backend.git vbwd-backend
+        run: git clone --branch main https://github.com/VBWD-platform/vbwd-backend.git vbwd-backend
 
       - name: Create .env file
         working-directory: vbwd-backend
@@ -245,7 +245,28 @@ jobs:
       - name: Clone vbwd-fe-user with submodules
         run: |
           git clone --branch main --recurse-submodules \
-            https://github.com/dantweb/vbwd-fe-user.git vbwd-fe-user
+            https://github.com/VBWD-platform/vbwd-fe-user.git vbwd-fe-user
+
+      - name: Clone fe-user plugins (gitignored in core repo)
+        run: |
+          cd vbwd-fe-user/plugins
+          for entry in \
+            "taro:vbwd-fe-user-plugin-taro" \
+            "cms:vbwd-fe-user-plugin-cms" \
+            "booking:vbwd-fe-user-plugin-booking" \
+            "chat:vbwd-fe-user-plugin-chat" \
+            "checkout:vbwd-fe-user-plugin-checkout" \
+            "ghrm:vbwd-fe-user-plugin-ghrm" \
+            "landing1:vbwd-fe-user-plugin-landing1" \
+            "stripe-payment:vbwd-fe-user-plugin-stripe-payment" \
+            "paypal-payment:vbwd-fe-user-plugin-paypal-payment" \
+            "yookassa-payment:vbwd-fe-user-plugin-yookassa-payment" \
+            "theme-switcher:vbwd-fe-user-plugin-theme-switcher" \
+            "subscription:vbwd-fe-user-plugin-subscription"; do
+            name="${entry%%:*}"; repo="${entry##*:}"
+            [ -d "$name" ] && continue
+            git clone --depth=1 -q "https://github.com/VBWD-platform/${repo}.git" "$name" 2>/dev/null || echo "WARN: ${repo} not found"
+          done
 
       - name: Build CI image
         working-directory: vbwd-fe-user
@@ -270,7 +291,23 @@ jobs:
       - name: Clone vbwd-fe-admin with submodules
         run: |
           git clone --branch main --recurse-submodules \
-            https://github.com/dantweb/vbwd-fe-admin.git vbwd-fe-admin
+            https://github.com/VBWD-platform/vbwd-fe-admin.git vbwd-fe-admin
+
+      - name: Clone fe-admin plugins (gitignored in core repo)
+        run: |
+          cd vbwd-fe-admin/plugins
+          for entry in \
+            "analytics-widget:vbwd-fe-admin-plugin-analytics-widget" \
+            "cms-admin:vbwd-fe-admin-plugin-cms" \
+            "email-admin:vbwd-fe-admin-plugin-email" \
+            "ghrm-admin:vbwd-fe-admin-plugin-ghrm" \
+            "taro-admin:vbwd-fe-admin-plugin-taro" \
+            "booking:vbwd-fe-admin-plugin-booking" \
+            "subscription-admin:vbwd-fe-admin-plugin-subscription"; do
+            name="${entry%%:*}"; repo="${entry##*:}"
+            [ -d "$name" ] && continue
+            git clone --depth=1 -q "https://github.com/VBWD-platform/${repo}.git" "$name" 2>/dev/null || echo "WARN: ${repo} not found"
+          done
 
       - name: Build CI image
         working-directory: vbwd-fe-admin
@@ -293,7 +330,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Clone vbwd-fe-core
-        run: git clone --branch main https://github.com/dantweb/vbwd-fe-core.git vbwd-fe-core
+        run: git clone --branch main https://github.com/VBWD-platform/vbwd-fe-core.git vbwd-fe-core
 
       - name: Build CI image
         working-directory: vbwd-fe-core
@@ -318,7 +355,23 @@ jobs:
       - name: Clone vbwd-fe-admin with submodules
         run: |
           git clone --branch main --recurse-submodules \
-            https://github.com/dantweb/vbwd-fe-admin.git vbwd-fe-admin
+            https://github.com/VBWD-platform/vbwd-fe-admin.git vbwd-fe-admin
+
+      - name: Clone fe-admin plugins (gitignored in core repo)
+        run: |
+          cd vbwd-fe-admin/plugins
+          for entry in \
+            "analytics-widget:vbwd-fe-admin-plugin-analytics-widget" \
+            "cms-admin:vbwd-fe-admin-plugin-cms" \
+            "email-admin:vbwd-fe-admin-plugin-email" \
+            "ghrm-admin:vbwd-fe-admin-plugin-ghrm" \
+            "taro-admin:vbwd-fe-admin-plugin-taro" \
+            "booking:vbwd-fe-admin-plugin-booking" \
+            "subscription-admin:vbwd-fe-admin-plugin-subscription"; do
+            name="${entry%%:*}"; repo="${entry##*:}"
+            [ -d "$name" ] && continue
+            git clone --depth=1 -q "https://github.com/VBWD-platform/${repo}.git" "$name" 2>/dev/null || echo "WARN: ${repo} not found"
+          done
 
       - name: Build CI image
         working-directory: vbwd-fe-admin
@@ -344,7 +397,7 @@ jobs:
 #
 #      - name: Clone repos
 #        run: |
-#          git clone --branch main https://github.com/dantweb/vbwd-backend.git vbwd-backend
+#          git clone --branch main https://github.com/VBWD-platform/vbwd-backend.git vbwd-backend
 #          git clone --branch main --recurse-submodules \
 #            https://github.com/dantweb/vbwd-fe-user.git vbwd-fe-user
 #
