@@ -84,6 +84,16 @@ jobs:
       - name: Clone vbwd-backend
         run: git clone --branch main https://github.com/VBWD-platform/vbwd-backend.git vbwd-backend
 
+      - name: Clone backend plugins (gitignored in core repo)
+        run: |
+          cd vbwd-backend/plugins
+          for plugin in analytics booking chat cms discount email ghrm mailchimp paypal shipping_flat_rate shop stripe subscription taro yookassa; do
+            [ -d "$plugin" ] && continue
+            git clone --depth=1 -q "https://github.com/VBWD-platform/vbwd-plugin-${plugin}.git" "$plugin" 2>/dev/null \
+              || echo "WARN: vbwd-plugin-${plugin} not found"
+          done
+          echo "Backend plugins present: $(ls -d */ 2>/dev/null | tr '\n' ' ')"
+
       - name: Create .env file
         working-directory: vbwd-backend
         run: cp .env.example .env
@@ -139,6 +149,15 @@ jobs:
 
       - name: Clone vbwd-backend
         run: git clone --branch main https://github.com/VBWD-platform/vbwd-backend.git vbwd-backend
+
+      - name: Clone backend plugins (gitignored in core repo)
+        run: |
+          cd vbwd-backend/plugins
+          for plugin in analytics booking chat cms discount email ghrm mailchimp paypal shipping_flat_rate shop stripe subscription taro yookassa; do
+            [ -d "$plugin" ] && continue
+            git clone --depth=1 -q "https://github.com/VBWD-platform/vbwd-plugin-${plugin}.git" "$plugin" 2>/dev/null \
+              || echo "WARN: vbwd-plugin-${plugin} not found"
+          done
 
       - name: Create .env file
         working-directory: vbwd-backend
