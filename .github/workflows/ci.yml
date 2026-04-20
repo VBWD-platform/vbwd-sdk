@@ -188,10 +188,11 @@ jobs:
       - name: Seed test data
         working-directory: vbwd-backend
         run: |
-          docker compose exec -T \
-            -e TEST_DATA_SEED=true \
-            api flask --app src.app:create_app seed-test-data \
-            || echo "Seed not available, skipping"
+          # install_demo_data.py is the canonical seed script used by
+          # deploy.sh on prod — it creates admin@example.com / AdminPass123@,
+          # base plans, demo users, access levels, etc. The older flask CLI
+          # path (src.app:create_app) is stale.
+          docker compose exec -T api python bin/install_demo_data.py
 
       - name: Verify all plugins installed and active
         working-directory: vbwd-backend
