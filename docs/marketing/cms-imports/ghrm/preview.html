@@ -1,0 +1,1652 @@
+<!doctype html><html><head><meta charset=utf-8><title>Preview — ghrm</title></head><body>
+<!-- about -->
+<style>.vbwd-page {
+  --vbwd-accent: #ea580c;
+  --vbwd-accent-soft: #ffedd5;
+  --vbwd-accent-dark: #c2410c;
+  --vbwd-gradient: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
+  --vbwd-text: #0f172a;
+  --vbwd-text-muted: #475569;
+  --vbwd-surface: #ffffff;
+  --vbwd-surface-soft: #f8fafc;
+  --vbwd-border: #e2e8f0;
+  --vbwd-radius: 14px;
+  --vbwd-radius-lg: 22px;
+  --vbwd-shadow-sm: 0 1px 2px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.08);
+  --vbwd-shadow-md: 0 4px 6px -1px rgba(15,23,42,0.08), 0 2px 4px -2px rgba(15,23,42,0.06);
+  --vbwd-shadow-lg: 0 20px 25px -5px rgba(15,23,42,0.10), 0 8px 10px -6px rgba(15,23,42,0.08);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  color: var(--vbwd-text);
+  line-height: 1.65;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+.vbwd-page *, .vbwd-page *::before, .vbwd-page *::after { box-sizing: border-box; }
+.vbwd-page h1, .vbwd-page h2, .vbwd-page h3, .vbwd-page h4 {
+  color: #0b1220;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65em;
+  font-weight: 700;
+}
+.vbwd-page h1 { font-size: clamp(2.2rem, 4vw, 3.25rem); font-weight: 800; }
+.vbwd-page h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); margin-top: 0.4em; }
+.vbwd-page h3 { font-size: 1.2rem; }
+.vbwd-page p  { margin: 0 0 1em; color: var(--vbwd-text); }
+.vbwd-page a  { color: var(--vbwd-accent-dark); text-decoration: none; font-weight: 600; }
+.vbwd-page a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.vbwd-page code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+  padding: 0.15em 0.45em;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.vbwd-page .vbwd-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.vbwd-page .vbwd-hero {
+  background: var(--vbwd-gradient);
+  color: #ffffff;
+  padding: clamp(3.5rem, 8vw, 6rem) 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--vbwd-radius-lg);
+  margin: 0 1rem 3rem;
+}
+.vbwd-page .vbwd-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(255,255,255,0.18), transparent 45%);
+  pointer-events: none;
+}
+.vbwd-page .vbwd-hero__eyebrow {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(4px);
+}
+.vbwd-page .vbwd-hero h1 {
+  color: #fff;
+  margin-bottom: 0.65rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  position: relative;
+}
+.vbwd-page .vbwd-hero__lead {
+  color: rgba(255,255,255,0.95);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+}
+.vbwd-page .vbwd-hero__badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.75rem;
+  position: relative;
+}
+.vbwd-page .vbwd-hero__badge {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+.vbwd-page section { padding: 2.5rem 0; }
+.vbwd-page section + section { border-top: 1px solid var(--vbwd-border); }
+.vbwd-page .vbwd-eyebrow {
+  display: inline-block;
+  color: var(--vbwd-accent-dark);
+  background: var(--vbwd-accent-soft);
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+/* ── Plugin grid ─────────────────────────────────────────────────── */
+.vbwd-page .vbwd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 0;
+}
+.vbwd-page .vbwd-card {
+  background: var(--vbwd-surface);
+  border: 1px solid var(--vbwd-border);
+  border-radius: var(--vbwd-radius);
+  padding: 1.25rem 1.35rem;
+  box-shadow: var(--vbwd-shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+.vbwd-page .vbwd-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--vbwd-accent);
+  opacity: 0.7;
+}
+.vbwd-page .vbwd-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--vbwd-shadow-md);
+  border-color: var(--vbwd-accent);
+}
+.vbwd-page .vbwd-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--vbwd-text);
+  margin-bottom: 0.35rem;
+  font-size: 1.02rem;
+}
+.vbwd-page .vbwd-card__title code {
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+  font-size: 0.88rem;
+}
+.vbwd-page .vbwd-card__desc {
+  color: var(--vbwd-text-muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.vbwd-page .vbwd-card--muted { opacity: 0.95; background: var(--vbwd-surface-soft); }
+.vbwd-page .vbwd-card--muted::before { background: #94a3b8; opacity: 0.6; }
+
+/* ── Feature list ────────────────────────────────────────────────── */
+.vbwd-page ul.vbwd-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.5rem 1.5rem;
+}
+.vbwd-page ul.vbwd-list li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 1.75rem;
+  color: var(--vbwd-text);
+}
+.vbwd-page ul.vbwd-list li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.75rem;
+  width: 0.7rem; height: 0.7rem;
+  border-radius: 3px;
+  background: var(--vbwd-accent);
+  box-shadow: 0 0 0 3px var(--vbwd-accent-soft);
+}
+
+/* ── Payment table ───────────────────────────────────────────────── */
+.vbwd-page .vbwd-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--vbwd-radius);
+  border: 1px solid var(--vbwd-border);
+  margin: 1rem 0 0;
+  background: var(--vbwd-surface);
+  box-shadow: var(--vbwd-shadow-sm);
+}
+.vbwd-page table.vbwd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.vbwd-page table.vbwd-table th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  background: var(--vbwd-surface-soft);
+  color: var(--vbwd-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--vbwd-border);
+}
+.vbwd-page table.vbwd-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--vbwd-border);
+  vertical-align: top;
+}
+.vbwd-page table.vbwd-table tr:last-child td { border-bottom: none; }
+.vbwd-page table.vbwd-table tr:hover td { background: var(--vbwd-accent-soft); }
+.vbwd-page table.vbwd-table .vbwd-method-name {
+  font-weight: 700;
+  color: var(--vbwd-text);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.vbwd-page table.vbwd-table code { font-size: 0.8rem; }
+
+.vbwd-page .vbwd-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.vbwd-page .vbwd-badge--ok {
+  background: #dcfce7;
+  color: #166534;
+}
+.vbwd-page .vbwd-badge--planned {
+  background: #fef3c7;
+  color: #92400e;
+}
+.vbwd-page .vbwd-badge--region {
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+}
+
+/* ── Stat row ────────────────────────────────────────────────────── */
+.vbwd-page .vbwd-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.vbwd-page .vbwd-stat {
+  text-align: center;
+  padding: 1.25rem 1rem;
+  background: var(--vbwd-surface);
+  border: 1px solid var(--vbwd-border);
+  border-radius: var(--vbwd-radius);
+  box-shadow: var(--vbwd-shadow-sm);
+}
+.vbwd-page .vbwd-stat__number {
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--vbwd-accent-dark);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.vbwd-page .vbwd-stat__label {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--vbwd-text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Callout / CTA ──────────────────────────────────────────────── */
+.vbwd-page .vbwd-callout {
+  background: var(--vbwd-accent-soft);
+  border-left: 4px solid var(--vbwd-accent);
+  border-radius: var(--vbwd-radius);
+  padding: 1.1rem 1.35rem;
+  margin: 1.5rem 0 0;
+  color: var(--vbwd-text);
+}
+.vbwd-page .vbwd-callout p { margin: 0; }
+.vbwd-page .vbwd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.35rem;
+  background: var(--vbwd-accent);
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: var(--vbwd-shadow-md);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.vbwd-page .vbwd-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .vbwd-page { font-size: 16px; }
+  .vbwd-page .vbwd-hero { margin: 0 0.5rem 2rem; padding: 2.75rem 1rem; }
+  .vbwd-page .vbwd-container { padding: 0 1.1rem; }
+  .vbwd-page ul.vbwd-list { grid-template-columns: 1fr; }
+}</style>
+<article class="vbwd-page vbwd-page--about">
+          <header class="vbwd-hero">
+  <span class="vbwd-hero__eyebrow">About</span>
+  <h1>🧭 VBWD GHRM</h1>
+  <p class="vbwd-hero__lead">Turn any GitHub repository into a paid, supported product.</p>
+  <div class="vbwd-hero__badge-row"><span class="vbwd-hero__badge">cms</span><span class="vbwd-hero__badge">ghrm</span><span class="vbwd-hero__badge">chat</span><span class="vbwd-hero__badge">theme-switcher</span><span class="vbwd-hero__badge">token-bundles</span><span class="vbwd-hero__badge">stripe</span></div>
+</header>
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">The pitch</span>
+              <h2>What this instance demonstrates</h2>
+              <p>
+                <strong>VBWD GHRM</strong> is a worked example of running the VBWD
+                platform for open-source maintainers and small development teams monetising repos. VBWD core is intentionally agnostic —
+                all domain behaviour is delivered by plugins. This instance is
+                nothing more than a chosen constellation of plugins on top of
+                the same core codebase that every other instance runs.
+              </p>
+              <div class="vbwd-stats">
+                <div class="vbwd-stat">
+                  <span class="vbwd-stat__number">8</span>
+                  <span class="vbwd-stat__label">Plugins enabled</span>
+                </div>
+                <div class="vbwd-stat">
+                  <span class="vbwd-stat__number">4</span>
+                  <span class="vbwd-stat__label">On the roadmap</span>
+                </div>
+                <div class="vbwd-stat">
+                  <span class="vbwd-stat__number">1,851+</span>
+                  <span class="vbwd-stat__label">Passing tests</span>
+                </div>
+                <div class="vbwd-stat">
+                  <span class="vbwd-stat__number">65+</span>
+                  <span class="vbwd-stat__label">REST endpoints</span>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Constellation</span>
+              <h2>Plugin constellation in this instance</h2>
+              <p>Every row below is a real plugin — switch it off in
+              <code>/admin/settings/plugins</code> and the corresponding
+              behaviour disappears cleanly.</p>
+              <div class="vbwd-grid"><div class="vbwd-card"><div class="vbwd-card__title"><code>cms</code></div><p class="vbwd-card__desc">Product pages, docs, changelog, blog.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>ghrm</code></div><p class="vbwd-card__desc">GitHub-repo browsing, gated downloads, license-key issuance.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>chat</code></div><p class="vbwd-card__desc">Token-metered support chat backed by an LLM.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>theme-switcher</code></div><p class="vbwd-card__desc">Branded docs for every repo you sell.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>token-bundles</code></div><p class="vbwd-card__desc">Credits for support questions or gated downloads.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>stripe</code></div><p class="vbwd-card__desc">Primary card processor.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>paypal</code></div><p class="vbwd-card__desc">International fallback.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>analytics</code></div><p class="vbwd-card__desc">Paid-download funnel and repo-level revenue.</p></div></div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Free with core</span>
+              <h2>Guarantees you inherit</h2>
+              <ul class="vbwd-list">
+                <li>Subscription lifecycle — <code>PENDING → ACTIVE → CANCELLED → EXPIRED</code>.</li>
+                <li>Multi-currency pricing, regional tax, line-item invoicing.</li>
+                <li>Token economy for any metered feature — AI, exports, downloads, bookings.</li>
+                <li>JWT auth with access + refresh, bcrypt hashing, RBAC.</li>
+                <li>Outbound webhooks with retry and delivery logs.</li>
+                <li>Enable / disable plugins without a server restart.</li>
+                <li>1,851+ passing tests, TDD as the development standard.</li>
+                <li>BSL 1.1 — self-host for yourself free; production use needs a licence.</li>
+              </ul>
+              <div class="vbwd-callout">
+                <p>Want the pricing? <a href="/pricing-native" class="vbwd-btn">See plans →</a></p>
+              </div>
+            </section>
+
+          </div>
+        </article>
+<hr>
+
+<!-- features -->
+<style>.vbwd-page {
+  --vbwd-accent: #ea580c;
+  --vbwd-accent-soft: #ffedd5;
+  --vbwd-accent-dark: #c2410c;
+  --vbwd-gradient: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
+  --vbwd-text: #0f172a;
+  --vbwd-text-muted: #475569;
+  --vbwd-surface: #ffffff;
+  --vbwd-surface-soft: #f8fafc;
+  --vbwd-border: #e2e8f0;
+  --vbwd-radius: 14px;
+  --vbwd-radius-lg: 22px;
+  --vbwd-shadow-sm: 0 1px 2px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.08);
+  --vbwd-shadow-md: 0 4px 6px -1px rgba(15,23,42,0.08), 0 2px 4px -2px rgba(15,23,42,0.06);
+  --vbwd-shadow-lg: 0 20px 25px -5px rgba(15,23,42,0.10), 0 8px 10px -6px rgba(15,23,42,0.08);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  color: var(--vbwd-text);
+  line-height: 1.65;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+.vbwd-page *, .vbwd-page *::before, .vbwd-page *::after { box-sizing: border-box; }
+.vbwd-page h1, .vbwd-page h2, .vbwd-page h3, .vbwd-page h4 {
+  color: #0b1220;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65em;
+  font-weight: 700;
+}
+.vbwd-page h1 { font-size: clamp(2.2rem, 4vw, 3.25rem); font-weight: 800; }
+.vbwd-page h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); margin-top: 0.4em; }
+.vbwd-page h3 { font-size: 1.2rem; }
+.vbwd-page p  { margin: 0 0 1em; color: var(--vbwd-text); }
+.vbwd-page a  { color: var(--vbwd-accent-dark); text-decoration: none; font-weight: 600; }
+.vbwd-page a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.vbwd-page code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+  padding: 0.15em 0.45em;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.vbwd-page .vbwd-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.vbwd-page .vbwd-hero {
+  background: var(--vbwd-gradient);
+  color: #ffffff;
+  padding: clamp(3.5rem, 8vw, 6rem) 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--vbwd-radius-lg);
+  margin: 0 1rem 3rem;
+}
+.vbwd-page .vbwd-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(255,255,255,0.18), transparent 45%);
+  pointer-events: none;
+}
+.vbwd-page .vbwd-hero__eyebrow {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(4px);
+}
+.vbwd-page .vbwd-hero h1 {
+  color: #fff;
+  margin-bottom: 0.65rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  position: relative;
+}
+.vbwd-page .vbwd-hero__lead {
+  color: rgba(255,255,255,0.95);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+}
+.vbwd-page .vbwd-hero__badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.75rem;
+  position: relative;
+}
+.vbwd-page .vbwd-hero__badge {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+.vbwd-page section { padding: 2.5rem 0; }
+.vbwd-page section + section { border-top: 1px solid var(--vbwd-border); }
+.vbwd-page .vbwd-eyebrow {
+  display: inline-block;
+  color: var(--vbwd-accent-dark);
+  background: var(--vbwd-accent-soft);
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+/* ── Plugin grid ─────────────────────────────────────────────────── */
+.vbwd-page .vbwd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 0;
+}
+.vbwd-page .vbwd-card {
+  background: var(--vbwd-surface);
+  border: 1px solid var(--vbwd-border);
+  border-radius: var(--vbwd-radius);
+  padding: 1.25rem 1.35rem;
+  box-shadow: var(--vbwd-shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+.vbwd-page .vbwd-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--vbwd-accent);
+  opacity: 0.7;
+}
+.vbwd-page .vbwd-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--vbwd-shadow-md);
+  border-color: var(--vbwd-accent);
+}
+.vbwd-page .vbwd-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--vbwd-text);
+  margin-bottom: 0.35rem;
+  font-size: 1.02rem;
+}
+.vbwd-page .vbwd-card__title code {
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+  font-size: 0.88rem;
+}
+.vbwd-page .vbwd-card__desc {
+  color: var(--vbwd-text-muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.vbwd-page .vbwd-card--muted { opacity: 0.95; background: var(--vbwd-surface-soft); }
+.vbwd-page .vbwd-card--muted::before { background: #94a3b8; opacity: 0.6; }
+
+/* ── Feature list ────────────────────────────────────────────────── */
+.vbwd-page ul.vbwd-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.5rem 1.5rem;
+}
+.vbwd-page ul.vbwd-list li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 1.75rem;
+  color: var(--vbwd-text);
+}
+.vbwd-page ul.vbwd-list li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.75rem;
+  width: 0.7rem; height: 0.7rem;
+  border-radius: 3px;
+  background: var(--vbwd-accent);
+  box-shadow: 0 0 0 3px var(--vbwd-accent-soft);
+}
+
+/* ── Payment table ───────────────────────────────────────────────── */
+.vbwd-page .vbwd-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--vbwd-radius);
+  border: 1px solid var(--vbwd-border);
+  margin: 1rem 0 0;
+  background: var(--vbwd-surface);
+  box-shadow: var(--vbwd-shadow-sm);
+}
+.vbwd-page table.vbwd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.vbwd-page table.vbwd-table th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  background: var(--vbwd-surface-soft);
+  color: var(--vbwd-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--vbwd-border);
+}
+.vbwd-page table.vbwd-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--vbwd-border);
+  vertical-align: top;
+}
+.vbwd-page table.vbwd-table tr:last-child td { border-bottom: none; }
+.vbwd-page table.vbwd-table tr:hover td { background: var(--vbwd-accent-soft); }
+.vbwd-page table.vbwd-table .vbwd-method-name {
+  font-weight: 700;
+  color: var(--vbwd-text);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.vbwd-page table.vbwd-table code { font-size: 0.8rem; }
+
+.vbwd-page .vbwd-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.vbwd-page .vbwd-badge--ok {
+  background: #dcfce7;
+  color: #166534;
+}
+.vbwd-page .vbwd-badge--planned {
+  background: #fef3c7;
+  color: #92400e;
+}
+.vbwd-page .vbwd-badge--region {
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+}
+
+/* ── Stat row ────────────────────────────────────────────────────── */
+.vbwd-page .vbwd-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.vbwd-page .vbwd-stat {
+  text-align: center;
+  padding: 1.25rem 1rem;
+  background: var(--vbwd-surface);
+  border: 1px solid var(--vbwd-border);
+  border-radius: var(--vbwd-radius);
+  box-shadow: var(--vbwd-shadow-sm);
+}
+.vbwd-page .vbwd-stat__number {
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--vbwd-accent-dark);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.vbwd-page .vbwd-stat__label {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--vbwd-text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Callout / CTA ──────────────────────────────────────────────── */
+.vbwd-page .vbwd-callout {
+  background: var(--vbwd-accent-soft);
+  border-left: 4px solid var(--vbwd-accent);
+  border-radius: var(--vbwd-radius);
+  padding: 1.1rem 1.35rem;
+  margin: 1.5rem 0 0;
+  color: var(--vbwd-text);
+}
+.vbwd-page .vbwd-callout p { margin: 0; }
+.vbwd-page .vbwd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.35rem;
+  background: var(--vbwd-accent);
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: var(--vbwd-shadow-md);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.vbwd-page .vbwd-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .vbwd-page { font-size: 16px; }
+  .vbwd-page .vbwd-hero { margin: 0 0.5rem 2rem; padding: 2.75rem 1rem; }
+  .vbwd-page .vbwd-container { padding: 0 1.1rem; }
+  .vbwd-page ul.vbwd-list { grid-template-columns: 1fr; }
+}</style>
+<article class="vbwd-page vbwd-page--features">
+          <header class="vbwd-hero">
+  <span class="vbwd-hero__eyebrow">Features</span>
+  <h1>🧭 VBWD GHRM</h1>
+  <p class="vbwd-hero__lead">Turn any GitHub repository into a paid, supported product.</p>
+  <div class="vbwd-hero__badge-row"><span class="vbwd-hero__badge">cms</span><span class="vbwd-hero__badge">ghrm</span><span class="vbwd-hero__badge">chat</span><span class="vbwd-hero__badge">theme-switcher</span><span class="vbwd-hero__badge">token-bundles</span><span class="vbwd-hero__badge">stripe</span></div>
+</header>
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">Composable</span>
+              <h2>Every feature is a plugin</h2>
+              <p>
+                Toggle any of these from the admin panel at
+                <code>/admin/settings/plugins</code>. No server restart, no
+                code change. Turn a plugin off and every route, menu item,
+                table and webhook it owns disappears cleanly.
+              </p>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Live</span>
+              <h2>Enabled out of the box</h2>
+              <div class="vbwd-grid"><div class="vbwd-card"><div class="vbwd-card__title"><code>cms</code></div><p class="vbwd-card__desc">Product pages, docs, changelog, blog.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>ghrm</code></div><p class="vbwd-card__desc">GitHub-repo browsing, gated downloads, license-key issuance.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>chat</code></div><p class="vbwd-card__desc">Token-metered support chat backed by an LLM.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>theme-switcher</code></div><p class="vbwd-card__desc">Branded docs for every repo you sell.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>token-bundles</code></div><p class="vbwd-card__desc">Credits for support questions or gated downloads.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>stripe</code></div><p class="vbwd-card__desc">Primary card processor.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>paypal</code></div><p class="vbwd-card__desc">International fallback.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>analytics</code></div><p class="vbwd-card__desc">Paid-download funnel and repo-level revenue.</p></div></div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Roadmap</span>
+              <h2>Planned for VBWD GHRM</h2>
+              <div class="vbwd-grid"><div class="vbwd-card vbwd-card--muted"><div class="vbwd-card__title"><code>license-keys</code></div><p class="vbwd-card__desc">Per-seat license key issuance and revocation.</p></div><div class="vbwd-card vbwd-card--muted"><div class="vbwd-card__title"><code>docs-sync</code></div><p class="vbwd-card__desc">Auto-sync repo README / docs into CMS pages.</p></div><div class="vbwd-card vbwd-card--muted"><div class="vbwd-card__title"><code>releases-webhook</code></div><p class="vbwd-card__desc">New GitHub release → auto-publish on VBWD.</p></div><div class="vbwd-card vbwd-card--muted"><div class="vbwd-card__title"><code>coinbase</code></div><p class="vbwd-card__desc">Crypto payments for international OSS buyers.</p></div></div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Core</span>
+              <h2>Features inherited from VBWD core</h2>
+              <ul class="vbwd-list">
+                <li>Tariff plans with monthly / annual / custom periods and multi-currency pricing.</li>
+                <li>Add-ons — purchasable extras on top of base subscriptions, bound to specific plans.</li>
+                <li>Invoicing with line items per subscription, token bundle and add-on charge.</li>
+                <li>Token economy — credit packs, per-plan daily limits, admin quota reset.</li>
+                <li>User management — register, login, password reset, billing address, RBAC.</li>
+                <li>Admin backoffice — users, plans, subscriptions, invoices, analytics, webhooks.</li>
+                <li>Embeddable pricing widget — drop a <code>&lt;script&gt;</code> tag on any site.</li>
+                <li>Plugin i18n — every plugin owns its own <code>locales/{en,de}.json</code>.</li>
+              </ul>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Stack</span>
+              <h2>Tech stack</h2>
+              <div class="vbwd-grid">
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title">Backend</div>
+                  <p class="vbwd-card__desc">Python 3.11, Flask 3.0, SQLAlchemy 2.0, PostgreSQL 16, Redis 7.</p>
+                </div>
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title">Frontend</div>
+                  <p class="vbwd-card__desc">Vue 3, TypeScript, Vite, Pinia, Vue Router 4.</p>
+                </div>
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title">Infra</div>
+                  <p class="vbwd-card__desc">Docker, Docker Compose, Nginx, Gunicorn.</p>
+                </div>
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title">Testing</div>
+                  <p class="vbwd-card__desc">pytest, Vitest, Playwright — 1,851+ passing tests.</p>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </article>
+<hr>
+
+<!-- integrations -->
+<style>.vbwd-page {
+  --vbwd-accent: #ea580c;
+  --vbwd-accent-soft: #ffedd5;
+  --vbwd-accent-dark: #c2410c;
+  --vbwd-gradient: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
+  --vbwd-text: #0f172a;
+  --vbwd-text-muted: #475569;
+  --vbwd-surface: #ffffff;
+  --vbwd-surface-soft: #f8fafc;
+  --vbwd-border: #e2e8f0;
+  --vbwd-radius: 14px;
+  --vbwd-radius-lg: 22px;
+  --vbwd-shadow-sm: 0 1px 2px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.08);
+  --vbwd-shadow-md: 0 4px 6px -1px rgba(15,23,42,0.08), 0 2px 4px -2px rgba(15,23,42,0.06);
+  --vbwd-shadow-lg: 0 20px 25px -5px rgba(15,23,42,0.10), 0 8px 10px -6px rgba(15,23,42,0.08);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  color: var(--vbwd-text);
+  line-height: 1.65;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+.vbwd-page *, .vbwd-page *::before, .vbwd-page *::after { box-sizing: border-box; }
+.vbwd-page h1, .vbwd-page h2, .vbwd-page h3, .vbwd-page h4 {
+  color: #0b1220;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65em;
+  font-weight: 700;
+}
+.vbwd-page h1 { font-size: clamp(2.2rem, 4vw, 3.25rem); font-weight: 800; }
+.vbwd-page h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); margin-top: 0.4em; }
+.vbwd-page h3 { font-size: 1.2rem; }
+.vbwd-page p  { margin: 0 0 1em; color: var(--vbwd-text); }
+.vbwd-page a  { color: var(--vbwd-accent-dark); text-decoration: none; font-weight: 600; }
+.vbwd-page a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.vbwd-page code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+  padding: 0.15em 0.45em;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.vbwd-page .vbwd-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.vbwd-page .vbwd-hero {
+  background: var(--vbwd-gradient);
+  color: #ffffff;
+  padding: clamp(3.5rem, 8vw, 6rem) 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--vbwd-radius-lg);
+  margin: 0 1rem 3rem;
+}
+.vbwd-page .vbwd-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(255,255,255,0.18), transparent 45%);
+  pointer-events: none;
+}
+.vbwd-page .vbwd-hero__eyebrow {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(4px);
+}
+.vbwd-page .vbwd-hero h1 {
+  color: #fff;
+  margin-bottom: 0.65rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  position: relative;
+}
+.vbwd-page .vbwd-hero__lead {
+  color: rgba(255,255,255,0.95);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+}
+.vbwd-page .vbwd-hero__badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.75rem;
+  position: relative;
+}
+.vbwd-page .vbwd-hero__badge {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+.vbwd-page section { padding: 2.5rem 0; }
+.vbwd-page section + section { border-top: 1px solid var(--vbwd-border); }
+.vbwd-page .vbwd-eyebrow {
+  display: inline-block;
+  color: var(--vbwd-accent-dark);
+  background: var(--vbwd-accent-soft);
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+/* ── Plugin grid ─────────────────────────────────────────────────── */
+.vbwd-page .vbwd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 0;
+}
+.vbwd-page .vbwd-card {
+  background: var(--vbwd-surface);
+  border: 1px solid var(--vbwd-border);
+  border-radius: var(--vbwd-radius);
+  padding: 1.25rem 1.35rem;
+  box-shadow: var(--vbwd-shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+.vbwd-page .vbwd-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--vbwd-accent);
+  opacity: 0.7;
+}
+.vbwd-page .vbwd-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--vbwd-shadow-md);
+  border-color: var(--vbwd-accent);
+}
+.vbwd-page .vbwd-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--vbwd-text);
+  margin-bottom: 0.35rem;
+  font-size: 1.02rem;
+}
+.vbwd-page .vbwd-card__title code {
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+  font-size: 0.88rem;
+}
+.vbwd-page .vbwd-card__desc {
+  color: var(--vbwd-text-muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.vbwd-page .vbwd-card--muted { opacity: 0.95; background: var(--vbwd-surface-soft); }
+.vbwd-page .vbwd-card--muted::before { background: #94a3b8; opacity: 0.6; }
+
+/* ── Feature list ────────────────────────────────────────────────── */
+.vbwd-page ul.vbwd-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.5rem 1.5rem;
+}
+.vbwd-page ul.vbwd-list li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 1.75rem;
+  color: var(--vbwd-text);
+}
+.vbwd-page ul.vbwd-list li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.75rem;
+  width: 0.7rem; height: 0.7rem;
+  border-radius: 3px;
+  background: var(--vbwd-accent);
+  box-shadow: 0 0 0 3px var(--vbwd-accent-soft);
+}
+
+/* ── Payment table ───────────────────────────────────────────────── */
+.vbwd-page .vbwd-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--vbwd-radius);
+  border: 1px solid var(--vbwd-border);
+  margin: 1rem 0 0;
+  background: var(--vbwd-surface);
+  box-shadow: var(--vbwd-shadow-sm);
+}
+.vbwd-page table.vbwd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.vbwd-page table.vbwd-table th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  background: var(--vbwd-surface-soft);
+  color: var(--vbwd-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--vbwd-border);
+}
+.vbwd-page table.vbwd-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--vbwd-border);
+  vertical-align: top;
+}
+.vbwd-page table.vbwd-table tr:last-child td { border-bottom: none; }
+.vbwd-page table.vbwd-table tr:hover td { background: var(--vbwd-accent-soft); }
+.vbwd-page table.vbwd-table .vbwd-method-name {
+  font-weight: 700;
+  color: var(--vbwd-text);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.vbwd-page table.vbwd-table code { font-size: 0.8rem; }
+
+.vbwd-page .vbwd-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.vbwd-page .vbwd-badge--ok {
+  background: #dcfce7;
+  color: #166534;
+}
+.vbwd-page .vbwd-badge--planned {
+  background: #fef3c7;
+  color: #92400e;
+}
+.vbwd-page .vbwd-badge--region {
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+}
+
+/* ── Stat row ────────────────────────────────────────────────────── */
+.vbwd-page .vbwd-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.vbwd-page .vbwd-stat {
+  text-align: center;
+  padding: 1.25rem 1rem;
+  background: var(--vbwd-surface);
+  border: 1px solid var(--vbwd-border);
+  border-radius: var(--vbwd-radius);
+  box-shadow: var(--vbwd-shadow-sm);
+}
+.vbwd-page .vbwd-stat__number {
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--vbwd-accent-dark);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.vbwd-page .vbwd-stat__label {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--vbwd-text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Callout / CTA ──────────────────────────────────────────────── */
+.vbwd-page .vbwd-callout {
+  background: var(--vbwd-accent-soft);
+  border-left: 4px solid var(--vbwd-accent);
+  border-radius: var(--vbwd-radius);
+  padding: 1.1rem 1.35rem;
+  margin: 1.5rem 0 0;
+  color: var(--vbwd-text);
+}
+.vbwd-page .vbwd-callout p { margin: 0; }
+.vbwd-page .vbwd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.35rem;
+  background: var(--vbwd-accent);
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: var(--vbwd-shadow-md);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.vbwd-page .vbwd-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .vbwd-page { font-size: 16px; }
+  .vbwd-page .vbwd-hero { margin: 0 0.5rem 2rem; padding: 2.75rem 1rem; }
+  .vbwd-page .vbwd-container { padding: 0 1.1rem; }
+  .vbwd-page ul.vbwd-list { grid-template-columns: 1fr; }
+}</style>
+<article class="vbwd-page vbwd-page--integrations">
+          <header class="vbwd-hero">
+  <span class="vbwd-hero__eyebrow">Integrations</span>
+  <h1>🧭 VBWD GHRM</h1>
+  <p class="vbwd-hero__lead">Turn any GitHub repository into a paid, supported product.</p>
+  <div class="vbwd-hero__badge-row"><span class="vbwd-hero__badge">cms</span><span class="vbwd-hero__badge">ghrm</span><span class="vbwd-hero__badge">chat</span><span class="vbwd-hero__badge">theme-switcher</span><span class="vbwd-hero__badge">token-bundles</span><span class="vbwd-hero__badge">stripe</span></div>
+</header>
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">Philosophy</span>
+              <h2>Plug-and-play at the boundary</h2>
+              <p>
+                VBWD is deliberately open at the edges: any third-party system
+                can be reached through a plugin adapter, outbound webhooks or
+                the REST API. The list below is what <strong>VBWD GHRM</strong>
+                typically connects to.
+              </p>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Ecosystem</span>
+              <h2>Integrations for this vertical</h2>
+              <div class="vbwd-grid"><div class="vbwd-card"><div class="vbwd-card__title">GitHub API</div><p class="vbwd-card__desc">Repo metadata, releases, issues, Sponsors cross-link.</p></div><div class="vbwd-card"><div class="vbwd-card__title">GitLab / Bitbucket</div><p class="vbwd-card__desc">Parallel adapters planned for non-GitHub repos.</p></div><div class="vbwd-card"><div class="vbwd-card__title">Zapier / n8n via webhooks</div><p class="vbwd-card__desc">Fire downstream automation on every purchase.</p></div><div class="vbwd-card"><div class="vbwd-card__title">OpenAI-compatible LLMs</div><p class="vbwd-card__desc">Power the support chat plugin with any model.</p></div><div class="vbwd-card"><div class="vbwd-card__title">SMTP / Postmark</div><p class="vbwd-card__desc">License-key delivery and renewal notices.</p></div><div class="vbwd-card"><div class="vbwd-card__title">Discord / Slack</div><p class="vbwd-card__desc">Post new paid-download events to your team channel.</p></div></div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Generic</span>
+              <h2>Integration surfaces available everywhere</h2>
+              <div class="vbwd-grid">
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title">REST API</div>
+                  <p class="vbwd-card__desc">
+                    65+ endpoints under <code>/api/v1/*</code>. Auth via JWT,
+                    machine-to-machine via API keys (planned).
+                  </p>
+                </div>
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title">Outbound webhooks</div>
+                  <p class="vbwd-card__desc">
+                    Fire on every subscription and payment event. Configurable
+                    endpoints per event type, retry with backoff, delivery log.
+                  </p>
+                </div>
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title">Plugin adapters</div>
+                  <p class="vbwd-card__desc">
+                    Wrap any third party as a backend plugin under
+                    <code>plugins/&lt;name&gt;/</code>. Follows the
+                    <code>stripe</code> or <code>mollie</code> reference.
+                  </p>
+                </div>
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title">Zapier / n8n / Make</div>
+                  <p class="vbwd-card__desc">
+                    Consume webhooks and drive inbound actions through the REST
+                    API without writing code.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </article>
+<hr>
+
+<!-- payment-modules -->
+<style>.vbwd-page {
+  --vbwd-accent: #ea580c;
+  --vbwd-accent-soft: #ffedd5;
+  --vbwd-accent-dark: #c2410c;
+  --vbwd-gradient: linear-gradient(135deg, #ea580c 0%, #dc2626 100%);
+  --vbwd-text: #0f172a;
+  --vbwd-text-muted: #475569;
+  --vbwd-surface: #ffffff;
+  --vbwd-surface-soft: #f8fafc;
+  --vbwd-border: #e2e8f0;
+  --vbwd-radius: 14px;
+  --vbwd-radius-lg: 22px;
+  --vbwd-shadow-sm: 0 1px 2px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.08);
+  --vbwd-shadow-md: 0 4px 6px -1px rgba(15,23,42,0.08), 0 2px 4px -2px rgba(15,23,42,0.06);
+  --vbwd-shadow-lg: 0 20px 25px -5px rgba(15,23,42,0.10), 0 8px 10px -6px rgba(15,23,42,0.08);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  color: var(--vbwd-text);
+  line-height: 1.65;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+.vbwd-page *, .vbwd-page *::before, .vbwd-page *::after { box-sizing: border-box; }
+.vbwd-page h1, .vbwd-page h2, .vbwd-page h3, .vbwd-page h4 {
+  color: #0b1220;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65em;
+  font-weight: 700;
+}
+.vbwd-page h1 { font-size: clamp(2.2rem, 4vw, 3.25rem); font-weight: 800; }
+.vbwd-page h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); margin-top: 0.4em; }
+.vbwd-page h3 { font-size: 1.2rem; }
+.vbwd-page p  { margin: 0 0 1em; color: var(--vbwd-text); }
+.vbwd-page a  { color: var(--vbwd-accent-dark); text-decoration: none; font-weight: 600; }
+.vbwd-page a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.vbwd-page code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+  padding: 0.15em 0.45em;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.vbwd-page .vbwd-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.vbwd-page .vbwd-hero {
+  background: var(--vbwd-gradient);
+  color: #ffffff;
+  padding: clamp(3.5rem, 8vw, 6rem) 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--vbwd-radius-lg);
+  margin: 0 1rem 3rem;
+}
+.vbwd-page .vbwd-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(255,255,255,0.18), transparent 45%);
+  pointer-events: none;
+}
+.vbwd-page .vbwd-hero__eyebrow {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(4px);
+}
+.vbwd-page .vbwd-hero h1 {
+  color: #fff;
+  margin-bottom: 0.65rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  position: relative;
+}
+.vbwd-page .vbwd-hero__lead {
+  color: rgba(255,255,255,0.95);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+}
+.vbwd-page .vbwd-hero__badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.75rem;
+  position: relative;
+}
+.vbwd-page .vbwd-hero__badge {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+.vbwd-page section { padding: 2.5rem 0; }
+.vbwd-page section + section { border-top: 1px solid var(--vbwd-border); }
+.vbwd-page .vbwd-eyebrow {
+  display: inline-block;
+  color: var(--vbwd-accent-dark);
+  background: var(--vbwd-accent-soft);
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+/* ── Plugin grid ─────────────────────────────────────────────────── */
+.vbwd-page .vbwd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 0;
+}
+.vbwd-page .vbwd-card {
+  background: var(--vbwd-surface);
+  border: 1px solid var(--vbwd-border);
+  border-radius: var(--vbwd-radius);
+  padding: 1.25rem 1.35rem;
+  box-shadow: var(--vbwd-shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+.vbwd-page .vbwd-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--vbwd-accent);
+  opacity: 0.7;
+}
+.vbwd-page .vbwd-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--vbwd-shadow-md);
+  border-color: var(--vbwd-accent);
+}
+.vbwd-page .vbwd-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--vbwd-text);
+  margin-bottom: 0.35rem;
+  font-size: 1.02rem;
+}
+.vbwd-page .vbwd-card__title code {
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+  font-size: 0.88rem;
+}
+.vbwd-page .vbwd-card__desc {
+  color: var(--vbwd-text-muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.vbwd-page .vbwd-card--muted { opacity: 0.95; background: var(--vbwd-surface-soft); }
+.vbwd-page .vbwd-card--muted::before { background: #94a3b8; opacity: 0.6; }
+
+/* ── Feature list ────────────────────────────────────────────────── */
+.vbwd-page ul.vbwd-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.5rem 1.5rem;
+}
+.vbwd-page ul.vbwd-list li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 1.75rem;
+  color: var(--vbwd-text);
+}
+.vbwd-page ul.vbwd-list li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.75rem;
+  width: 0.7rem; height: 0.7rem;
+  border-radius: 3px;
+  background: var(--vbwd-accent);
+  box-shadow: 0 0 0 3px var(--vbwd-accent-soft);
+}
+
+/* ── Payment table ───────────────────────────────────────────────── */
+.vbwd-page .vbwd-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--vbwd-radius);
+  border: 1px solid var(--vbwd-border);
+  margin: 1rem 0 0;
+  background: var(--vbwd-surface);
+  box-shadow: var(--vbwd-shadow-sm);
+}
+.vbwd-page table.vbwd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.vbwd-page table.vbwd-table th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  background: var(--vbwd-surface-soft);
+  color: var(--vbwd-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--vbwd-border);
+}
+.vbwd-page table.vbwd-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--vbwd-border);
+  vertical-align: top;
+}
+.vbwd-page table.vbwd-table tr:last-child td { border-bottom: none; }
+.vbwd-page table.vbwd-table tr:hover td { background: var(--vbwd-accent-soft); }
+.vbwd-page table.vbwd-table .vbwd-method-name {
+  font-weight: 700;
+  color: var(--vbwd-text);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.vbwd-page table.vbwd-table code { font-size: 0.8rem; }
+
+.vbwd-page .vbwd-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.vbwd-page .vbwd-badge--ok {
+  background: #dcfce7;
+  color: #166534;
+}
+.vbwd-page .vbwd-badge--planned {
+  background: #fef3c7;
+  color: #92400e;
+}
+.vbwd-page .vbwd-badge--region {
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+}
+
+/* ── Stat row ────────────────────────────────────────────────────── */
+.vbwd-page .vbwd-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.vbwd-page .vbwd-stat {
+  text-align: center;
+  padding: 1.25rem 1rem;
+  background: var(--vbwd-surface);
+  border: 1px solid var(--vbwd-border);
+  border-radius: var(--vbwd-radius);
+  box-shadow: var(--vbwd-shadow-sm);
+}
+.vbwd-page .vbwd-stat__number {
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--vbwd-accent-dark);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.vbwd-page .vbwd-stat__label {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--vbwd-text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Callout / CTA ──────────────────────────────────────────────── */
+.vbwd-page .vbwd-callout {
+  background: var(--vbwd-accent-soft);
+  border-left: 4px solid var(--vbwd-accent);
+  border-radius: var(--vbwd-radius);
+  padding: 1.1rem 1.35rem;
+  margin: 1.5rem 0 0;
+  color: var(--vbwd-text);
+}
+.vbwd-page .vbwd-callout p { margin: 0; }
+.vbwd-page .vbwd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.35rem;
+  background: var(--vbwd-accent);
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: var(--vbwd-shadow-md);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.vbwd-page .vbwd-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .vbwd-page { font-size: 16px; }
+  .vbwd-page .vbwd-hero { margin: 0 0.5rem 2rem; padding: 2.75rem 1rem; }
+  .vbwd-page .vbwd-container { padding: 0 1.1rem; }
+  .vbwd-page ul.vbwd-list { grid-template-columns: 1fr; }
+}</style>
+<article class="vbwd-page vbwd-page--payments">
+          <header class="vbwd-hero">
+  <span class="vbwd-hero__eyebrow">Payment Modules</span>
+  <h1>🧭 VBWD GHRM</h1>
+  <p class="vbwd-hero__lead">Turn any GitHub repository into a paid, supported product.</p>
+  <div class="vbwd-hero__badge-row"><span class="vbwd-hero__badge">cms</span><span class="vbwd-hero__badge">ghrm</span><span class="vbwd-hero__badge">chat</span><span class="vbwd-hero__badge">theme-switcher</span><span class="vbwd-hero__badge">token-bundles</span><span class="vbwd-hero__badge">stripe</span></div>
+</header>
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">Overview</span>
+              <h2>Every rail is a plugin</h2>
+              <p>
+                Enable several at once; the user picks their preferred method
+                at checkout. No code change, no server restart — just toggle
+                the plugin in the admin panel.
+              </p>
+              <div class="vbwd-stats">
+                <div class="vbwd-stat">
+                  <span class="vbwd-stat__number">3</span>
+                  <span class="vbwd-stat__label">Rails live today</span>
+                </div>
+                <div class="vbwd-stat">
+                  <span class="vbwd-stat__number">20</span>
+                  <span class="vbwd-stat__label">On the roadmap</span>
+                </div>
+                <div class="vbwd-stat">
+                  <span class="vbwd-stat__number">23</span>
+                  <span class="vbwd-stat__label">Total catalogue</span>
+                </div>
+                <div class="vbwd-stat">
+                  <span class="vbwd-stat__number">6</span>
+                  <span class="vbwd-stat__label">Continents covered</span>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Ready today</span>
+              <h2>Implemented (3)</h2>
+              <div class="vbwd-table-wrap"><table class="vbwd-table"><thead><tr><th>Method</th><th>Region</th><th>What it adds</th><th>Status</th></tr></thead><tbody><tr><td><span class="vbwd-method-name">Stripe</span><code>stripe</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>Cards, Apple/Google Pay, SCA-compliant checkout, webhooks, plan sync.</td><td><span class="vbwd-badge vbwd-badge--ok">Implemented</span></td></tr><tr><td><span class="vbwd-method-name">PayPal</span><code>paypal</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>Orders API, capture flow, webhooks — trusted buyer-protection brand.</td><td><span class="vbwd-badge vbwd-badge--ok">Implemented</span></td></tr><tr><td><span class="vbwd-method-name">YooKassa</span><code>yookassa</code></td><td><span class="vbwd-badge vbwd-badge--region">ru</span></td><td>Russian-market payments (Yandex). Bank cards, SberPay, SBP QR.</td><td><span class="vbwd-badge vbwd-badge--ok">Implemented</span></td></tr></tbody></table></div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Roadmap</span>
+              <h2>Planned (20)</h2>
+              <div class="vbwd-table-wrap"><table class="vbwd-table"><thead><tr><th>Method</th><th>Region</th><th>What it adds</th><th>Status</th></tr></thead><tbody><tr><td><span class="vbwd-method-name">Adyen</span><code>adyen</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>Unified enterprise gateway — cards, local methods, tokenisation.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Braintree</span><code>braintree</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>PayPal-owned gateway, vault support, Venmo in the US.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Square</span><code>square</code></td><td><span class="vbwd-badge vbwd-badge--region">us/ca/uk/au</span></td><td>In-person + online, strong for retail and food-service verticals.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Razorpay</span><code>razorpay</code></td><td><span class="vbwd-badge vbwd-badge--region">in</span></td><td>Indian-market gateway — UPI, Netbanking, EMI, RuPay.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Mollie</span><code>mollie</code></td><td><span class="vbwd-badge vbwd-badge--region">eu</span></td><td>European gateway — iDEAL, Bancontact, SEPA, SOFORT, credit cards.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Klarna</span><code>klarna</code></td><td><span class="vbwd-badge vbwd-badge--region">eu/us</span></td><td>Buy-now-pay-later instalments and pay-in-30 plans.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Paddle</span><code>paddle</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>Merchant-of-record handling EU/UK VAT and US sales tax automatically.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Authorize.Net</span><code>authorizenet</code></td><td><span class="vbwd-badge vbwd-badge--region">us/ca</span></td><td>Long-standing US gateway, Visa-owned, strong for B2B card-not-present.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">2Checkout (Verifone)</span><code>twocheckout</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>Global checkout with 200+ payment methods and 45 currencies.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Wise Business</span><code>wise</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>International payouts at mid-market rates, multi-currency accounts.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Revolut Business</span><code>revolut</code></td><td><span class="vbwd-badge vbwd-badge--region">eu/uk</span></td><td>EU/UK business accounts, card acquiring, crypto on-ramp.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Coinbase Commerce</span><code>coinbase</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>Accept BTC, ETH, USDC — non-custodial with instant settlement.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">BitPay</span><code>bitpay</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>Crypto invoicing with auto-conversion to fiat for accounting.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Apple Pay (direct)</span><code>apple-pay</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>Merchant-of-record Apple Pay without a gateway intermediary.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Google Pay (direct)</span><code>google-pay</code></td><td><span class="vbwd-badge vbwd-badge--region">global</span></td><td>Direct Google Pay tokenisation; pairs with any processor.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Alipay</span><code>alipay</code></td><td><span class="vbwd-badge vbwd-badge--region">cn/apac</span></td><td>China's leading wallet — QR and web checkout.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">WeChat Pay</span><code>wechat-pay</code></td><td><span class="vbwd-badge vbwd-badge--region">cn/apac</span></td><td>Tencent's dominant mobile wallet for the Chinese market.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">SEPA Direct Debit</span><code>sepa</code></td><td><span class="vbwd-badge vbwd-badge--region">eu</span></td><td>Low-cost recurring euro pulls under the SEPA mandate scheme.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">iDEAL</span><code>ideal</code></td><td><span class="vbwd-badge vbwd-badge--region">nl</span></td><td>Dutch bank-transfer standard — near-zero fees, instant confirmation.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr><tr><td><span class="vbwd-method-name">Sofort / Bancontact</span><code>sofort</code></td><td><span class="vbwd-badge vbwd-badge--region">de/at/be</span></td><td>DACH and Belgian online-banking rails, popular for one-off purchases.</td><td><span class="vbwd-badge vbwd-badge--planned">Planned</span></td></tr></tbody></table></div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Architecture</span>
+              <h2>How a payment plugin is structured</h2>
+              <p>
+                Each provider lives under <code>plugins/&lt;provider&gt;/</code>
+                with its own config schema, models, service layer, routes and
+                tests. They all register against the same
+                <code>IPaymentAdapter</code> interface — switch providers and
+                nothing else in the codebase needs to move.
+              </p>
+              <div class="vbwd-callout">
+                <p>
+                  Need a rail we don't cover yet? Payment plugins are standalone
+                  repos; build your own using <code>plugins/stripe/</code> as a
+                  reference or
+                  <a href="mailto:partners@vbwd.io" class="vbwd-btn">commission us →</a>
+                </p>
+              </div>
+            </section>
+
+          </div>
+        </article>
+<hr>
+</body></html>
