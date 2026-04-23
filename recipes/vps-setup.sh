@@ -198,8 +198,24 @@ services:
     container_name: vbwd-${INSTANCE_NAME}-api
     restart: unless-stopped
     env_file: .env
+    environment:
+      # Server-side plugin manifest management — see
+      # vbwd-sdk-2/docs/architecture/plugin-management.md.
+      - VBWD_VAR_DIR=/app/var
+      - VBWD_BACKEND_PLUGINS_JSON=/app/var/plugins/backend-plugins.json
+      - VBWD_BACKEND_PLUGINS_CONFIG_JSON=/app/var/plugins/backend-plugins-config.json
+      - VBWD_FE_ADMIN_PLUGINS_JSON=/app/var/plugins/fe-admin-plugins.json
+      - VBWD_FE_ADMIN_PLUGINS_CONFIG_JSON=/app/var/plugins/fe-admin-plugins-config.json
+      - VBWD_FE_USER_PLUGINS_JSON=/app/var/plugins/fe-user-plugins.json
+      - VBWD_FE_USER_PLUGINS_CONFIG_JSON=/app/var/plugins/fe-user-plugins-config.json
     volumes:
-      - ./plugins.json:/app/plugins/plugins.json:ro
+      # Backend's own manifest still at /app/plugins (legacy code imports
+      # it from there). Same file, two mount points for compatibility.
+      - ./var/plugins/backend-plugins.json:/app/plugins/plugins.json
+      - ./var/plugins/backend-plugins-config.json:/app/plugins/config.json
+      # Canonical plugin-state dir — all 6 manifests live here. Shared
+      # with fe-admin / fe-user below.
+      - ./var:/app/var
       - uploads:/app/uploads
       - logs:/app/logs
     networks:
@@ -218,6 +234,10 @@ services:
     restart: unless-stopped
     environment:
       - API_UPSTREAM=api:5000
+    volumes:
+      # Read-only bind to the same files the backend writes.
+      - ./var/plugins/fe-user-plugins.json:/usr/share/nginx/html/plugins.json:ro
+      - ./var/plugins/fe-user-plugins-config.json:/usr/share/nginx/html/config.json:ro
     ports:
       - "127.0.0.1:${INSTANCE_FE_USER_PORT}:80"
     depends_on:
@@ -232,6 +252,10 @@ services:
     restart: unless-stopped
     environment:
       - API_UPSTREAM=api:5000
+    volumes:
+      # Read-only bind to the same files the backend writes.
+      - ./var/plugins/fe-admin-plugins.json:/usr/share/nginx/html/plugins.json:ro
+      - ./var/plugins/fe-admin-plugins-config.json:/usr/share/nginx/html/config.json:ro
     ports:
       - "127.0.0.1:${INSTANCE_FE_ADMIN_PORT}:80"
     depends_on:
@@ -260,12 +284,18 @@ DATABASE_URL=postgresql://vbwd:${PG_PASSWORD}@postgres:5432/vbwd_${INSTANCE_NAME
 REDIS_URL=redis://redis:6379/${INSTANCE_REDIS_DB}
 GUNICORN_WORKERS=2
 LOG_LEVEL=warning
+VAR_DIR=${instance_dir}/var
 ENVINSTEOF
 
   chmod 600 "${instance_dir}/.env"
 
-  # ── plugins.json ──
-  # Convert comma-separated plugin list to JSON
+  # ── var/plugins/ (canonical manifest dir) ──
+  # Seed the 6 manifest files. The backend rewrites them in place when
+  # the admin toggles plugins via the UI; the frontends read them via
+  # the read-only mounts above.
+  mkdir -p "${instance_dir}/var/plugins"
+
+  # Convert comma-separated plugin list to the fe-admin manifest.
   plugins_json='{"plugins":{'
   first=true
   IFS=',' read -ra plugin_list <<< "${INSTANCE_PLUGINS}"
@@ -278,9 +308,23 @@ ENVINSTEOF
     plugins_json+="\"${plugin}\":{\"enabled\":true,\"version\":\"1.0.0\",\"source\":\"local\"}"
   done
   plugins_json+='}}'
-  echo "$plugins_json" | python3 -m json.tool > "${instance_dir}/plugins.json"
 
-  log "  docker-compose.yml + .env + plugins.json written"
+  # Only seed files that don't exist — later deploys must not clobber
+  # admin-edited state that already lives in the runtime directory.
+  for fname in backend-plugins.json fe-admin-plugins.json fe-user-plugins.json; do
+    target="${instance_dir}/var/plugins/${fname}"
+    if [ ! -f "$target" ]; then
+      echo "$plugins_json" | python3 -m json.tool > "$target"
+    fi
+  done
+  for fname in backend-plugins-config.json fe-admin-plugins-config.json fe-user-plugins-config.json; do
+    target="${instance_dir}/var/plugins/${fname}"
+    if [ ! -f "$target" ]; then
+      echo '{}' > "$target"
+    fi
+  done
+
+  log "  docker-compose.yml + .env + var/plugins/*.json written"
 done
 
 # ============================================================================

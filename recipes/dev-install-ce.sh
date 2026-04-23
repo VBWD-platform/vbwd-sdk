@@ -218,6 +218,40 @@ if [ ! -f "$BACKEND_DIR/plugins/plugins.json" ]; then
     echo "✓ plugins.json created from plugins.json.dist"
 fi
 
+# Seed ${VAR_DIR}/plugins/ — the canonical, server-side plugin manifest
+# directory shared across api / fe-admin / fe-user (see
+# docs/architecture/plugin-management.md). All six files MUST exist
+# before the backend container starts; the backend refuses to manage a
+# frontend app whose env-var-configured manifest is missing.
+VAR_DIR="${VBWD_VAR_DIR:-$WORKSPACE_DIR/var}"
+mkdir -p "$VAR_DIR/plugins"
+echo ""
+echo "Seeding $VAR_DIR/plugins/ (idempotent — admin edits via UI are preserved)"
+
+seed_manifest() {
+    src="$1"
+    dst="$VAR_DIR/plugins/$2"
+    if [ -f "$dst" ]; then
+        echo "  skip  $(basename "$dst") — already exists"
+    elif [ -f "$src" ]; then
+        cp "$src" "$dst"
+        echo "  seed  $(basename "$dst") ← $src"
+    else
+        echo "  WARN  $src not found; $(basename "$dst") not seeded"
+    fi
+}
+
+seed_manifest "$BACKEND_DIR/plugins/plugins.json"           backend-plugins.json
+seed_manifest "$BACKEND_DIR/plugins/config.json"            backend-plugins-config.json
+seed_manifest "$FE_ADMIN_DIR/plugins/plugins.json"          fe-admin-plugins.json
+seed_manifest "$FE_ADMIN_DIR/plugins/config.json"           fe-admin-plugins-config.json
+seed_manifest "$FE_USER_DIR/plugins/plugins.json"           fe-user-plugins.json
+seed_manifest "$FE_USER_DIR/plugins/config.json"            fe-user-plugins-config.json
+
+echo "✓ Plugin manifests seeded into $VAR_DIR/plugins/"
+echo "  Export VBWD_VAR_DIR before 'docker compose up' if you want to"
+echo "  keep this directory somewhere other than $WORKSPACE_DIR/var"
+
 # Clone and setup frontend repositories (3 independent repos with submodules)
 echo ""
 echo "=========================================="
