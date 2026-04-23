@@ -138,6 +138,24 @@ Routes → Services → Repositories → Models
 - SDK adapter pattern for payment providers
 - Plugin system for extensibility
 
+### Plugin Management (single source of truth)
+
+Plugin enable/disable state for **all three apps** (backend / fe-admin /
+fe-user) is persisted in one directory on the host: `${VAR_DIR}/plugins/`.
+All three containers bind-mount it. The backend is the only writer via
+`POST /api/v1/admin/frontend-plugins/<app>/<plugin>/{enable,disable}`;
+the frontends mount the files read-only. No localStorage, no per-browser
+drift. See `docs/architecture/plugin-management.md` for the full design.
+
+**Env vars the backend reads** (set in each compose file):
+```
+VBWD_VAR_DIR=/app/var
+VBWD_BACKEND_PLUGINS_JSON=/app/var/plugins/backend-plugins.json
+VBWD_FE_ADMIN_PLUGINS_JSON=/app/var/plugins/fe-admin-plugins.json
+VBWD_FE_USER_PLUGINS_JSON=/app/var/plugins/fe-user-plugins.json
+# ...plus the three *-config.json counterparts
+```
+
 ### Plugin System (Backend)
 
 Located in `vbwd-backend/src/plugins/`:
