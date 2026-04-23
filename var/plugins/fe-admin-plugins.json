@@ -1,0 +1,58 @@
+{
+  "plugins": {
+    "analytics-widget": {
+      "enabled": true,
+      "version": "1.0.0",
+      "installedAt": "2026-02-10T00:00:00.000Z",
+      "source": "local"
+    },
+    "taro-admin": {
+      "enabled": true,
+      "version": "1.0.0",
+      "installedAt": "2026-02-16T10:00:00.000Z",
+      "source": "local"
+    },
+    "cms-admin": {
+      "enabled": true,
+      "version": "1.0.0",
+      "installedAt": "2026-03-02T00:00:00.000Z",
+      "source": "local"
+    },
+    "ghrm-admin": {
+      "enabled": true,
+      "version": "1.0.0",
+      "installedAt": "2026-03-11T10:00:00.000Z",
+      "source": "local"
+    },
+    "email-admin": {
+      "enabled": true,
+      "version": "1.0.0",
+      "installedAt": "2026-03-14T10:00:00.000Z",
+      "source": "local"
+    },
+    "booking": {
+      "enabled": true,
+      "version": "0.1.0",
+      "installedAt": "2026-03-19T00:00:00.000Z",
+      "source": "local"
+    },
+    "subscription-admin": {
+      "enabled": true,
+      "version": "1.0.0",
+      "installedAt": "2026-03-27T00:00:00.000Z",
+      "source": "local"
+    },
+    "shop-admin": {
+      "enabled": true,
+      "version": "0.1.0",
+      "installedAt": "2026-03-29T00:00:00.000Z",
+      "source": "local"
+    },
+    "discount-admin": {
+      "enabled": true,
+      "version": "0.1.0",
+      "installedAt": "",
+      "source": "local"
+    }
+  }
+}
