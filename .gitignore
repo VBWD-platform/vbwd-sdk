@@ -36,3 +36,10 @@ dist/
 Thumbs.db
 /vbwd-frontend/user/test-results/
 /vbwd-frontend/admin/vue/test-results/
+
+# Runtime plugin config — may contain API keys / secrets. Per-deployment.
+# The three plugin-*.json manifest files (which plugins are enabled) are
+# safe to commit — those are seeded from the canonical defaults by the
+# install recipes. The *-config.json files are runtime per-environment
+# state populated from each app's plugins/config.json (already gitignored).
+var/plugins/*-config.json
