@@ -43,3 +43,4 @@ Thumbs.db
 # install recipes. The *-config.json files are runtime per-environment
 # state populated from each app's plugins/config.json (already gitignored).
 var/plugins/*-config.json
+vbwd-demo-instances
