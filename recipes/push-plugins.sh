@@ -62,7 +62,7 @@ fi
 # Note: multi-word directory slugs use underscores; GitHub repo slugs use
 # dashes (e.g., mercado_pago → vbwd-plugin-mercado-pago).
 echo "=== Backend plugins ==="
-for plugin in analytics chat cms email ghrm mailchimp paypal stripe taro yookassa \
+for plugin in analytics chat checkout cms email ghrm mailchimp paypal stripe taro yookassa \
               c2p2 truemoney conekta promptpay meinchat; do
   push_plugin "$BACKEND/plugins/$plugin" "VBWD-platform/vbwd-plugin-$plugin"
 done

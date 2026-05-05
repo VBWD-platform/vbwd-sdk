@@ -53,6 +53,12 @@
       "version": "0.1.0",
       "installedAt": "",
       "source": "local"
+    },
+    "meinchat-admin": {
+      "enabled": true,
+      "version": "1.0.0",
+      "installedAt": "2026-05-05T11:30:00.000Z",
+      "source": "local"
     }
   }
 }
