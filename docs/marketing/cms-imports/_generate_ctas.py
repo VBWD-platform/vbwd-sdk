@@ -28,7 +28,7 @@ OUTPUT_ROOT = Path(__file__).parent
 # ── Vertical configs (mirrored from _generate.py) ────────────────────────────
 
 VERTICALS = {
-    "main": {
+    "core": {
         "title": "VBWD",
         "emoji": "⚡",
         "accent": "#2563eb", "accent_soft": "#dbeafe", "accent_dark": "#1d4ed8",
@@ -40,8 +40,8 @@ VERTICALS = {
         "demo_path":     "/demo",
         "partner_label": "digital agency",
     },
-    "shop": {
-        "title": "VBWD Shop",
+    "softwarestore": {
+        "title": "VBWD Software Store",
         "emoji": "\U0001f6cd",
         "accent": "#7c3aed", "accent_soft": "#ede9fe", "accent_dark": "#5b21b6",
         "gradient": "linear-gradient(135deg, #7c3aed 0%, #db2777 100%)",

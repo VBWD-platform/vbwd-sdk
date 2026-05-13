@@ -81,7 +81,7 @@ PAYMENT_METHODS_PLANNED = [
 # pages feel distinct at a glance in an exhibition setting.
 
 VERTICALS = {
-    "main": {
+    "core": {
         "title": "VBWD",
         "tagline": "The open-source SaaS billing platform, on your own server.",
         "hero": "The open-source SaaS billing platform, run on your own server.",
@@ -94,6 +94,7 @@ VERTICALS = {
         "plugins_enabled": [
             ("landing1", "Embeddable marketing landing with pricing widget."),
             ("cms", "Pages, categories, image uploads, slug routing."),
+            ("mainchat", "Front-of-house public chat — visitor FAQ, KB-aware, anonymous→identified handoff."),
             ("chat", "LLM chat with token metering (OpenAI-compatible)."),
             ("theme-switcher", "Five CSS-var presets with zero regressions when off."),
             ("analytics", "Active sessions, revenue snapshots, domain-event log."),
@@ -115,8 +116,8 @@ VERTICALS = {
             ("Zapier / n8n via webhooks", "Outbound webhooks on every subscription lifecycle event."),
         ],
     },
-    "shop": {
-        "title": "VBWD Shop",
+    "softwarestore": {
+        "title": "VBWD Software Store",
         "tagline": "Self-hosted subscription commerce and a digital-goods storefront.",
         "hero": "A self-hosted subscription commerce and digital-goods storefront.",
         "audience": "digital creators, subscription box operators, niche marketplaces",
@@ -161,6 +162,7 @@ VERTICALS = {
         "emoji": "\U0001f3e8",  # hotel
         "plugins_enabled": [
             ("cms", "Rooms, amenities, house rules, blog, landing."),
+            ("mainchat", "Pre-arrival guest chat — multilingual, KB-aware, hand-off to reception."),
             ("theme-switcher", "On-brand light/dark across the guest portal."),
             ("stripe", "Card payments and holds."),
             ("paypal", "International guest preference."),
@@ -195,6 +197,7 @@ VERTICALS = {
         "emoji": "\u2695\ufe0f",  # medical symbol
         "plugins_enabled": [
             ("cms", "Services, staff bios, consent forms, blog."),
+            ("mainchat", "Patient-facing chat — site-aware, triage + KB, never clinical advice."),
             ("theme-switcher", "Clinic-branded patient portal."),
             ("stripe", "Card payments for consultations and products."),
             ("mollie", "Local EU rails — iDEAL, Bancontact, SEPA."),

@@ -9,11 +9,11 @@ the page acts as a worked example of that vertical.
 
 | Instance | Audience | Plugin constellation (flavour) |
 |----------|----------|--------------------------------|
-| `main`   | Indie devs, agencies, platform teams | cms, chat, landing1, theme-switcher, analytics, stripe, paypal, yookassa |
-| `shop`   | Digital creators, subscription boxes, niche marketplaces | cms, theme-switcher, stripe, paypal, mollie, token-bundles, analytics |
-| `hotel`  | Boutique hotels, B&Bs, hostels, vacation rentals | cms, theme-switcher, stripe, paypal, mollie, analytics (+ planned booking, calendar-sync, klarna, sepa) |
-| `doctor` | Private doctors, dentists, therapists, small clinics | cms, theme-switcher, stripe, mollie, analytics (+ planned booking, calendar-sync, sepa, paddle, consent-forms) |
-| `ghrm`   | OSS maintainers, small dev teams monetising repos | cms, ghrm, chat, theme-switcher, token-bundles, stripe, paypal, analytics |
+| `core`          | Indie devs, agencies, platform teams | cms, mainchat, chat, landing1, theme-switcher, analytics, stripe, paypal, yookassa |
+| `softwarestore` | Digital creators, subscription boxes, niche marketplaces | cms, theme-switcher, stripe, paypal, mollie, token-bundles, analytics |
+| `hotel`         | Boutique hotels, B&Bs, hostels, vacation rentals | cms, mainchat, theme-switcher, stripe, paypal, mollie, analytics (+ planned booking, calendar-sync, klarna, sepa) |
+| `doctor`        | Private doctors, dentists, therapists, small clinics | cms, mainchat, theme-switcher, stripe, mollie, analytics (+ planned booking, calendar-sync, sepa, paddle, consent-forms) |
+| `ghrm`          | OSS maintainers, small dev teams monetising repos | cms, ghrm, chat, theme-switcher, token-bundles, stripe, paypal, analytics |
 
 ## Pages delivered per vertical
 
@@ -54,8 +54,8 @@ raw JSON body. Log in as an admin (`admin@example.com` / `AdminPass123@` on
 dev), then:
 
 ```bash
-# Import into the `main` instance
-bash docs/marketing/cms-imports/bin/import.sh main https://vbwd.io admin@example.com 'AdminPass123@'
+# Import into the `core` instance
+bash docs/marketing/cms-imports/bin/import.sh core https://vbwd.io admin@example.com 'AdminPass123@'
 
 # Import into a specific vertical on localhost
 bash docs/marketing/cms-imports/bin/import.sh hotel http://localhost:5000 admin@example.com 'AdminPass123@'
@@ -73,11 +73,11 @@ colour and gradient so instances feel distinct at a glance:
 
 | Instance | Accent | Gradient |
 |----------|--------|----------|
-| `main`   | Blue `#2563eb` | blue → violet |
-| `shop`   | Violet `#7c3aed` | violet → pink |
-| `hotel`  | Teal `#0d9488` | teal → sky |
-| `doctor` | Emerald `#059669` | emerald → cyan |
-| `ghrm`   | Orange `#ea580c` | orange → red |
+| `core`          | Blue `#2563eb` | blue → violet |
+| `softwarestore` | Violet `#7c3aed` | violet → pink |
+| `hotel`         | Teal `#0d9488` | teal → sky |
+| `doctor`        | Emerald `#059669` | emerald → cyan |
+| `ghrm`          | Orange `#ea580c` | orange → red |
 
 `use_theme_switcher_styles` is set to `false` so the per-page CSS always
 wins — you get the designed look with or without the theme plugin.
@@ -88,7 +88,7 @@ Each vertical gets a `preview.html` that renders all four pages stacked on
 a single page. Open any of them directly in a browser:
 
 ```bash
-open docs/marketing/cms-imports/main/preview.html
+open docs/marketing/cms-imports/core/preview.html
 ```
 
 These previews are throwaway — regenerate them with the snippet below

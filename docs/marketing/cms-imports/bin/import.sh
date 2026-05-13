@@ -5,7 +5,7 @@
 #   ./import.sh <vertical> <base-url> <admin-email> <admin-password>
 #
 # Example:
-#   ./import.sh main http://localhost:5000 admin@example.com 'AdminPass123@'
+#   ./import.sh core http://localhost:5000 admin@example.com 'AdminPass123@'
 #
 # Requires: curl, jq
 
@@ -13,7 +13,7 @@ set -euo pipefail
 
 if [ "$#" -ne 4 ]; then
   echo "Usage: $0 <vertical> <base-url> <admin-email> <admin-password>" >&2
-  echo "Verticals: main | shop | hotel | doctor | ghrm" >&2
+  echo "Verticals: core | softwarestore | hotel | doctor | ghrm" >&2
   exit 2
 fi
 
