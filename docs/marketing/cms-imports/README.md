@@ -105,3 +105,56 @@ python3 docs/marketing/cms-imports/_generate.py
 
 Every `pages.json` is overwritten. No external dependencies — standard
 library only.
+
+## `core` (vbwd.cc) — the platform's own site
+
+`core` is special: it is not a flavoured vertical demo, it is the VBWD
+platform itself. It therefore ships an extended, deck-sourced information
+architecture (content mirrors `pitchmacher-vbwd/dist/deck/core/`) and the
+generic `light-clean-narrow` neutral palette instead of a per-vertical
+accent. Concretely:
+
+- Page set (in `PAGE_SETS["core"]` in `_generate.py`): `about`,
+  `architecture`, `event-architecture`, `features`, `plugins`,
+  `integrations`, `billing`, `devops`, `open-source` — **no standalone
+  `payment-modules`** (the 23-rail catalogue is folded into `billing`).
+- `_generate_ctas.py` emits **only `cta-partner`** for `core` (no
+  `cta-contact` / `cta-buy`).
+- `core/home.json` is a standalone landing record (deck cover + the
+  four "for whom" use-cases). It is **not** emitted by `_generate.py`;
+  regenerate it with the snippet in that file's header if the core CSS
+  changes (it reuses `gen.build_css(VERTICALS["core"])` so it stays in
+  lockstep). It is imported by the same `pages/import` endpoint.
+- Every other vertical's `pages.json` stays byte-for-byte identical —
+  the new builders are wired only into `core`.
+
+Regenerate the full core set:
+
+```bash
+python3 docs/marketing/cms-imports/_generate.py
+python3 docs/marketing/cms-imports/_generate_ctas.py
+python3 docs/marketing/cms-imports/_generate_previews.py   # eyeball
+bash docs/marketing/cms-imports/bin/import.sh core https://vbwd.cc admin@example.com 'PW'
+```
+
+## Menus (header-nav / footer-nav)
+
+Menus are **not** part of the pages-import pipeline. A menu lives on a
+`cms_widget` of `type=menu` (slugs `header-nav` / `footer-nav`), not on a
+page, so `import.sh` does not touch it. `<vertical>/menu.json` holds the
+two menus as **flat arrays** (the `replace_tree` endpoint does NOT recurse
+a `children` key — it would be silently dropped). Each item has a
+placeholder string `id`, optional `url` / `page_slug` / `target` /
+`sort_order`, and sub-items set `parent_id` to their parent's placeholder
+`id`. `replace_tree` remaps placeholders to real UUIDs. Apply them with
+the sibling helper, which resolves
+the widget IDs by slug and PUTs each tree to
+`/api/v1/admin/cms/widgets/<id>/menu` (replace-tree — idempotent):
+
+```bash
+bash docs/marketing/cms-imports/bin/import-menu.sh core https://vbwd.cc admin@example.com 'PW'
+```
+
+The `header-nav` / `footer-nav` widgets must already exist on the
+instance (created by the CMS populate step). If a slug is missing the
+script skips it with a warning rather than failing the run.

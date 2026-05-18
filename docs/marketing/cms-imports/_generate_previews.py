@@ -25,6 +25,13 @@ def render_preview(vertical: str) -> str | None:
         return None
     pages = json.loads(pages_file.read_text())
 
+    # home.json is a standalone landing record (not in pages.json). Prepend it
+    # so the preview shows the full site, landing first.
+    home_file = OUTPUT_ROOT / vertical / "home.json"
+    if home_file.exists():
+        home = json.loads(home_file.read_text())
+        pages = (home if isinstance(home, list) else [home]) + pages
+
     # Emit a single preview.html with all pages stacked. Each page brings its
     # own scoped CSS; we include it once per page (cheap, since browsers
     # de-dupe identical text content easily).

@@ -32,8 +32,8 @@ VERTICALS = {
         "title": "VBWD",
         "emoji": "⚡",
         "accent": "#2563eb", "accent_soft": "#dbeafe", "accent_dark": "#1d4ed8",
-        "gradient": "linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)",
-        "audience": "indie developers, agencies and platform teams",
+        "gradient": "linear-gradient(135deg, #1d4ed8 0%, #5b21b6 100%)",
+        "audience": "software engineers, SaaS builders and digital agencies",
         "contact_lead":  "Where the conversation starts. Bring your stack, your billing question, your timeline.",
         "buy_lead":      "Self-hosted, annual licence, no usage limits, no per-transaction fees.",
         "partner_lead":  "If you build digital products for clients, VBWD is a product you can resell.",
@@ -151,6 +151,9 @@ box-shadow:0 4px 6px -1px rgba(15,23,42,.08)}\
 .vbwd-page .vbwd-btn:hover{filter:brightness(1.08);text-decoration:none}\
 .vbwd-page .vbwd-btn--ghost{background:transparent;color:var(--vbwd-accent-dark);\
 border:1.5px solid var(--vbwd-accent)}\
+.cms-layout .cms-widget--header-nav,.cms-layout .cms-widget--footer-nav,\
+.cms-layout .cms-area--vue .cms-breadcrumb{max-width:1100px;margin-left:auto;margin-right:auto}\
+.cms-layout .cms-area--vue .cms-breadcrumb{padding-left:16px}\
 @media(max-width:640px){.vbwd-page{font-size:16px}\
 .vbwd-page .vbwd-hero{margin:0 .5rem 2rem;padding:2.75rem 1rem}\
 .vbwd-page .vbwd-container{padding:0 1.1rem}}
@@ -398,9 +401,16 @@ def append_ctas(vertical_key, cfg):
     cta_slugs = {"cta-contact", "cta-buy", "cta-partner"}
     existing = [p for p in existing if p.get("slug") not in cta_slugs]
 
-    cta_pages = [page_cta_contact(cfg), page_cta_buy(cfg), page_cta_partner(cfg)]
+    # `core` (vbwd.cc — the platform itself) only ships the partner CTA; the
+    # contact/buy funnels are handled elsewhere on the platform site. Every
+    # other vertical keeps all three CTAs unchanged.
+    if vertical_key == "core":
+        cta_pages = [page_cta_partner(cfg)]
+    else:
+        cta_pages = [page_cta_contact(cfg), page_cta_buy(cfg), page_cta_partner(cfg)]
     target.write_text(json.dumps(existing + cta_pages, indent=2, ensure_ascii=False) + "\n")
-    print(f"  + {vertical_key}/pages.json — {len(existing)} existing + 3 CTAs = {len(existing) + 3}")
+    print(f"  + {vertical_key}/pages.json — {len(existing)} existing "
+          f"+ {len(cta_pages)} CTA(s) = {len(existing) + len(cta_pages)}")
 
 
 if __name__ == "__main__":

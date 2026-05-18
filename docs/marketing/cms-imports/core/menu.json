@@ -1,0 +1,30 @@
+{
+  "_format": "Flat arrays — the /api/v1/admin/cms/widgets/<id>/menu endpoint (replace_tree) does NOT recurse into a 'children' key. Each item carries a placeholder string 'id'; sub-items reference it via 'parent_id'. replace_tree remaps placeholder ids to real UUIDs. 'sort_order' controls ordering within a level.",
+
+  "header-nav": [
+    { "id": "h-home",   "label": "Home",         "page_slug": "home",               "sort_order": 0 },
+    { "id": "h-about",  "label": "About",        "page_slug": "about",              "sort_order": 1 },
+    { "id": "h-arch",   "label": "Architecture", "url": null,                       "sort_order": 2 },
+    { "id": "h-arch-1", "label": "Overview",     "page_slug": "architecture",       "parent_id": "h-arch", "sort_order": 0 },
+    { "id": "h-arch-2", "label": "Plugins",      "page_slug": "plugins",            "parent_id": "h-arch", "sort_order": 1 },
+    { "id": "h-arch-3", "label": "Event System", "page_slug": "event-architecture", "parent_id": "h-arch", "sort_order": 2 },
+    { "id": "h-arch-4", "label": "Billing system","page_slug": "billing",           "parent_id": "h-arch", "sort_order": 3 },
+    { "id": "h-arch-5", "label": "DevOps-first", "page_slug": "devops",             "parent_id": "h-arch", "sort_order": 4 },
+    { "id": "h-arch-6", "label": "Integrations", "page_slug": "integrations",       "parent_id": "h-arch", "sort_order": 5 },
+    { "id": "h-feat",   "label": "Features",     "page_slug": "features",           "sort_order": 3 },
+    { "id": "h-oss",    "label": "Open Source",  "page_slug": "open-source",        "sort_order": 4 },
+    { "id": "h-part",   "label": "Partner",      "page_slug": "cta-partner",        "sort_order": 5 }
+  ],
+
+  "footer-nav": [
+    { "id": "f-home", "label": "Home",          "page_slug": "home",        "sort_order": 0 },
+    { "id": "f-about","label": "About",         "page_slug": "about",       "sort_order": 1 },
+    { "id": "f-arch", "label": "Architecture",  "page_slug": "architecture","sort_order": 2 },
+    { "id": "f-plug", "label": "Plugins",       "page_slug": "plugins",     "sort_order": 3 },
+    { "id": "f-bill", "label": "Billing system","page_slug": "billing",     "sort_order": 4 },
+    { "id": "f-oss",  "label": "Open Source",   "page_slug": "open-source", "sort_order": 5 },
+    { "id": "f-part", "label": "Partner",       "page_slug": "cta-partner", "sort_order": 6 },
+    { "id": "f-gh",   "label": "GitHub",        "url": "https://github.com/VBWD-platform/vbwd-sdk", "target": "_blank", "sort_order": 7 },
+    { "id": "f-bsl",  "label": "BSL 1.1 · self-host free", "url": "https://github.com/VBWD-platform/vbwd-sdk/blob/main/LICENSE", "target": "_blank", "sort_order": 8 }
+  ]
+}

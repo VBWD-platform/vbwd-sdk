@@ -83,13 +83,22 @@ PAYMENT_METHODS_PLANNED = [
 VERTICALS = {
     "core": {
         "title": "VBWD",
-        "tagline": "The open-source SaaS billing platform, on your own server.",
-        "hero": "The open-source SaaS billing platform, run on your own server.",
-        "audience": "indie developers, agencies and internal platform teams",
-        "accent": "#2563eb",        # blue-600
-        "accent_soft": "#dbeafe",   # blue-100
-        "accent_dark": "#1d4ed8",   # blue-700
-        "gradient": "linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)",
+        "tagline": "A sales platform for the digital world \u2014 SaaS subscriptions, "
+                   "CMS, shop, booking and a token economy on one self-hosted "
+                   "backend, two Vue front-ends and one plugin contract.",
+        "hero": "One self-hosted backend, two Vue front-ends, one plugin "
+                "contract \u2014 installed once, extended forever.",
+        "audience": "software engineers, SaaS builders, digital agencies and "
+                    "smart-app teams",
+        # Palette mirrors the generic CMS theme `light-clean-narrow`
+        # (vbwd-backend/plugins/cms/docs/imports/styles/styles/
+        # light-clean-narrow.json) \u2014 neutral blue, white surfaces, 1100px
+        # narrow column. Deliberately NOT a vertical-specific accent: vbwd.cc
+        # is the platform itself, not a flavoured demo.
+        "accent": "#2563eb",        # --color-accent
+        "accent_soft": "#dbeafe",   # --color-accent-soft
+        "accent_dark": "#1d4ed8",   # --color-accent-dark
+        "gradient": "linear-gradient(135deg, #1d4ed8 0%, #5b21b6 100%)",
         "emoji": "\u26a1",  # lightning
         "plugins_enabled": [
             ("landing1", "Embeddable marketing landing with pricing widget."),
@@ -284,6 +293,9 @@ BASE_CSS_TEMPLATE = dedent("""
       line-height: 1.65;
       font-size: 17px;
       -webkit-font-smoothing: antialiased;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .vbwd-page *, .vbwd-page *::before, .vbwd-page *::after { box-sizing: border-box; }
     .vbwd-page h1, .vbwd-page h2, .vbwd-page h3, .vbwd-page h4 {
@@ -596,6 +608,37 @@ BASE_CSS_TEMPLATE = dedent("""
       filter: brightness(1.08);
       transform: translateY(-1px);
       text-decoration: none;
+    }
+
+    /* Layout chrome (header / breadcrumb / footer) cosmetics — background,
+     * borders, padding, menu gap, link weight/colour — are intentionally NOT
+     * styled here. Those areas are owned by the canonical CMS theme
+     * stylesheet (vbwd-backend/plugins/cms/docs/imports/_build_theme_styles
+     * .py). Re-styling them per-page produced a bordered grey header bar
+     * that diverged from the clean theme header used on /home2.
+     *
+     * The ONLY thing we re-assert is geometry: constrain the header/footer
+     * nav and breadcrumb to the same centred 1100px column as .vbwd-page,
+     * exactly like /home2 (whose theme applies max-width:var(--container-max)
+     * + margin:auto to the same wrappers). Exhibition pages set
+     * use_theme_switcher_styles:false so they never load that theme rule;
+     * without this the menu would sit flush against the viewport edge while
+     * the hero/content stayed centred. No colours, borders or backgrounds —
+     * the menu keeps the clean theme-default look, just aligned. */
+    .cms-layout .cms-widget--header-nav,
+    .cms-layout .cms-widget--footer-nav,
+    .cms-layout .cms-area--vue .cms-breadcrumb {
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    /* Every .cms-menu__link carries 16px of intrinsic left padding, so the
+     * header menu's first item ("Home") text sits 16px inside the 1100px
+     * column. The breadcrumb has no per-item padding, so inset it by the
+     * same 16px — its first crumb then lands on the exact same vertical
+     * justification line as the menu's first item (harmonical layout). */
+    .cms-layout .cms-area--vue .cms-breadcrumb {
+      padding-left: 16px;
     }
 
     /* ── Responsive ──────────────────────────────────────────────────── */
@@ -975,25 +1018,535 @@ def build_payment_modules(vertical_key, config):
     """).strip()
 
 
+# ── Core-only deep-dive pages ────────────────────────────────────────────────
+#
+# vbwd.cc is the platform itself, not a flavoured vertical demo, so it ships a
+# richer information architecture sourced from the pitchmacher core deck
+# (pitchmacher-vbwd/dist/deck/core/var/assets/content/en). These builders are
+# wired only into the `core` PAGE_SET below — every other vertical keeps its
+# original four pages byte-for-byte.
+
+def build_architecture(vertical_key, config):
+    hero = _hero(config, "Architecture")
+    return dedent(f"""
+        <article class="vbwd-page vbwd-page--architecture">
+          {hero}
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">Three runtimes</span>
+              <h2>Three runtimes. One contract. Plugins everywhere.</h2>
+              <p>
+                Every corner of VBWD is its own runtime with the same plugin
+                contract. A feature lights up by shipping a coordinated trio —
+                a backend plugin (API + data model), an fe-admin plugin
+                (configuration UI) and an fe-user plugin (customer surface) —
+                or any subset; they are independent.
+              </p>
+              <div class="vbwd-grid">
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title"><code>vbwd-backend</code></div>
+                  <p class="vbwd-card__desc">Python · Flask · PostgreSQL. REST API at
+                  <code>/api/v1/*</code>, SQLAlchemy 2.0, dependency-injector, event
+                  bus, Alembic. 292+ tests · Gunicorn · Redis cache.</p>
+                </div>
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title"><code>vbwd-fe-admin</code></div>
+                  <p class="vbwd-card__desc">Vue 3 · Pinia · Vite. The back-office —
+                  users, plans, subscriptions, invoices, gateways, analytics,
+                  plugin manager. Port 8081 · Playwright E2E.</p>
+                </div>
+                <div class="vbwd-card">
+                  <div class="vbwd-card__title"><code>vbwd-fe-user</code></div>
+                  <p class="vbwd-card__desc">Vue 3 · PluginRegistry · IPlatformSDK.
+                  Customer portal + public surfaces. Topological dependency
+                  resolution. Port 8080 · 23+ plugins.</p>
+                </div>
+              </div>
+              <div class="vbwd-callout">
+                <p>One source of truth for plugin state — enable/disable lives in
+                <code>${{VAR_DIR}}/plugins/</code>; the backend writes, both
+                front-ends mount it read-only. No localStorage drift.</p>
+              </div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Backend surface</span>
+              <h2>The backend ships the core, then steps aside for plugins</h2>
+              <ul class="vbwd-list">
+                <li>Flask blueprint auto-mounted at <code>/api/v1/&lt;plugin&gt;/*</code> on enable, unmounted on disable.</li>
+                <li>SQLAlchemy 2.0 models + Alembic migrations tied to the plugin lifecycle.</li>
+                <li><code>register_event_handlers(bus)</code> — subscribe to subscription, payment, checkout, security events. No polling.</li>
+                <li>Emit your own domain events; other plugins consume them without direct imports.</li>
+                <li>Line-item handlers plug into checkout totals: discounts, taxes, shipping, token deductions.</li>
+                <li>Shipping providers, categories + routing, declarative permission scopes in the RBAC matrix.</li>
+                <li>Namespaced <code>get_config</code> / <code>set_config</code>, JSON-schema-validated, secrets via env indirection only.</li>
+              </ul>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Core models</span>
+              <h2>A finite, named set of aggregates — not "anything goes"</h2>
+              <p>Every domain has a small, named set of SQLAlchemy 2.0 entities.
+              Plugins add their own; the core never grows by accretion.</p>
+              <div class="vbwd-grid">
+                <div class="vbwd-card"><div class="vbwd-card__title">Identity &amp; access</div>
+                <p class="vbwd-card__desc"><code>User</code>, <code>UserDetails</code>, <code>UserAccessLevel</code>, <code>Role</code>, <code>UserTokenBalance</code>, <code>FeatureUsage</code>.</p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Plans &amp; subscriptions</div>
+                <p class="vbwd-card__desc"><code>TarifPlan</code>, <code>TarifPlanCategory</code>, <code>Subscription</code>, <code>AddOn</code>, <code>AddOnSubscription</code>.</p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Money</div>
+                <p class="vbwd-card__desc"><code>Invoice</code>, <code>InvoiceLineItem</code>, <code>PaymentMethod</code>, <code>Tax</code>, <code>Country</code>, <code>Currency</code>.</p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Glue</div>
+                <p class="vbwd-card__desc"><code>plugin_config</code>, <code>Webhook</code> + delivery log, routing rules, categories, audit log.</p></div>
+              </div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Services &amp; DI</span>
+              <h2>A typed DI container. No globals. No accidental singletons.</h2>
+              <p>
+                <code>dependency-injector</code> wires repositories, services and
+                infrastructure (DB session, Redis, event bus, secrets). Every
+                consumer asks for what it needs through constructor injection;
+                in tests, providers are swapped for in-memory repositories, a
+                fake bus and a deterministic clock — no service knows it is
+                mocked.
+              </p>
+              <ul class="vbwd-list">
+                <li><code>AuthService</code>, <code>UserService</code>, <code>SubscriptionService</code>, <code>InvoiceService</code>, <code>RefundService</code>, <code>TokenService</code>.</li>
+                <li><code>PluginService</code>, <code>WebhookService</code>, <code>EmailService</code>, <code>EventDispatcher</code>.</li>
+                <li>One repository per aggregate; multi-aggregate writes orchestrated in services, never in ORM session magic.</li>
+              </ul>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Patterns</span>
+              <h2>SOLID as contracts, not decoration</h2>
+              <ul class="vbwd-list">
+                <li><strong>S</strong> — routes validate, services orchestrate, repositories persist, models describe.</li>
+                <li><strong>O</strong> — extend by adding plugins, never by editing core.</li>
+                <li><strong>L</strong> — every payment provider is interchangeable; checkout never branches by provider.</li>
+                <li><strong>I</strong> — the plugin SDK is segregated: emitting events needs no knowledge of line items.</li>
+                <li><strong>D</strong> — services take interfaces; the container injects SQLAlchemy in prod, in-memory in tests.</li>
+                <li>TDD-first — no tests, no merge. DRY — a bug fix happens once. Clean code — no abbreviations.</li>
+              </ul>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Security</span>
+              <h2>Defaults that don't get you breached on a Tuesday</h2>
+              <ul class="vbwd-list">
+                <li>JWT bearer + refresh, per-deploy secret, rotatable without dropping live sessions.</li>
+                <li>RBAC roles + access levels; plugins declare their own scopes.</li>
+                <li>Per-IP / per-user rate limiting; stricter caps on login + password reset.</li>
+                <li>Argon2id hashing; same response on bad-password and unknown-user — no enumeration.</li>
+                <li>HMAC-signed outbound webhooks; inbound provider webhooks verified before any state change.</li>
+                <li>Idempotency keys on order/capture/refund; full audit log; secrets never in <code>plugin_config</code>.</li>
+              </ul>
+              <div class="vbwd-callout">
+                <p>Go deeper: <a href="/event-architecture" class="vbwd-btn">Event system →</a></p>
+              </div>
+            </section>
+
+          </div>
+        </article>
+    """).strip()
+
+
+def build_event_architecture(vertical_key, config):
+    hero = _hero(config, "Event System")
+    return dedent(f"""
+        <article class="vbwd-page vbwd-page--events">
+          {hero}
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">The seam</span>
+              <h2>Plugins don't import each other. They listen.</h2>
+              <p>
+                The event bus is the platform's spinal cord. Every meaningful
+                state change emits a typed domain event; plugins subscribe to
+                what they care about. Email confirmations, analytics, Mailchimp
+                sync, dunning, GHRM access grants — none are wired into the
+                services that triggered them.
+              </p>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Catalogue</span>
+              <h2>Named events shipped</h2>
+              <div class="vbwd-grid">
+                <div class="vbwd-card"><div class="vbwd-card__title">Subscription</div>
+                <p class="vbwd-card__desc"><code>created · activated · cancelled · expired · dunning</code></p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Payment</div>
+                <p class="vbwd-card__desc"><code>authorized · captured · failed · refunded</code> · <code>refund.reversed</code></p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Checkout</div>
+                <p class="vbwd-card__desc"><code>checkout.initiated · completed</code></p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Security</div>
+                <p class="vbwd-card__desc"><code>password_reset.request · execute</code> · <code>login.failed</code></p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Plugins</div>
+                <p class="vbwd-card__desc"><code>plugin.registered · initialized · enabled · disabled</code></p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Per-plugin</div>
+                <p class="vbwd-card__desc"><code>chat.tokens.consumed</code>, <code>booking.created</code>, <code>order.fulfilled</code>, <code>lead.captured</code>.</p></div>
+              </div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Why events</span>
+              <h2>Why the bus is the extension point</h2>
+              <ul class="vbwd-list">
+                <li><strong>Decoupling</strong> — services emit; subscribers proliferate. No service grows tentacles into other plugins.</li>
+                <li><strong>Pluggable side-effects</strong> — add an audit listener, a Slack notifier, a metrics exporter without touching the emitter.</li>
+                <li><strong>Replayability</strong> — events are recorded; "what should have happened after this capture" is a query, not archaeology.</li>
+                <li><strong>Testability</strong> — assert "event X emitted with payload Y" instead of mocking N collaborators.</li>
+              </ul>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Plugin hook</span>
+              <h2>How a plugin plugs into the bus</h2>
+              <p>
+                A plugin registers handlers via
+                <code>register_event_handlers(bus)</code> and emits its own
+                events for others to consume — cross-plugin coordination with
+                zero direct imports. The same handler signature keeps working
+                when the bus moves to a durable queue.
+              </p>
+              <div class="vbwd-callout">
+                <p><strong>Async path.</strong> Synchronous today (in-process
+                dispatch); async <em>[planned]</em> via a durable queue — a
+                wiring change, not a plugin rewrite.</p>
+              </div>
+            </section>
+
+          </div>
+        </article>
+    """).strip()
+
+
+def build_plugins(vertical_key, config):
+    hero = _hero(config, "Plugins")
+    showcase = [
+        ("mainchat", "Public, pre-account chat — FAQ, support intake, lead capture, in-thread peer-to-peer token transfer. Lands in the same admin inbox as authenticated chats."),
+        ("booking", "Calendly-grade booking on your data, auth and billing. Resources + slots, inventory holds, cancel/reschedule policy, per-plan quotas."),
+        ("shop", "Digital-goods + software store on the same checkout as subscriptions. Catalog, cart, orders, RMA, license keys, signed downloadables."),
+        ("llm-chat", "Reference demo: internal token wallet metering + a provider-agnostic external-API connector (OpenAI / Anthropic / Mistral / self-hosted)."),
+        ("taro", "Reference demo for the subscription engine: tiered plans, monthly grants, plan-gated features — all configured in admin, nothing hardcoded."),
+        ("discount + checkout", "Two halves that meet at the cart: server-validated codes with stacking rules + a multi-provider, country-aware, idempotent checkout."),
+    ]
+    showcase_grid = _plugin_grid(showcase)
+    return dedent(f"""
+        <article class="vbwd-page vbwd-page--plugins">
+          {hero}
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">The contract</span>
+              <h2>A plugin is not a config flag</h2>
+              <p>
+                It is a coordinated trio of contributions. A single plugin entry
+                can register code into all three runtimes at once — each runtime
+                exposes a typed surface so plugins extend it without forks,
+                monkey-patching, or "please rebuild the core" tickets.
+              </p>
+              <div class="vbwd-grid">
+                <div class="vbwd-card"><div class="vbwd-card__title">Backend</div>
+                <p class="vbwd-card__desc">API endpoints, data models + migrations, event handlers, own domain events, line-item / shipping handlers.</p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">fe-admin</div>
+                <p class="vbwd-card__desc">Menu items, full-page views, dashboard widgets, JSON-schema settings panels, permission gates, translations.</p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">fe-user</div>
+                <p class="vbwd-card__desc"><code>addRoute</code>, <code>createStore</code>, <code>addComponent</code>, <code>addTranslations</code> — routes, Pinia stores, widgets, locales.</p></div>
+              </div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Lifecycle</span>
+              <h2>Safe by construction</h2>
+              <p>
+                <code>DISCOVERED → REGISTERED → INITIALIZED → ENABLED ↔ DISABLED</code>
+                with an <code>ERROR</code> state for safe failure. Persistent
+                across restarts via the <code>plugin_config</code> table; the
+                backend is the only writer. Toggle a plugin and every route,
+                menu item, table and webhook it owns appears or disappears
+                cleanly — no rebuild, no redeploy.
+              </p>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Showcase</span>
+              <h2>Demo plugins that prove the platform</h2>
+              <p>Each one a complete feature; each one optional; each one composable.</p>
+              {showcase_grid}
+            </section>
+
+            <section>
+              <div class="vbwd-callout">
+                <p>Every row is a real plugin — toggle it in
+                <code>/admin/settings/plugins</code>. Plugins live in their own
+                <code>vbwd-plugin-*</code> repos. <a href="/open-source" class="vbwd-btn">Browse the repos →</a></p>
+              </div>
+            </section>
+
+          </div>
+        </article>
+    """).strip()
+
+
+def build_billing(vertical_key, config):
+    hero = _hero(config, "Billing System")
+    badge_ok = '<span class="vbwd-badge vbwd-badge--ok">Implemented</span>'
+    badge_planned = '<span class="vbwd-badge vbwd-badge--planned">Planned</span>'
+    implemented_table = _payments_table(PAYMENT_METHODS_IMPLEMENTED, badge_ok)
+    planned_table = _payments_table(PAYMENT_METHODS_PLANNED, badge_planned)
+    n_impl = len(PAYMENT_METHODS_IMPLEMENTED)
+    n_plan = len(PAYMENT_METHODS_PLANNED)
+    n_total = n_impl + n_plan
+    return dedent(f"""
+        <article class="vbwd-page vbwd-page--billing">
+          {hero}
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">The substrate</span>
+              <h2>Everything around the payment, already wired up</h2>
+              <p>
+                Most teams don't need yet another payment integration — they
+                need identity, plans, invoices, taxes, retries, refunds,
+                webhooks and an admin UI already wired around it. VBWD ships
+                that surface, then gets out of your way.
+              </p>
+              <div class="vbwd-stats">
+                <div class="vbwd-stat"><span class="vbwd-stat__number">{n_impl}</span><span class="vbwd-stat__label">Rails live today</span></div>
+                <div class="vbwd-stat"><span class="vbwd-stat__number">{n_plan}</span><span class="vbwd-stat__label">On the roadmap</span></div>
+                <div class="vbwd-stat"><span class="vbwd-stat__number">{n_total}</span><span class="vbwd-stat__label">Total catalogue</span></div>
+                <div class="vbwd-stat"><span class="vbwd-stat__number">6</span><span class="vbwd-stat__label">Continents covered</span></div>
+              </div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Subscription engine</span>
+              <h2>What the engine handles for you</h2>
+              <ul class="vbwd-list">
+                <li>Plan catalogue with categories, add-ons, discounts, trials, intro pricing.</li>
+                <li>Monthly / annual / custom billing cycles + prorated upgrades and downgrades.</li>
+                <li>Dunning, retries and payment-method-failure handling.</li>
+                <li>Token-grant refresh on each renewal; per-plan daily limits.</li>
+                <li>Cancellation flow with grace period; line-item invoicing per subscription, bundle and add-on.</li>
+                <li>Multi-currency pricing, regional tax, country-availability matrix.</li>
+              </ul>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Checkout &amp; discounts</span>
+              <h2>Two halves that meet at the cart</h2>
+              <div class="vbwd-grid">
+                <div class="vbwd-card"><div class="vbwd-card__title">Discounts</div>
+                <p class="vbwd-card__desc">Percentage, fixed, free-trial, BOGO, first-purchase. Stacking whitelist/blacklist, server-validated, deterministic line-item ordering.</p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Checkout</div>
+                <p class="vbwd-card__desc">Public + authenticated, multi-provider selector, country/currency aware, address + VAT-ID validation, idempotent and retry-safe.</p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Token economy</div>
+                <p class="vbwd-card__desc">Bundles, wallet ledger, pre-call metering for any paid feature — AI, exports, downloads, bookings.</p></div>
+              </div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Ready today</span>
+              <h2>Payment rails — implemented ({n_impl})</h2>
+              {implemented_table}
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Roadmap</span>
+              <h2>Payment rails — planned ({n_plan})</h2>
+              {planned_table}
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Architecture</span>
+              <h2>Every rail is a plugin</h2>
+              <p>
+                Each provider implements the same <code>PaymentProviderPlugin</code>
+                interface — <code>create_payment_intent</code>,
+                <code>capture_payment</code>, <code>refund_payment</code>, a
+                webhook handler — plus a matching fe-user checkout component.
+                Adding a tenth provider is one plugin, not a core change.
+              </p>
+              <div class="vbwd-callout">
+                <p>Roll your own from <code>plugins/stripe/</code> — two files,
+                one enable. <a href="/cta-partner" class="vbwd-btn">Or commission us →</a></p>
+              </div>
+            </section>
+
+          </div>
+        </article>
+    """).strip()
+
+
+def build_devops(vertical_key, config):
+    hero = _hero(config, "DevOps-First")
+    return dedent(f"""
+        <article class="vbwd-page vbwd-page--devops">
+          {hero}
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">One command</span>
+              <h2>Clean clone to live in under five minutes</h2>
+              <p>
+                One image pipeline, one CI workflow, one deploy command. Adding
+                a client is a config diff, not a release. The whole stack —
+                backend + fe-admin + fe-user — boots on a laptop from a single
+                recipe.
+              </p>
+              <div class="vbwd-grid">
+                <div class="vbwd-card"><div class="vbwd-card__title"><code>./recipes/dev-install-ce.sh</code></div>
+                <p class="vbwd-card__desc">Clones all three front-end repos in the correct submodule order + backend, builds <code>vbwd-fe-core</code> first, brings the stack up.</p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title"><code>./recipes/dev-install-taro.sh</code></div>
+                <p class="vbwd-card__desc">Full CE setup plus the Taro plugin database — a worked example of bootstrapping a plugin from cold.</p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title"><code>./deploy.sh &lt;instance&gt;</code></div>
+                <p class="vbwd-card__desc">One deploy command per instance; multi-tenant routing means a new client is a config diff, not a fork.</p></div>
+              </div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Infra</span>
+              <h2>Boring, reproducible infrastructure</h2>
+              <ul class="vbwd-list">
+                <li>Docker + Docker Compose; Gunicorn behind Nginx with path-based routing (<code>/admin</code> → fe-admin, <code>/</code> → fe-user).</li>
+                <li>PostgreSQL 16 + Redis 7; Alembic migrations tied to the plugin lifecycle — applied on enable, rolled back on uninstall.</li>
+                <li>Per-instance config (env + compose) — never hand-edited prod files; local and prod compose stay separate.</li>
+                <li>Uploads + plugin state on host bind-mounts; the backend is the only writer to <code>${{VAR_DIR}}/plugins/</code>.</li>
+              </ul>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">The gate</span>
+              <h2>Tests are the merge gate</h2>
+              <p>
+                Every new model / service / route lands with unit tests in the
+                same PR. <code>make test</code> is the gate; CI re-runs on every
+                push. <strong>1,851+ passing tests</strong> across pytest,
+                Vitest and Playwright. No tests, no merge.
+              </p>
+              <div class="vbwd-callout">
+                <p>It's all on GitHub. <a href="/open-source" class="vbwd-btn">Read the code →</a></p>
+              </div>
+            </section>
+
+          </div>
+        </article>
+    """).strip()
+
+
+def build_open_source(vertical_key, config):
+    hero = _hero(config, "Open Source")
+    platform_repos = [
+        ("vbwd-sdk", "The umbrella — recipes, dev-install scripts, integration test harness. Start here."),
+        ("vbwd-backend", "Python · Flask — auth, billing, CMS, plugin host, event bus, DI container. Postgres + Redis."),
+        ("vbwd-fe-user", "Vue 3 — the user-facing SPA. Plugins inject their own routes + stores at boot."),
+        ("vbwd-fe-admin", "Vue 3 — the back-office SPA. Same plugin contract as fe-user."),
+        ("vbwd-fe-core", "Shared Vue component library both SPAs depend on. Touch once, both apps update."),
+    ]
+    plugin_repos = [
+        ("vbwd-plugin-cms", "Pages, layouts, widgets — theme switcher, page-level access, widget registry."),
+        ("vbwd-plugin-booking", "Calendars + bookable resources. Same engine, different config."),
+        ("vbwd-plugin-shop", "Storefront catalogue + inventory + checkout. Pairs with discount + shipping."),
+        ("vbwd-plugin-meinchat", "1-on-1 messaging, address book, peer-to-peer token transfer, admin moderation."),
+        ("vbwd-plugin-subscription", "Tiered plans, add-ons, prorated upgrades, dunning — the billing backbone."),
+    ]
+    return dedent(f"""
+        <article class="vbwd-page vbwd-page--open-source">
+          {hero}
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">Read the code</span>
+              <h2>All on GitHub. Fork it. Ship it.</h2>
+              <p>
+                47 public repos under <strong>VBWD-platform</strong>. BSL 1.1 —
+                self-host for free; a licence is needed only at production
+                scale. Everything below is one <code>git clone</code> away.
+              </p>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Part 1 · the platform</span>
+              <h2>The canvas every plugin paints on</h2>
+              <p>The runtime that boots before any feature loads — auth,
+              sessions, plans, invoices, events, the plugin loader.</p>
+              {_plugin_grid(platform_repos)}
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Part 2 · feature plugins</span>
+              <h2>What users pay for</h2>
+              <p>Each plugin is a trio — <code>vbwd-plugin-&lt;name&gt;</code>,
+              <code>vbwd-fe-user-plugin-&lt;name&gt;</code>,
+              <code>vbwd-fe-admin-plugin-&lt;name&gt;</code> — three repos per
+              feature, each with its own tests and CI.</p>
+              {_plugin_grid(plugin_repos)}
+            </section>
+
+            <section>
+              <div class="vbwd-callout">
+                <p>Start the whole stack on a laptop in under five minutes —
+                <a href="https://github.com/VBWD-platform/vbwd-sdk" class="vbwd-btn">github.com/VBWD-platform/vbwd-sdk →</a></p>
+              </div>
+            </section>
+
+          </div>
+        </article>
+    """).strip()
+
+
 BUILDERS = {
     "about": build_about,
     "features": build_features,
     "integrations": build_integrations,
     "payment-modules": build_payment_modules,
+    "architecture": build_architecture,
+    "event-architecture": build_event_architecture,
+    "plugins": build_plugins,
+    "billing": build_billing,
+    "devops": build_devops,
+    "open-source": build_open_source,
 }
 
 SORT_ORDER = {
     "about": 10,
+    "architecture": 15,
+    "event-architecture": 18,
     "features": 20,
+    "plugins": 25,
     "integrations": 30,
     "payment-modules": 40,
+    "billing": 40,
+    "devops": 45,
+    "open-source": 50,
 }
 
 NAMES = {
     "about": "About",
+    "architecture": "Architecture",
+    "event-architecture": "Event Architecture",
     "features": "Features",
+    "plugins": "Plugins",
     "integrations": "Integrations",
     "payment-modules": "Payment Modules",
+    "billing": "Billing System",
+    "devops": "DevOps-First",
+    "open-source": "Open Source",
+}
+
+# Per-vertical page sets. Only `core` (vbwd.cc — the platform itself) ships the
+# extended deck-sourced IA; every other vertical keeps its original four pages
+# so their pages.json stays byte-for-byte identical.
+DEFAULT_PAGE_SET = ("about", "features", "integrations", "payment-modules")
+PAGE_SETS = {
+    "core": (
+        "about", "architecture", "event-architecture", "features",
+        "plugins", "integrations", "billing", "devops", "open-source",
+    ),
 }
 
 
@@ -1011,7 +1564,25 @@ def build_page_record(vertical_key, slug, config, css):
         "payment-modules": f"{config['title']} supports 23 payment rails "
                            f"(3 implemented, 20 planned) covering every "
                            f"major region.",
-    }[slug]
+        "architecture": f"{config['title']} architecture: three runtimes, one "
+                        f"plugin contract, typed DI, SOLID, and security "
+                        f"defaults you inherit.",
+        "event-architecture": f"{config['title']} runs on a typed event bus — "
+                              f"plugins listen instead of importing each "
+                              f"other. Decoupled, replayable, testable.",
+        "plugins": f"In {config['title']} a plugin is a coordinated trio "
+                   f"(backend + fe-admin + fe-user). Showcase of the demo "
+                   f"plugins built on the platform.",
+        "billing": f"{config['title']} billing: subscription engine, "
+                   f"checkout, discounts, token economy and 23 payment "
+                   f"rails — all plugins around one core.",
+        "devops": f"{config['title']} is DevOps-first: one image pipeline, "
+                  f"one CI workflow, one deploy command, clean clone to "
+                  f"live in under five minutes.",
+        "open-source": f"{config['title']} is open source — 47 public repos "
+                       f"under VBWD-platform, BSL 1.1. Read the code, fork "
+                       f"it, ship it.",
+    }.get(slug, f"{config['title']} — {NAMES[slug]}.")
     return {
         "slug": slug,
         "name": name,
@@ -1036,9 +1607,10 @@ def build_page_record(vertical_key, slug, config, css):
 def main():
     for vertical_key, config in VERTICALS.items():
         css = build_css(config)
+        slugs = PAGE_SETS.get(vertical_key, DEFAULT_PAGE_SET)
         pages = [
             build_page_record(vertical_key, slug, config, css)
-            for slug in ("about", "features", "integrations", "payment-modules")
+            for slug in slugs
         ]
         out_dir = OUTPUT_ROOT / vertical_key
         out_dir.mkdir(parents=True, exist_ok=True)
