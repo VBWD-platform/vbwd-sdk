@@ -159,6 +159,28 @@ jobs:
               || echo "WARN: vbwd-plugin-${plugin} not found"
           done
 
+      # plugins/plugins.json is gitignored in vbwd-backend (only the
+      # analytics-only plugins.json.dist is tracked), so a fresh clone has
+      # no manifest and the backend default-enables analytics ONLY. Generate
+      # a manifest that enables every cloned plugin so the integration smoke
+      # test ("Verify all plugins installed and active") has plugins to
+      # verify. Mirrors what an operator does post-install via the admin UI.
+      - name: Generate backend plugins.json (enable all cloned plugins)
+        working-directory: vbwd-backend/plugins
+        run: |
+          python3 - <<'PY'
+          import json, os
+          plugins = {
+              name: {"enabled": True, "version": "1.0.0",
+                     "installedAt": "", "source": "local"}
+              for name in sorted(os.listdir("."))
+              if os.path.isdir(name) and not name.startswith(".")
+          }
+          with open("plugins.json", "w") as fh:
+              json.dump({"plugins": plugins}, fh, indent=2)
+          print("Enabled plugins:", ", ".join(plugins) or "(none)")
+          PY
+
       - name: Create .env file
         working-directory: vbwd-backend
         run: cp .env.example .env
