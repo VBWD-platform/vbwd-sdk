@@ -237,18 +237,24 @@ seed_manifest() {
         cp "$src" "$dst"
         echo "  seed  $(basename "$dst") ← $src"
     else
-        echo "  WARN  $src not found; $(basename "$dst") not seeded"
+        # Source missing: still create an empty JSON manifest so `make up`
+        # bind-mounts a real file. Leaving it absent makes Docker auto-create
+        # the host path as a directory, breaking the file mount.
+        echo '{}' > "$dst"
+        echo "  WARN  $src not found; wrote empty $(basename "$dst")"
     fi
 }
 
+# Backend manifests can be seeded now (backend repo + plugins already cloned).
+# Frontend manifests are seeded later in Step 2 — AFTER the fe-user / fe-admin
+# repos are cloned — because their source files (plugins/config.json) do not
+# exist until then. Seeding them here would leave var/plugins/fe-*-config.json
+# absent, and `make up` would then bind-mount a non-existent host path that
+# Docker auto-creates as a directory, failing the file mount.
 seed_manifest "$BACKEND_DIR/plugins/plugins.json"           backend-plugins.json
 seed_manifest "$BACKEND_DIR/plugins/config.json"            backend-plugins-config.json
-seed_manifest "$FE_ADMIN_DIR/plugins/plugins.json"          fe-admin-plugins.json
-seed_manifest "$FE_ADMIN_DIR/plugins/config.json"           fe-admin-plugins-config.json
-seed_manifest "$FE_USER_DIR/plugins/plugins.json"           fe-user-plugins.json
-seed_manifest "$FE_USER_DIR/plugins/config.json"            fe-user-plugins-config.json
 
-echo "✓ Plugin manifests seeded into $VAR_DIR/plugins/"
+echo "✓ Backend plugin manifests seeded into $VAR_DIR/plugins/"
 echo "  Export VBWD_VAR_DIR before 'docker compose up' if you want to"
 echo "  keep this directory somewhere other than $WORKSPACE_DIR/var"
 
@@ -385,6 +391,19 @@ for plugin in analytics-widget cms-admin email-admin ghrm-admin taro-admin; do
     fi
 done
 echo "✓ vbwd-fe-admin plugins installed"
+
+# Seed the frontend plugin manifests now that the fe-user / fe-admin repos
+# (and their plugins/config.json source files) exist. These MUST be present
+# as files before `make up`, otherwise Docker auto-creates the missing
+# var/plugins/fe-*-config.json host path as a directory and the read-only
+# bind mount onto /app/vue/public/config.json fails.
+echo ""
+echo "Seeding frontend plugin manifests into $VAR_DIR/plugins/"
+seed_manifest "$FE_ADMIN_DIR/plugins/plugins.json"          fe-admin-plugins.json
+seed_manifest "$FE_ADMIN_DIR/plugins/config.json"           fe-admin-plugins-config.json
+seed_manifest "$FE_USER_DIR/plugins/plugins.json"           fe-user-plugins.json
+seed_manifest "$FE_USER_DIR/plugins/config.json"            fe-user-plugins-config.json
+echo "✓ Frontend plugin manifests seeded into $VAR_DIR/plugins/"
 
 # Setup frontend environment files
 echo ""
