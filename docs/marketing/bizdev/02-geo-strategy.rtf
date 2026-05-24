@@ -1,0 +1,1807 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 \fmodern Courier;}}
+{\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
+\widowctrl\hyphauto
+
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel0 \b \fs36 VBWD \u8212- Geo Strategy: SE Asia + Gulf, Hospitality/Wellness/Travel\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b Companion to} {\f1 01-next-90-days-plan.md}. Same constraints apply: solo dev, day-job, {\b 8\u8211-12 hrs/week}, {\b no synchronous sales}, no founder-led demos, no merchant calls. The Y1 base plan (Bucket B / Gumroad-alternative wedge) stays intact. This document layers an {\b incremental geo channel} on top.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b The question this document answers.} Can VBWD earn meaningful revenue from agencies and hospitality/wellness/travel vendors in Thailand, Vietnam, and the Arab world (UAE + KSA + Bahrain/Qatar/Kuwait), under the same constraints as plan 01? Short answer: {\b yes, but only via local reseller agencies and only on top of one product investment} (RTL + local payment rails + translations). Realistic incremental contribution: {\b \u8364 ?15\u8211-30k Y1, \u8364 ?60\u8211-100k Y2.}\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b What this document is NOT proposing.} Not a Booking.com / Agoda / Klook / Trip.com alternative. VBWD does not compete with {\b inventory aggregators} (the marketplace OTAs that bring guests via their own demand-generation). VBWD competes with {\b single-property and small-chain direct-booking infrastructure}: Cloudbeds, Hotelogix, RoomRaccoon, Resly, ezCloud \u8212- and the bespoke "Bangkok web-agency built it from scratch" stack that small hotels and spa chains run today. The honest framing in {\f1 decks/hotel/en/06-honest-gaps.html} already says this \u8212- VBWD is the {\b guest-facing surface}, not a full PMS, not a channel manager.\par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 1. TL;DR\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2160\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx6480\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Thailand\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Vietnam\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 GCC (UAE + KSA core)\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Tourist arrivals 2024 (intl, public stats)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~35M\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~17.5M intl + ~110M domestic\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 UAE ~30M; KSA ~30M (Vision 2030 target 100M by 2030)\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Accommodation establishments (broad)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~30k\u8211-40k formal hotels + 100k+ informal\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~36k licensed accommodation properties\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 UAE ~1,200 hotels + serviced apartments; KSA ~5k+ hotels\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Spa/wellness establishments (estimates)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~30k massage/spa\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~5k formal spa\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 UAE ~700+ wellness/spa; growing fast under Saudi Vision\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 OTA dependency (industry-reported range)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 60\u8211-80% of bookings via OTAs for SME hotels\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 65\u8211-80%\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 50\u8211-70% (luxury skews lower; budget skews higher)\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Booking.com / Agoda commission\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 15\u8211-25%\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 15\u8211-25%\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 15\u8211-25%\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Local agencies that build hotel websites\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Hundreds; well-organised dev scene in Bangkok / Chiang Mai / Phuket\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Hundreds; HCMC + Hanoi tech hubs\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Dubai, Riyadh, Jeddah \u8212- strong but expensive\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Stripe availability\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Yes (Stripe Thailand)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Limited (workaround via SG/MY entity)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Yes (UAE + KSA, since 2024\u8211-25)\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Critical local payment rails\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 PromptPay, TrueMoney, Rabbit LinePay\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 VNPay, MoMo, ZaloPay, Napas\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Mada (KSA), Tabby, Tamara, Apple Pay, Network Intl\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Language burden\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Thai (i18n only)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Vietnamese (i18n only)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Arabic (i18n {\b + RTL CSS})\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b The bet:} sign {\b 8\u8211-15 local agencies as resellers} across the three geos in 12 months, give them a localised VBWD package, take Pro/Enterprise license fees from them, let {\b them} do all the merchant-facing work. You never speak to a hotel or spa owner.\par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 2. The framing \u8212- what we are and aren't selling\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 We are NOT selling\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2880\clbrdrb\brdrs\cellx5760\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Category\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Examples\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Why we don't go here\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Inventory aggregators / OTAs\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Booking.com, Agoda, Trip.com, Klook, Expedia\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Two-sided marketplace = needs supply {\i and} demand. VBWD has neither.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Mass-market metasearch\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Trivago, KAYAK, Skyscanner\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Same reason\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Property management systems (PMS) for ops\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Opera, Mews, Cloudbeds (PMS layer), Hotelogix (PMS layer)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 VBWD is guest-facing only. Honest gap is documented.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Channel managers\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 SiteMinder, HotelRunner, DerbySoft, Cloudbeds Channel Manager\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Roadmap, not shipped. Plugin opportunity for a partner.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Restaurant POS\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 TouchBistro, Toast, Square, Loyverse, StoreHub (SE Asia)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Different problem space; VBWD has no POS hardware story.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Tour-operator OTAs\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Viator, GetYourGuide, Klook\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Same as Booking.com \u8212- aggregators with their own demand engine.\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 We ARE selling \u8212- the four shapes that fit\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2160\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx6480\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Shape\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Who\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Pain VBWD solves\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Vertical fit (1\u8211-5)\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Independent boutique hotel direct-booking}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 5\u8211-80 room hotels, often family-owned, with a PMS already\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 OTA tax + non-converting English-only checkout + no loyalty system\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 5/5 (matches the hotel deck)\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Small hotel group / chain (3\u8211-15 properties)}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Regional groups, wellness resorts, eco-lodges\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Same as above + multi-property routing on one VBWD instance\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 5/5\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Wellness / spa chain (3\u8211-30 locations)}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Day spas, medical wellness, yoga retreat chains\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Appointment booking + prepaid token packages + membership tiers + multilingual marketing\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b 5/5 \u8212- best fit of all}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b DMC / tour operator (B2C-side)}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Destination Management Companies selling multi-day packages, Umrah operators, halal-tourism specialists, dive-shop chains\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Multi-pax bookings, voucher delivery, package builder, partner referral commissions\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 4/5 (needs minor extension)\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 HORECA chains (restaurants, bars, caf\u233 ? chains)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 3+ outlet operators\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Loyalty + booking (table reservation, pre-order pickup)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b 2/5 \u8212- skip in Y1.} No POS = wrong stack. Re-evaluate Y3.\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b The product surface that sells across all four shapes} already exists in the platform: Booking plugin ({\f1 decks/core/en/16-booking.html}), Token economy, CMS, Shop plugin (used here for vouchers/license-keys), multi-payment gateway, multi-tenant per VPS.\par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 3. Why an aggregator-replacement pitch would fail (and we'd waste two years)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 It's worth stating this explicitly because the question comes up every time:\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Reason\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Detail\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Two-sided market problem}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 An aggregator needs both inventory (hotels) and demand (travellers). VBWD has neither. Bootstrapping both, solo, part-time, in three foreign markets = ~zero probability.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Capital intensity}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Booking Holdings spent {\b $5.9B on marketing in 2023}. Even regional players (Traveloka raised $200M+ in single rounds). We have a part-time dev.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Network effect already won}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Booking.com + Agoda dominance in SE Asia is structural. Hotels list because travellers go there; travellers go there because hotels list.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b The leaky-bucket pitch beats the replacement pitch}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 "Reduce your OTA dependency by 5\u8211-10%" is achievable and quantifiable. "Replace Booking.com" is not credible to any hotel owner who's been in business >2 years.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b VBWD's actual winning frame}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 "You keep your PMS. You keep your OTA distribution. You add a direct-booking surface that converts your {\i returning} guests on your domain at 0% commission." This is the existing hotel deck \u8212- we don't change it.\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 4. Market 1 \u8212- Thailand\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Why it matters\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab ~35M international tourists in 2024 (Tourism Authority of Thailand reporting), back near pre-COVID peak.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Hospitality contributes ~12\u8211-18% of GDP depending on year.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b 30k+ formal hotels and 100k+ informal accommodation} (homestays, condotels, hostels).\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b ~30k spa/massage establishments} \u8212- Thai spa industry roughly {\b $1.5B+ annually} per industry trade reporting; one of the densest spa markets per capita on earth.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Boutique hotel scene (Phuket, Koh Samui, Chiang Mai, Hua Hin, Krabi) is full of 10\u8211-60 room independent properties \u8212- {\b exactly the VBWD sweet spot}.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Real competitors in market\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2160\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx6480\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Vendor\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 What they sell\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Pricing\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Where they're weak\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Cloudbeds}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 All-in-one PMS + booking engine + channel manager\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~20\u8211-200/room/month\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Cloud-only, USD pricing, no token/loyalty primitive\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Hotelogix}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Cloud PMS + booking\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~$3.99/room/month + add-ons\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Older UI; integrated channel manager limited\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b RoomRaccoon}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 PMS + booking + channel\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~\u8364 ?200+/month per property\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 EU-priced, strong but premium\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b eZee Absolute (Yanolja Cloud)}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 PMS + booking\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 $39+/month\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Limited customisation\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Resly}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Local Thai PMS\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 THB-priced\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Domestic-only marketing; no plugin ecosystem\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Hotelinvo, Bukin, Hotelogie}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Local Thai SaaS\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 THB-priced\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Small footprint\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Bespoke web agency builds}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Custom on WordPress/Webflow + manual Stripe/Omise\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 5{\i k}\u8211-15k one-time\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 No ongoing platform; brittle\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b The wedge.} None of the cloud PMS vendors have a {\b token economy} or {\b multi-method local payment} architecture. Wellness chains and resort properties that want prepaid packages (very common in Thailand: "10-massage card", "weekly yoga unlimited") cannot get this from Cloudbeds without custom dev. VBWD ships it.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Local payment rails (must support)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b PromptPay} (QR-based bank transfer, dominant for under-THB-5,000 payments)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b TrueMoney Wallet} (e-wallet, common with younger Thai buyers)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Rabbit LinePay} (LINE-integrated wallet)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Visa/MasterCard via Stripe Thailand (live), Omise (popular Thai gateway), 2C2P (regional)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab PayPal (low usage but expected for international guests)\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b Plugin status today:} Stripe + PayPal + YooKassa in core. {\b PromptPay + TrueMoney = a plugin to ship}, ~30 hrs of work, sellable at \u8364 ?99\u8211-199 one-time.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Local agency landscape (the channel)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 The reseller play depends on convincing 3\u8211-5 Thai dev/web agencies to add VBWD to their offering. Real candidates (publicly visible, well-known in BKK tech scene):\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Pomelo Software} \u8212- Bangkok, hospitality-tech focused\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Seven Peaks Software} \u8212- Bangkok, larger consultancy with hotel clients\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Codium / Codigo} \u8212- boutique Thai dev shops\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Tigerbay} \u8212- Phuket-based, digital agency with hotel clients\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Fastwork-listed mid-tier dev shops} (~50 active hotel-website builders on the platform)\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Initial outreach to ~30 agencies via cold email (one-shot, async \u8212- no call required). Conversion expected: {\b 2\u8211-4 reseller signups in 90 days} at this volume.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Y1 Thailand revenue model\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Revenue line\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Y1 estimate\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 3 reseller agencies \u215 ? \u8364 ?1,499 Pro license\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?4,500\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 1 reseller agency \u215 ? \u8364 ?4,999 Enterprise (white-label rights)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?5,000\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Direct boutique-hotel licenses sold via the agencies (Starter): 10 \u215 ? \u8364 ?499\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?5,000\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Spa/wellness chain Enterprise: 1 \u215 ? \u8364 ?4,999\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?5,000\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 PromptPay/TrueMoney plugin sales: 30 \u215 ? \u8364 ?149\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?4,500\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Y1 Thailand total}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b ~\u8364 ?24,000}\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b About half the geo-incremental revenue.}\par}
+{\pard \ql \f0 \sa180 \li720 \fi0 {\b Money model \u8212- who runs hosting (applies to all three geos).} Consistent with plan 01's no-own-hosting rule: {\b you never run or bill hosting for any venue.} The reseller agency hosts the venue's instance on its own infrastructure (Hetzner / OVH / Vultr / a local Thai/VN/GCC cloud) and folds that cost into the monthly fee it charges the venue (the THB/VND/AED 3,000\u8211-8,000/mo). {\b None of that hosting margin flows to you} \u8212- it is the agency's, and is part of {\i why} the agency signs (recurring margin it keeps). Your revenue from the geo channel is strictly: (a) the Pro/Enterprise licence the agency buys from you, (b) one-shot local payment-rail plugin sales, (c) trickle payment-processor cashback. The revenue tables above already reflect this \u8212- there is deliberately {\b no hosting line in any geo table}. If a venue insists on managed hosting and the agency won't provide it, the fallback is the Elest.io listing from plan 01 (Elest.io operates it, you collect a small rev-share), never you.\par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 5. Market 2 \u8212- Vietnam\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Why it matters\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab 2024: {\b ~17.5M international + ~110M domestic} tourist arrivals (Vietnam National Authority of Tourism). Domestic tourism is the secret weapon \u8212- far less OTA-saturated than international flow.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab ~36k licensed accommodation establishments (statistics published by VNAT; the long tail of unlicensed mini-hotels is much larger).\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Wellness market: {\b growing 12\u8211-15% annually} per industry estimates; Vietnamese middle class adopting spa/wellness rapidly.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b HORECA (caf\u233 ?s especially)}: Vietnam's coffee chain density is world-class (Highlands, The Coffee House, Phuc Long, Trung Nguyen) \u8212- but as flagged earlier, no POS in VBWD = wrong stack for this segment.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Real competitors in market\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Vendor\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Notes\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b ezCloud / ezFolio}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Dominant local cloud PMS. SME-focused. Strong Vietnamese-language UI. Reasonably entrenched.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b ChannelManager.com.vn}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Local channel manager + booking engine combos\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Cuckoo PMS}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Local SaaS, mid-market\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b iVMS / Vinotel}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Local players\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Hotelogix}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Indian SaaS with growing Vietnam footprint\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Cloudbeds}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Premium segment (4\u8211-5 star)\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Manual WordPress + VNPay}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Genuinely common at sub-30-room properties\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b The wedge.} Same as Thailand but harder \u8212- local players (ezCloud) have language and price advantage. {\b VBWD wins only via local agencies} who bundle a custom-branded portal + token loyalty + multi-language i18n, none of which ezCloud ships natively.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Local payment rails\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b VNPay} (most universal; QR + card + bank transfer)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b MoMo} (largest e-wallet, ~30M+ users)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b ZaloPay} (Zalo super-app integrated)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b ShopeePay} (e-commerce-tied, growing)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Napas 247} (interbank instant transfer)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Visa/Master via local processors (OnePay, NganLuong)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Stripe {\b not directly available} for Vietnamese-registered entities (Stripe currently does not list VN as a supported country for Atlas/Stripe accounts). Workaround: Singapore/Malaysia/Hong Kong holding entity. {\b This is a constraint on direct-customer outreach in Vietnam.} For the reseller play, the agency handles entity / payments \u8212- not your problem.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Vietnam channel partner candidates\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b KMS Technology} \u8212- large dev house (HCMC), occasional hospitality work\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Saigon Technology} \u8212- boutique, English-friendly\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Mona Media} \u8212- strong WordPress/Web design footprint, hotel clients\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b FPT Software} \u8212- too big, but their solution-architect freelancers moonlight\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Scuti} \u8212- boutique, Vietnamese SME focus\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Long-tail: {\b TopDev} and {\b ITviec} marketplaces list ~hundreds of agencies; ~10\u8211-20 with real hotel/F&B portfolio\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Y1 Vietnam revenue model\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Revenue line\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Y1 estimate\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 2 reseller agencies \u215 ? \u8364 ?1,499 Pro\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?3,000\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 1 reseller agency \u215 ? \u8364 ?4,999 Enterprise\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?5,000\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Direct hotel licenses via agencies: 6 \u215 ? \u8364 ?499 Starter\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?3,000\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Y1 Vietnam total}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b ~\u8364 ?11,000}\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Smaller than Thailand because (a) Stripe friction limits direct-customer flow, (b) ezCloud is entrenched at the SME level, (c) language localisation is more isolating (less English in admin role at small properties).\par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 6. Market 3 \u8212- GCC (UAE + KSA + Bahrain/Qatar/Kuwait)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Why it matters\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab UAE: {\b ~30M international tourists in 2024} (Dubai alone ~18M); hospitality sector revenue ~AED 200B+ annually.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Saudi Vision 2030}: explicit public targets of {\b 100M visitors by 2030}, ~$800B in tourism investment, 250k+ hotel rooms added. NEOM, AlUla, Diriyah, Red Sea Project. {\b Largest greenfield hospitality opportunity in the world right now.}\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Wellness market in UAE alone: {\b $5B+} per industry estimates, double-digit annual growth.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Religious tourism (Umrah, Hajj) \u8212- Saudi government opening up year-round Umrah; ~20M Umrah pilgrims/year, growing toward Vision 2030 target of 30M.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab DMC (destination management) sector is mature and well-capitalised \u8212- many independent operators serve halal-tourism, luxury desert, dive (Red Sea), yacht charter.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Real competitors in market\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Vendor\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Notes\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Mews}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Strong in UAE 4\u8211-5 star. Cloud PMS, polished UI.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Cloudbeds}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Mid-market dominance\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Opera (Oracle Hospitality)}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Enterprise standard; expensive\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Quore, ALICE (Actabl)}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Operations layer; not a competitor (different layer)\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Hotelogix}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Lower-end, Arabic UI partial\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b D-Edge, SiteMinder}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Booking engine + channel mgr, premium\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Local UAE/Saudi web agencies}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Dozens; charge AED 30k\u8211-100k for custom hotel sites\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b The wedge.} Three structural openings:\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 1.\tx360\tab {\b EU/Saudi data residency concerns} \u8212- same theme as plan 01's GoHighLevel pitch, but here the regulator is NCA / SDAIA in Saudi and TDRA in UAE. Self-hosted on Tier-3 datacentre {\b inside the country} (e.g., Khazna, STC, G42) is increasingly required for tourism / wellness data tied to government programs.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 2.\tx360\tab {\b Arabic + RTL is uneven across competitors.} Cloudbeds Arabic UI is partial. Most local agencies build Arabic frontends manually. A polished VBWD Arabic + RTL package becomes a real differentiator.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 3.\tx360\tab {\b Halal-tourism / Umrah-package operators} are underserved by Western SaaS. They want package builder, voucher delivery, group bookings, prayer-time integrations \u8212- niche but profitable.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Local payment rails\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Stripe} \u8212- live in both UAE and KSA (Stripe MENA launched 2024)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Mada} (Saudi national debit network) \u8212- handled via Hyperpay, Checkout.com, PayTabs, Network International\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Tabby, Tamara} (BNPL, dominant in GCC e-commerce)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Apple Pay, Google Pay} (very high penetration in UAE/KSA)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b STC Pay, urpay} (KSA wallets)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Network International, Telr} (regional gateways)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Cash on arrival} \u8212- still common for hotels in KSA secondary cities\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b Plugin status today:} Stripe \u9989 ?. Mada/Tabby/Tamara via Checkout.com or Hyperpay = a plugin to ship, ~40 hrs work, sellable at \u8364 ?299 one-time given the higher local willingness-to-pay.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Arabic + RTL \u8212- the must-fix gap\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 This is the {\b single biggest product investment} to make the GCC opening real.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab All current FE-admin and FE-user surfaces are LTR.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Vue + Vite app needs RTL CSS strategy: either logical properties (margin-inline-start etc.) or a {\f1 [dir=rtl]} override sheet.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Effort estimate: {\b 40\u8211-60 hrs} for fe-user (customer-facing), {\b 30 hrs} for fe-admin (lower priority \u8212- admin can stay English in Y1).\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Translation: English \u8594 ? Arabic ~3,000 strings; budget \u8364 ?500\u8211-1,000 to a freelance translator.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Without this: {\b the GCC channel does not open.} A reseller agency in Riyadh will not pitch a non-RTL platform to a Saudi hotel.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 GCC channel partner candidates\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b GCG Enterprise Solutions} (Dubai) \u8212- broader IT, occasional hospitality\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Apex Hosting / Apex Hotel Tech} (UAE)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Magnetic, Bayanat, Wunderman Thompson MENA} \u8212- full-service agencies with hotel clients\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Local Riyadh + Jeddah dev studios} \u8212- surge of new shops post-Vision 2030; identifiable via LinkedIn / ArabNet / STEP Conference attendee lists\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Halal-tourism niche specialists} \u8212- Umrah app/portal builders (a specialised sub-segment)\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Y1 GCC revenue model\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Lower volume but higher per-deal value due to local willingness-to-pay.\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Revenue line\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Y1 estimate\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 2 reseller agencies \u215 ? \u8364 ?1,499 Pro\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?3,000\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 1 reseller agency \u215 ? \u8364 ?4,999 Enterprise\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?5,000\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Direct boutique-hotel/spa licenses via agencies: 4 \u215 ? \u8364 ?1,499 Pro\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?6,000\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Halal-tourism/Umrah DMC: 1 Enterprise \u215 ? \u8364 ?4,999\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?5,000\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Mada/Tabby plugin sales: 15 \u215 ? \u8364 ?299\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?4,500\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Y1 GCC total}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b ~\u8364 ?23,500}\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 GCC is a {\b slow-burn, high-value} market. Y2 is where it really compounds \u8212- Vision 2030 hotel openings ramp through 2026\u8211-2030.\par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 7. The wellness/spa angle (best fit, deserves its own section)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Wellness is {\b a better fit than hotels} for VBWD's existing primitives, and worth pitching independently across all three geos.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Why wellness fits VBWD better than hotels\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 VBWD primitive\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Why a spa chain needs it more than a hotel\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Token economy}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Spa packages are {\i naturally} prepaid: "10-massage package", "monthly unlimited yoga". Hotels rarely sell room nights as bundled prepaid units.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Booking plugin (slot-based)}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Spa appointments are slot bookings (60-min, 90-min, room-as-resource). This is the plugin's primary use case. Hotel night-bookings are more inventory-style.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Subscriptions}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 "Wellness club membership" with recurring billing \u8212- plug-and-play. Hotels don't subscribe.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b CMS}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Spa marketing (treatment menu, therapist bios, package promos) is content-heavy. Hotels have it too but their PMS rarely owns the website.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b No PMS gap}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Spas don't need a hotel PMS, so the "missing channel manager / housekeeping" gap is irrelevant. {\b VBWD is feature-complete for a spa.}\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 The wellness segments worth targeting\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2160\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx6480\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Segment\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Geos\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Estimated count\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Why they buy\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Boutique day-spa chains (3\u8211-15 locations)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Thailand (huge), UAE (growing), Vietnam (emerging)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Hundreds across the three geos\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Need centralised booking + loyalty across locations\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Yoga / pilates / fitness studio chains\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 All three\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Hundreds\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Membership management + class booking\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Medical wellness (IV drips, aesthetic clinics)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 UAE especially\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Hundreds in Dubai/Abu Dhabi alone\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Premium pricing, strong willingness-to-pay\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Retreat operators (week-long packages)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Thailand (Koh Phangan, Chiang Mai), UAE, Bali-adjacent\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Hundreds\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Multi-day package builder + voucher delivery\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Halal-friendly wellness (gender-segregated, prayer-time-aware)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 KSA, UAE\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Growing\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Underserved by Western SaaS\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Wellness pitch one-liner\par}
+{\pard \ql \f0 \sa180 \li720 \fi0 "Your spa, your bookings, your loyalty cards \u8212- on your domain, in your customers' language and currency, with prepaid packages and memberships. No per-booking commission. \u8364 ?499/year."\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Reuse the existing hotel deck ({\f1 decks/hotel/}) as the structural template, swap "rooms" for "treatments" and "OTAs" for "third-party booking apps". One designer-hour of work. Ship as {\f1 decks/wellness/}.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Wellness Y1 revenue inside the geo numbers\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Already counted in the per-geo tables above. The reason wellness numbers are conservative: {\b the agencies are the bottleneck}, not the demand. With 8\u8211-15 agencies recruited in Y1, they each onboard 3\u8211-8 wellness clients in Y1 \u8212- that ceiling is what caps the number.\par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 8. Channel-led distribution (no founder calls \u8212- the "respect the constraint" section)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 The entire geo plan dies if you take a single Zoom call. Every channel below is async-by-design.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Channel A \u8212- Cold email to local agencies (one-shot, no call)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab 30 agencies per geo (90 total), pulled from LinkedIn + Tech in Asia + ArabNet + local dev directories.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab One-paragraph pitch, {\b personalised by name + agency website + one specific hotel/spa client they shipped}.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Pitch shape: "I've built a self-hosted hospitality platform that you can resell to your hotel/spa clients under your own brand. Pro license \u8364 ?1,499/yr, Enterprise \u8364 ?4,999/yr with white-label. You charge the client \u8364 ?200\u8211-500/mo. Demo + docs + reseller pack: [link]. No call needed \u8212- everything is in the link."\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Hard rule}: if the agency replies asking for a call, send the demo URL + the YouTube walkthrough + a Calendly-free async-feedback form. If they insist on a call, decline politely: "I'm solo and async-only; if the docs and demo aren't enough I'm probably the wrong vendor."\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Expected conversion: 2\u8211-5 reseller signups per geo from a 30-email batch.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Time cost: 4 hrs research + 4 hrs writing per geo = 24 hrs total. One burst weekend.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Channel B \u8212- Hire one local part-time freelancer per geo\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 This is the single biggest unlock for the geo plan and the only paid expense.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Per geo}: hire 1 freelancer for {\b \u8364 ?300\u8211-\u8364 ?500/month} (rates are realistic in TH/VN; closer to \u8364 ?700 in UAE/KSA).\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Their job (async-only, async-reporting, monthly Loom updates):\par}
+{\pard \ql \f0 \sa0 \li720 \fi-360 \endash \tx360\tab Translate landing page + key admin strings to local language\par}
+{\pard \ql \f0 \sa0 \li720 \fi-360 \endash \tx360\tab Be the local face on local forums (Pantip Thailand, Vietnamese tech FB groups, Saudi Telegram)\par}
+{\pard \ql \f0 \sa0 \li720 \fi-360 \endash \tx360\tab Triage local-language inbound to Discord\par}
+{\pard \ql \f0 \sa0 \li720 \fi-360 \endash \tx360\tab Write 1 blog post/month in local language targeting local search terms\par}
+{\pard \ql \f0 \sa0 \li720 \fi-360 \endash \tx360\tab Optionally: build the local payment rail plugin (paid as one-shot project on top of retainer)\sa180\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Where to find them}: Upwork (still works for this), local marketplaces (Fastwork TH, Freelancer.vn, Bawabba SA), Twitter/X dev community, Discord\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Total monthly cost across 3 geos: {\b \u8364 ?1,000\u8211-\u8364 ?1,500}\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab {\b Important: this is the {\i only} place the plan trades cash for time.} It's worth it because each freelancer-hour replaces a founder-hour you don't have.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Channel C \u8212- Self-hosted directory / marketplace listings (already in plan 01)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Cloudron, Coolify, Easypanel, Awesome-selfhosted listings cover the global self-hoster audience including SE Asia tinkerers and Saudi engineers. {\b Already in plan 01 weeks 11\u8211-12. No change.}\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Channel D \u8212- Regional content SEO (long-tail compounder)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab 1 article per month in English targeting:\par}
+{\pard \ql \f0 \sa0 \li720 \fi-360 \endash \tx360\tab "Cloudbeds alternative Thailand"\par}
+{\pard \ql \f0 \sa0 \li720 \fi-360 \endash \tx360\tab "self-hosted hotel booking engine"\par}
+{\pard \ql \f0 \sa0 \li720 \fi-360 \endash \tx360\tab "Hotelogix vs [X]"\par}
+{\pard \ql \f0 \sa0 \li720 \fi-360 \endash \tx360\tab "ezCloud alternative Vietnam English"\par}
+{\pard \ql \f0 \sa0 \li720 \fi-360 \endash \tx360\tab "spa management software UAE Arabic"\sa180\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Plus 1 article per month in {\b local language} written by the local freelancer (Channel B)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab 12-month outcome: 24 articles total, 3\u8211-6 of which rank top-10 on long-tail keywords \u8594 ? 50\u8211-200 monthly organic visits on each = compounding inbound that {\b never asks you for a call}\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Channel E \u8212- Local conferences (no attendance, content only)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Skip physical attendance (time + travel = blows the constraint).\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab BUT: write a content piece per major regional event ("3 things missing from this year's HITEC Asia / Future Hospitality Riyadh / VITM Hanoi"). Tag the speakers/exhibitors. Some will reply. Async ROI.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 What you do NOT do\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Forbidden\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Why\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Travel to Bangkok/Dubai/HCMC for "intro meetings"\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Day job + family + the math says it doesn't pay back\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Take Zoom calls with hotel/spa owners\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 They want sync support; you can't supply it; channel partner takes the call instead\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Send sales reps / hire a BDR\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Burns cash, requires management overhead you don't have\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Localise to all 3 languages before validating any geo\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Each language is a 60+ hour commitment; do them sequentially as resellers sign\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Promise compliance certifications (PCI L1, ISO 27001, NCA Saudi) you haven't earned\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Stay honest; let agencies handle "their hosting, their cert"\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Run or bill hosting for any venue yourself\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 The agency hosts on its own infra and bills the venue; none of that margin is yours. Managed-hosting fallback is Elest.io (per plan 01), never you. Spinning up one VPS for one venue sets a precedent that breaks the constraint.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx4320\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Offer an uptime SLA to a venue or agency\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 SLAs in this plan are response-time only. You cannot promise uptime for software someone else hosts.\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 9. Revenue overlay on top of plan 01\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2160\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx6480\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Plan 01 base (revised, post-hosting-cut)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Geo overlay (this doc)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Combined\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Y1 brutto}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~\u8364 ?100k\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 +\u8364 ?15\u8211-30k (mid: \u8364 ?25k)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b \u8364 ?115\u8211-130k}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Y2 brutto}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~\u8364 ?220k\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 +\u8364 ?60\u8211-100k (mid: \u8364 ?80k)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b \u8364 ?280\u8211-320k}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b 24-month cumulative}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 ~\u8364 ?320k\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 +\u8364 ?85\u8211-120k\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b \u8364 ?405\u8211-440k}\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 The plan 01 base figures here match the revised {\f1 01-next-90-days-plan.md} after the own-brand managed-hosting line was cut and replaced with hosting-platform rev-share + the async priority-support add-on. The geo overlay numbers are unchanged because the per-geo tables never contained a hosting line in the first place.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b The geo overlay is not the path to \u8364 ?100k Y1 \u8212- plan 01 is.} The geo overlay is the {\b insurance} against plan 01 underperforming, AND the lever that makes the \u8364 ?300k 24-month target comfortable rather than tight.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel2 \b \fs28 Cost overlay\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2880\clbrdrb\brdrs\cellx5760\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Item\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Monthly\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Annual\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 3 local freelancers @ ~\u8364 ?450 avg\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?1,350\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?16,200\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 RTL + Arabic translation (one-shot, Y1 Q3)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8211-\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?1,500\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 PromptPay + TrueMoney plugin dev (one-shot, by TH freelancer)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8211-\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?800\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Mada + Tabby plugin dev (one-shot, by GCC freelancer)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8211-\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?1,200\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Vietnam payment rail plugin (one-shot)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8211-\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8364 ?800\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b Y1 total geo cost}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 \u8211-\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 {\b ~\u8364 ?20,500}\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b Net Y1 geo contribution: \u8364 ?25k \u8211- \u8364 ?20.5k = ~\u8364 ?4.5k.} That's intentional. Y1 funds the geo build-out; {\b Y2 is where it pays back hard}: \u8364 ?80k revenue \u8211- \u8364 ?18k cost = {\b \u8364 ?62k net incremental in Y2}.\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 If Y1 freelancer costs feel too high: {\b start with one geo (Thailand)}, prove the reseller model with 2 agencies, then layer the others in Y1 H2.\par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 10. 90-day execution overlay (on top of plan 01's 90-day plan)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 Plan 01 takes priority. The geo work below fits in the {\b slack hours} of those weeks (~2\u8211-3 hrs/week of the 10\u8211-12 total) and the {\b monthly burst weekend}.\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2880\clbrdrb\brdrs\cellx5760\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Week\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Geo task\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Hours\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 1\u8211-2\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Decide: which 1 geo do you start in? {\b Recommend Thailand} (largest TAM, Stripe live, dense agency scene, wellness fit).\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 1\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 3\u8211-4\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Pull and qualify list of 30 Thai agencies (LinkedIn + Fastwork + agency directory sites)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 3\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 5\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Hire ONE Thailand freelancer (\u8364 ?350\u8211-500/mo). Brief them: localise landing page hero + Stripe Checkout + 5 key admin labels to Thai.\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 2\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 6\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Send the 30 cold emails to Thai agencies. One paragraph each, personalised. {\b Include reseller pack PDF} (single page: pricing, white-label rights, link to demo + docs).\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 4\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 7\u8211-8\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 (Slack hours) Reply to inbound from cold emails async. Refer any "let's call" requests to the docs + demo. {\b Hard no on calls.}\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 2\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 9\u8211-10\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Plan 01's launch week \u8212- geo work pauses except Thai freelancer continues.\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 0\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 11\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Pull Vietnam agency list (15 agencies \u8212- smaller market). Hire VN freelancer.\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 3\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2880\cellx5760\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 12\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Send Vietnam outreach. Begin scoping RTL + Arabic translation (post the gig on Upwork; quotes only).\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 3\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b 90-day output (geo-specific):}\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab 1\u8211-2 Thai reseller agency signups (\u8364 ?1,500\u8211-\u8364 ?10,000 in license fees)\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Thai-localised landing page live\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Vietnam outreach in progress\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab GCC RTL plan scoped, vendor selected, ready to start Q2\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b 90-day revenue from geo overlay: \u8364 ?1,500 \u8211- \u8364 ?10,000.} Realistic.\par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 11. Risks (geo-specific)\par}
+{
+\trowd \trgaph120
+\clbrdrb\brdrs\cellx2160\clbrdrb\brdrs\cellx4320\clbrdrb\brdrs\cellx6480\clbrdrb\brdrs\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Risk\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Likelihood\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Impact\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Mitigation\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Local agencies say "we already use [Cloudbeds / ezCloud], why switch?"\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 High\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Lost reseller deal\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Don't pitch as switch \u8212- pitch as {\i additional} white-label revenue stream. Their existing PMS clients don't need to change.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Reseller agency wants exclusivity in geo\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Medium\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Limits market\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Decline exclusivity; offer "preferred partner" badge instead. Multiple agencies > one exclusive.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Currency volatility (THB, VND especially)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Medium\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 -10\u8211-20% on local-currency revenue\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Price licenses in EUR/USD; agencies handle local-currency markup\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Stripe pulls Vietnam workaround / changes Saudi terms\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Low\u8211-Med\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 One geo crippled\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Multi-payment-gateway architecture is the mitigation; YooKassa for sanctions-resilient backup\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 RTL implementation has hidden Vue/Vite gotchas\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Medium\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 +30 hrs of unplanned work\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Budget +50% on Arabic ETA; ship admin LTR-only in Y1\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Freelancer ghosts you / quality drops\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Medium\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Lost month per geo\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Standard freelancer hygiene: monthly Loom check-ins, milestone-based payments, replaceable in 2 weeks\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Saudi NCA cybersecurity rules require local datacentre\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Becoming binding\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Forces VBWD to be hosted on Saudi soil for KSA hotel data\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 This is a {\i feature} \u8212- VBWD self-hosted on Khazna/STC = fully compliant. Position as advantage.\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Your day-job employer notices you have foreign income\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Geo-specific\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Tax + employment-contract issue\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Sole proprietorship / SRL / proper invoicing infrastructure must exist before first foreign reseller signs. {\b Resolve before week 6.}\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Halal-tourism segment requires religious advisory you can't provide\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Certain\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Lost deals if pitched directly\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Channel through Saudi/UAE freelancer + agency; you stay one step removed\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Cultural mismatch: SE Asian / Gulf buyers expect relationship-driven sales\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Certain\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Direct pitch fails\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Channel-only \u8212- agency is the relationship; you are the vendor behind the agency\par}
+\cell}
+}
+\intbl\row}
+{
+\trowd \trgaph120
+\cellx2160\cellx4320\cellx6480\cellx8640
+\trkeep\intbl
+{
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 You learn that one geo is dead-end at month 6\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Likely (1 of 3 geos won't work)\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 -\u8364 ?5k freelancer cost\par}
+\cell}
+{{\pard\intbl \ql \f0 \sa0 \li0 \fi0 Cut the freelancer in that geo, redeploy the budget to the working ones\par}
+\cell}
+}
+\intbl\row}
+{\pard \ql \f0 \sa180 \li0 \fi0 \par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 12. Decision points\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b Month 3 (after first geo outreach wave):}\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Did Thailand produce \u8805 ? 1 reseller signup? If no, the cold-email pitch is wrong (revise) OR Thailand isn't the right starter geo (try Vietnam or skip to GCC).\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Is the Thai freelancer producing? If no, replace within 30 days.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b Month 6:}\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab \u8805 ? 3 active reseller agencies across all geos? If yes, on track. If no, the channel model isn't taking \u8212- consider going direct in 1 geo with just the localised landing page + freelancer-supported Discord, accept slower ramp.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Has any reseller actually onboarded a paying hotel/spa? If no after 90 days, the agencies aren't really resellers \u8212- they're sitting on the license. Audit and prune.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b Month 9:}\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Is RTL shipped? If no, kill the GCC plan, refund any GCC reseller deposits, refocus on TH+VN.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 {\b Month 12:}\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 \bullet \tx360\tab Geo overlay net contribution to Y1 revenue \u8805 ? \u8364 ?15k? If yes, double the freelancer budget for Y2 and add a 4th geo (recommend Indonesia or Malaysia \u8212- lower TAM but lower competition). If no, geo overlay is a bust; cancel freelancers, refund any goodwill, refocus on plan 01 base.\sa180\par}
+{\pard \qc \f0 \sa180 \li0 \fi0 \emdash\emdash\emdash\emdash\emdash\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 \outlinelevel1 \b \fs32 13. Immediate next actions (this week, geo-specific)\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 In order, additive to plan 01's "this week" list:\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 1.\tx360\tab {\b Confirm the geo starter:} Thailand (recommended) \u8212- or override with reasoning.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 2.\tx360\tab {\b Draft the agency reseller one-pager} (PDF): pricing tiers, white-label rights, what they get, what you don't do (no support, no calls, no SLA without Enterprise tier). 1 hour.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 3.\tx360\tab {\b Set up business entity invoicing} capable of receiving foreign B2B payments (Stripe Connect, Wise Business, or local equivalent in your jurisdiction). Confirm employer contract permits this.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 4.\tx360\tab {\b Post the freelancer gig} for Thailand (Upwork or Fastwork). Spec: Thai-native, web-dev background, will translate landing page + key strings, ~10 hrs/week, \u8364 ?350\u8211-500/mo. 30 min to write the post.\par}
+{\pard \ql \f0 \sa0 \li360 \fi-360 5.\tx360\tab {\b Pull the first 30 Thai agency contacts} from LinkedIn (filter: Bangkok + 10\u8211-50 employees + "hospitality" or "hotel" in case studies). 2 hours.\sa180\par}
+{\pard \ql \f0 \sa180 \li0 \fi0 That's it for the geo overlay this week. Plan 01's "this week" list still takes priority.\par}
+}
