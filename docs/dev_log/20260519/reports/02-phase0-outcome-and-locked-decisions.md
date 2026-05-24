@@ -6,6 +6,24 @@ document. This file is the **single source of truth** for the corrected
 findings and the locked decisions; report 01 and Sprints 03–08 are revised to
 agree with it.
 
+> **SUPERSEDED IN PART BY SPRINT 11 (2026-05-25):**
+> - **Decision A / R3** ("subscription model classes stay in core as shared
+>   domain") is **superseded** — the 5 model classes
+>   (`subscription`, `tarif_plan`, `tarif_plan_category`, `addon`,
+>   `addon_subscription`) now live in `plugins/subscription/subscription/models/`.
+>   The 6 peer plugins reach subscription data through ports/registries, not the
+>   models.
+> - **R4** ("core invoice FK to subscription/plan blocks table ownership") is
+>   **resolved** — core `vbwd_user_invoice` carries no `subscription_id` /
+>   `tarif_plan_id`; the link is the invoice's SUBSCRIPTION line item
+>   (migration `20260525_1000_inv_drop_sub_fk`).
+> - **A2** (extract initial DDL) remains deferred/prod-gated.
+> - **D4 residuals (invoice `subscription_*` metadata + `/deletion-info`
+>   `subscription_count`) are closed** — invoices carry no subscription field;
+>   deletion-info returns a generic `dependencies[]`. (Token routes +
+>   `subscription.*` permission names remain a cosmetic S8 stretch.)
+> See `docs/dev_log/20260525/reports/02-sprint11-day2-backend-complete.md`.
+
 ---
 
 ## 1. Phase 0 — what shipped (code only, no commits)

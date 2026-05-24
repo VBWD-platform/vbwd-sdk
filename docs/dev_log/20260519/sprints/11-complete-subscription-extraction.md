@@ -1,5 +1,13 @@
 # Sprint 11 — Complete the subscription extraction (models + FK leave core)
 
+> **STATUS (2026-05-24): split + in progress.** Day 1 done — S2 ✅, S3 ✅,
+> S1 *code* ✅ (proven; webhook tests red — churn). This file is the original
+> master plan; the **remaining sub-sprints (S4/S5/S6/S7 + S1-test-finish) are
+> split into per-file sub-sprints and carried to
+> [`../../20260525/sprints/`](../../20260525/sprints/README.md)**. Resume from
+> [`../../20260525/reports/01-sprint11-day1-outcome-and-lessons.md`](../../20260525/reports/01-sprint11-day1-outcome-and-lessons.md).
+> The "Progress (2026-05-24)" section below has the day-1 detail.
+
 **Phase:** 3 (the deferred "A2") · **Repos:** `vbwd-backend` (+ its
 `plugins/{subscription,stripe,paypal,yookassa,taro,analytics,ghrm}`),
 `vbwd-fe-admin`, `vbwd-fe-user`
@@ -56,6 +64,55 @@ inversion*, not an inherent coupling. This sprint finishes it.
    cancellation → entitlement read (taro) → ghrm plan gate — all still work.
 
 ---
+
+## Progress (2026-05-24)
+
+- **S2 — DONE** ✅ (taro/analytics → ports). Entitlement port gained
+  `get_feature_value` + `current_plan_name`; read-model port gained
+  `active_subscription_count`. taro/analytics import no subscription model.
+  48 affected tests green, lint clean.
+- **S3 — DONE (runtime)** ✅ (ghrm → new `ICatalogReadModel` port:
+  `category_labels_by_slugs` + `plan_ids_in_category`). ghrm route + repository
+  decoupled; the `GhrmSoftwarePackage.tariff_plan_id` FK is a string ref (a
+  plugin→plugin DB link, acceptable). **Finding:** `bin/populate_ghrm.py` (a dev
+  seed that *creates* plans/categories) still imports `vbwd.models.tarif_plan*`;
+  it's dev tooling and repoints to the plugin in **S5**.
+- **S1 — code DONE; payment-test rewrite pending.** All three payment plugins
+  (stripe/paypal/yookassa) decoupled: subscription writes (link / renewal /
+  cancel / payment-failed) go through a new `ISubscriptionLifecycle` port
+  (impl in the subscription plugin); the **recurring-vs-one-time** decision +
+  billing spec come from the **extensible line-item registry**
+  (`recurring_billing_spec`) — so SUBSCRIPTION (and recurring add-ons) recur,
+  tokens/shop/one-off add-ons are one-time, and **any plugin can register its
+  own recurring line-item type**. Payment plugins import zero subscription
+  models (verified) + flake8/black clean. **Proven by 7 new tests** (recurring
+  registry extensibility + ghrm subscription mode + add-on recurring/one-time).
+  *Remaining:* the existing payment-webhook tests still mock the old
+  `container.subscription_repository` seam and need rewiring to the port (churn,
+  not a behaviour change). (Pre-existing/unrelated: paypal `sdk_adapter` tests
+  error on an unimplemented `release_authorization` — not from this sprint.)
+- **S4/S5 — investigated; NOT executed (high blast radius, reverted clean).**
+  Findings from the dig:
+  - **S5 (move models) is FK-blocked by S4** (R4): core `invoice` declares
+    `db.ForeignKey("vbwd_subscription.id")` + `"vbwd_tarif_plan.id")` (string
+    refs). Move the model classes out while core still FKs them and SQLAlchemy
+    mapper config can fail at boot for a subscription-free deploy. So S4 must
+    land first / together.
+  - **S4 touches CORE, not just the plugin.** `invoice.subscription_id` /
+    `tarif_plan_id` are *written* in **core** `vbwd/services/invoice_service.py`
+    (create) + `vbwd/routes/admin/invoices.py` (duplicate), plus 4 plugin sites
+    (checkout_handler, subscription_service, demo_seed, the new lifecycle). All
+    must move to the line-item link + the core invoice `create` API signature
+    changes + all callers update + Alembic drop + full checkout/renewal/admin
+    validation. This is the real "A2".
+  - The subscription↔invoice link is **derivable from line items** (item_type
+    SUBSCRIPTION, item_id = subscription id) — `find_by_subscription` and the
+    renewal/checkout flows can use that instead of the columns; a backfill is
+    only needed for any legacy invoice lacking a subscription line item.
+  - **Decision:** execute S4+S5 as a focused, continuously-validated pass
+    (run the agnostic oracle + subscription integration after each step) rather
+    than rushing — a broken mapper-config or column drop is high-cost. The
+    partial S4 reroute was reverted to keep core consistent.
 
 ## Slices (ordered; each is behaviour-preserving, E2)
 

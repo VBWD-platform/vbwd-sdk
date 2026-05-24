@@ -19,7 +19,7 @@ shop/booking/ghrm and core is provably subscription-agnostic.
 | 08 | [fe-admin: P1 + P2](done/08-fe-admin-resolve-live-couplings.md) | ✅ Done (P1 + P2, e2e-verified) |
 | 09 | [cross-repo agnostic-install gate](sprints/09-cross-repo-agnostic-install-proof.md) | ✅ Backend + fe-admin + **fe-user** oracles done (in CI) |
 | 10 | fe-user: extract checkout subscription/shop coupling (source registry) | ✅ Done (e2e-verified) — see report §3o |
-| 11 | [complete extraction: models + FK leave core (resolves R3/R4, supersedes A)](sprints/11-complete-subscription-extraction.md) | 📋 Planned — optional "full clean" phase (XL, incl. DB-migration window) |
+| 11 | [complete extraction: models + FK leave core (resolves R3/R4, supersedes A)](sprints/11-complete-subscription-extraction.md) | 🔶 **In progress (day 1 done)** — S2✅ S3✅ S1-code✅+proven; **S4/S5/S6/S7 carried to [20260525](../20260525/README.md)**; payment-webhook tests red (churn). Split into sub-sprints under [20260525/sprints](../20260525/sprints/README.md). |
 
 ## Work done
 
@@ -84,17 +84,22 @@ AccessLevels); no commits made (standing instruction).
 
 ## Remaining
 
-The subscription extraction (Direction A) is **functionally complete** across
-backend, fe-core, fe-admin, and fe-user. Optional hardening only:
+Direction A (subscription as a plugin peer, core agnostic) is **functionally
+complete**. **Sprint 11** ("full clean" — models + FK leave core) is **in
+progress** and carried to **[20260525](../20260525/README.md)**:
 
-- **Sprint 09 hardening (optional)** — plugin-disabled runtime proof + wire the
-  three `subscription-agnostic` oracles (backend, fe-admin, fe-user) as named
-  per-repo CI jobs.
-- **fe-admin / fe-user further-decoupling (optional, D4-acceptable)** —
-  `InvoiceDetails`/`InvoiceDetail` "Subscription Info" behind an
-  `invoiceDetailSections` point; `/deletion-info` generic `dependencies[]`
-  (backend); `Dashboard` token/invoice gates use the `subscription.*` permission
-  namespace. All D4-residual (tokens/invoices stay core), not blocking.
+- **Sprint 11 day 1 done:** S2 (taro/analytics ports), S3 (ghrm catalog port),
+  S1 *code* (payment plugins → `ISubscriptionLifecycle` port + recurring via the
+  extensible line-item registry; proven by tests). 58 done-work tests green,
+  app boots.
+- **Sprint 11 remaining (tomorrow):** S4 (invoice FK + migration — HIGH risk,
+  core invoice API + schema), S5 (move 5 model classes core→plugin), S1-test
+  rewrite (payment-webhook tests red — churn), S6 (FE invoiceDetailSections +
+  generic `/deletion-info`), S7 (flip the 3 oracles + decision log). Plan +
+  lessons: [20260525/reports/01](../20260525/reports/01-sprint11-day1-outcome-and-lessons.md),
+  sub-sprints: [20260525/sprints](../20260525/sprints/README.md).
+- **Optional/stretch:** Sprint 09 plugin-disabled runtime proof + named CI
+  oracle jobs; permission namespace rename (`subscription.*` → `token.*`/`invoice.*`).
 
 ## Pending — needs user action
 
