@@ -83,6 +83,12 @@
       "version": "0.1.0",
       "installedAt": "",
       "source": "local"
+    },
+    "token_payment": {
+      "enabled": true,
+      "version": "1.0.0",
+      "installedAt": "",
+      "source": "local"
     }
   }
 }

@@ -1,6 +1,9 @@
 # S10 — Pay an invoice with token balance (as a payment plugin)
 
-**Status:** PLANNED — 2026-05-25. Revives & re-architects the approved-but-never-built
+**Status:** IMPLEMENTED — 2026-05-25 (backend plugin + fe-user UI). 14 backend +
+8 fe-user unit tests green; flake8/eslint/vue-tsc clean. Backend integration/e2e
+deferred until the in-progress s5 model refactor (backend currently 500) is
+fixed. Revives & re-architects the approved-but-never-built
 [`../../20260403/sprints/16-token-payment.md`](../../20260403/sprints/16-token-payment.md)
 (2026-04-06) for the **current** post-subscription-extraction architecture.
 **Track:** independent — not a Sprint-11 sub-sprint. `s10` to avoid the reserved

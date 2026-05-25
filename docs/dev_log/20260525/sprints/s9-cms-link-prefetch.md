@@ -1,6 +1,8 @@
 # S9 — fe-user CMS: instant local navigation via viewport link prefetch
 
-**Status:** PLANNED — 2026-05-25
+**Status:** IMPLEMENTED — 2026-05-25 (16 unit tests green; eslint + vue-tsc clean;
+no regressions across 216 plugin unit tests; wired at the `CmsLayoutRenderer`
+root). The "no full reload" e2e is deferred until the stack is runnable.
 **Track:** independent FE/CMS work — **not** a Sprint-11 (subscription-extraction)
 sub-sprint. Numbered `s9` only to avoid the reserved `S8` (permissions rename) in
 this folder's README.

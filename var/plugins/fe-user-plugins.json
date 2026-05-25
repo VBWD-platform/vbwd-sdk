@@ -83,6 +83,12 @@
       "version": "1.0.0",
       "installedAt": "2026-05-05T11:00:00.000Z",
       "source": "local"
+    },
+    "token-payment": {
+      "enabled": true,
+      "version": "1.0.0",
+      "installedAt": "2026-05-25T00:00:00.000Z",
+      "source": "local"
     }
   }
 }
