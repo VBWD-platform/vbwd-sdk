@@ -1,6 +1,8 @@
 # S11 — token-payment follow-ups (post-e2e polish)
 
-**Status:** PLANNED — 2026-05-25. Follow-ups from the s10 live e2e
+**Status:** IMPLEMENTED & E2E-VERIFIED — 2026-05-26 (20 unit tests green; lint
+clean; live e2e: paid invoice now reports `payment_method=token_payment`,
+`new_balance` reflects post-capture, panel rows visually separated). Follow-ups from the s10 live e2e
 ([report 06](../reports/06-s9-s10-e2e-verification.md)). Low risk, mostly polish.
 **Track:** independent (continues s10). **Repos:** `vbwd-backend` (core, item 1),
 `vbwd-plugin-token-payment` (item 2), `vbwd-fe-user-plugin-token-payment` (item 3).
