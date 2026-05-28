@@ -710,7 +710,10 @@ with app.app_context():
                     continue
                 setattr(home_page, column.name, getattr(home1, column.name))
             home_page.slug = "home"
-            home_page.title = (home1.title or "Home") + ""
+            # `name` is the human-visible label; keep the home1 value unless
+            # it literally said "Home 1" — normalise to "Home" for clarity.
+            if home_page.name and "home1" in home_page.name.lower().replace(" ", ""):
+                home_page.name = "Home"
             db.session.add(home_page)
             db.session.commit()
             print("  + page 'home' created (cloned from 'home1')")
