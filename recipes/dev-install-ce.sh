@@ -654,7 +654,11 @@ with app.app_context():
             print(f"  No seed-image dir at {seed_dir} — skipping")
         else:
             image_repo = CmsImageRepository(db.session)
-            storage = LocalFileStorage(base_path="/app/uploads")
+            # Match the runtime wiring in plugins/cms/src/routes.py::_image_service
+            # — both args are required; base_url becomes the public URL prefix.
+            storage = LocalFileStorage(
+                base_path="/app/uploads", base_url="/uploads"
+            )
             image_service = CmsImageService(image_repo, storage)
 
             files = sorted(p for p in seed_dir.iterdir() if p.is_file())
