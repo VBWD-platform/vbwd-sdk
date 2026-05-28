@@ -219,12 +219,15 @@ for plugin in \
     analytics booking chat checkout cms discount email ghrm mailchimp \
     meinchat paypal shop stripe subscription taro token_payment; do
     PLUGIN_DIR="$BACKEND_DIR/plugins/$plugin"
-    PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-plugin-${plugin}.git"
+    # GitHub repo names are kebab-case; on-disk plugin dirs are the python
+    # snake_case import names. Map underscores → hyphens for the URL only.
+    plugin_repo_name="${plugin//_/-}"
+    PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-plugin-${plugin_repo_name}.git"
     if [ -d "$PLUGIN_DIR/.git" ]; then
         echo "Plugin $plugin already installed, pulling..."
         cd "$PLUGIN_DIR" && git pull origin main || true
     else
-        echo "Cloning plugin $plugin..."
+        echo "Cloning plugin $plugin (from vbwd-plugin-${plugin_repo_name})..."
         rm -rf "$PLUGIN_DIR"
         git clone --depth=1 "$PLUGIN_REPO" "$PLUGIN_DIR"
     fi
