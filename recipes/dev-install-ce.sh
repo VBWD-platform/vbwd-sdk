@@ -215,7 +215,7 @@ echo "=========================================="
 echo "Step 1.5: Installing backend plugins"
 echo "=========================================="
 
-for plugin in analytics chat cms email ghrm mailchimp paypal stripe taro yookassa; do
+for plugin in analytics chat cms email ghrm mailchimp paypal stripe taro; do
     PLUGIN_DIR="$BACKEND_DIR/plugins/$plugin"
     PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-plugin-${plugin}.git"
     if [ -d "$PLUGIN_DIR/.git" ]; then
@@ -347,7 +347,7 @@ npm install
 echo "✓ vbwd-fe-user dependencies installed"
 
 echo "Installing vbwd-fe-user plugins..."
-for plugin in chat checkout cms ghrm landing1 paypal-payment stripe-payment taro theme-switcher yookassa-payment; do
+for plugin in chat checkout cms ghrm landing1 paypal-payment stripe-payment taro theme-switcher; do
     PLUGIN_DIR="$FE_USER_DIR/plugins/$plugin"
     PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-fe-user-plugin-${plugin}.git"
     if [ -d "$PLUGIN_DIR/.git" ]; then
