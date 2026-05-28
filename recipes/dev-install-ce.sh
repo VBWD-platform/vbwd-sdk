@@ -569,6 +569,7 @@ POPULATE_PLUGINS=(cms booking shop ghrm discount token_payment)
 
 for plugin in "${POPULATE_PLUGINS[@]}"; do
     populate_sh="$BACKEND_DIR/plugins/$plugin/bin/populate-db.sh"
+    populate_py="$BACKEND_DIR/plugins/$plugin/populate_db.py"
     if [ -f "$populate_sh" ]; then
         echo ""
         echo "── Populating $plugin ──"
@@ -577,8 +578,26 @@ for plugin in "${POPULATE_PLUGINS[@]}"; do
         else
             echo "WARNING: $plugin populate failed — check logs"
         fi
+    elif [ -f "$populate_py" ]; then
+        # Fallback: plugin ships populate_db.py but no shell wrapper
+        # (e.g. token_payment). Run the module's populate_db() entrypoint
+        # inside an app context so db.session + plugin imports resolve.
+        echo ""
+        echo "── Populating $plugin (via populate_db.py fallback) ──"
+        if docker compose exec -T api python -c "
+from vbwd.app import create_app
+app = create_app()
+with app.app_context():
+    from plugins.${plugin}.populate_db import populate_db
+    populate_db()
+print('✓ ${plugin} populate_db() finished')
+"; then
+            echo "✓ $plugin demo data populated"
+        else
+            echo "WARNING: $plugin populate (fallback) failed — check logs"
+        fi
     else
-        echo "WARNING: $populate_sh not found — skipping $plugin populate"
+        echo "WARNING: neither $populate_sh nor $populate_py exists — skipping $plugin populate"
     fi
 done
 
@@ -614,7 +633,7 @@ import os
 import sys
 from pathlib import Path
 
-from vbwd.app_factory import create_app
+from vbwd.app import create_app
 from vbwd.extensions import db
 
 app = create_app()
