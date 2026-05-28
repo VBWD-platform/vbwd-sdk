@@ -4,17 +4,26 @@ set -e
 # VBWD Community Edition - Development Installation Script
 # Works for both local development and GitHub Actions
 # Usage: ./recipes/dev-install-ce.sh [--domain <hostname>] [--ssl]
-# Or set VBWD_DOMAIN / VBWD_SSL env vars before running.
+#                                    [--admin-email <addr>] [--admin-password <pw>]
+# Or set VBWD_DOMAIN / VBWD_SSL / VBWD_ADMIN_EMAIL / VBWD_ADMIN_PASSWORD env
+# vars before running.
 #
 # Examples:
-#   ./recipes/dev-install-ce.sh                              # http://localhost
+#   ./recipes/dev-install-ce.sh                              # http://localhost, admin@vbwd.local / admin123
 #   ./recipes/dev-install-ce.sh --domain myapp.com          # http://myapp.com
 #   ./recipes/dev-install-ce.sh --domain myapp.com --ssl    # https://myapp.com
 #   VBWD_DOMAIN=myapp.com VBWD_SSL=1 ./recipes/dev-install-ce.sh
+#   ./recipes/dev-install-ce.sh --admin-email me@x.io --admin-password 'S3cret!'
+#
+# The default admin (admin@vbwd.local / admin123) is for LOCAL DEVELOPMENT
+# ONLY. The Step 3.6 routine rotates an existing admin's password to whatever
+# the caller passed, so you can re-run this script with new credentials.
 
 # Parse arguments
 DOMAIN="${VBWD_DOMAIN:-localhost}"
 SSL="${VBWD_SSL:-0}"
+ADMIN_EMAIL="${VBWD_ADMIN_EMAIL:-admin@vbwd.local}"
+ADMIN_PASSWORD="${VBWD_ADMIN_PASSWORD:-admin123}"
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --domain)
@@ -24,6 +33,14 @@ while [[ $# -gt 0 ]]; do
         --ssl)
             SSL=1
             shift
+            ;;
+        --admin-email)
+            ADMIN_EMAIL="$2"
+            shift 2
+            ;;
+        --admin-password)
+            ADMIN_PASSWORD="$2"
+            shift 2
             ;;
         *)
             echo "Unknown argument: $1"
@@ -487,6 +504,36 @@ else
     echo "WARNING: run_migrations.sh not found, skipping migrations"
 fi
 
+# Create the default admin user.
+#
+# Idempotent: bin/create_admin.sh inside the backend container does an
+# upsert — if the email exists it ensures the user is ACTIVE + has the
+# ADMIN role; if absent it creates one with the supplied password. Re-runs
+# of this recipe with different --admin-password values rotate the password
+# of the existing admin to the new value, so the script stays a single
+# source of truth for "what does it take to log into this stack."
+#
+# Defaults (admin@vbwd.local / admin123) are LOCAL DEV ONLY. Override per
+# run with --admin-email / --admin-password or VBWD_ADMIN_EMAIL /
+# VBWD_ADMIN_PASSWORD.
+echo ""
+echo "=========================================="
+echo "Step 3.6: Creating default admin user"
+echo "=========================================="
+
+cd "$BACKEND_DIR"
+if [ -f "$BACKEND_DIR/bin/create_admin.sh" ]; then
+    echo "Creating / upserting admin: $ADMIN_EMAIL"
+    if bash "$BACKEND_DIR/bin/create_admin.sh" "$ADMIN_EMAIL" "$ADMIN_PASSWORD"; then
+        echo "✓ Admin user ready: $ADMIN_EMAIL"
+    else
+        echo "WARNING: admin-user creation failed — check backend logs"
+        echo "  (you can retry with: cd $BACKEND_DIR && ./bin/create_admin.sh '$ADMIN_EMAIL' '$ADMIN_PASSWORD')"
+    fi
+else
+    echo "WARNING: $BACKEND_DIR/bin/create_admin.sh not found — admin not created"
+fi
+
 # Run backend tests
 #echo ""
 #echo "=========================================="
@@ -502,36 +549,49 @@ fi
 #    exit 1
 #fi
 
-# Note about frontend startup
+# Start frontend containers
 echo ""
 echo "=========================================="
-echo "Step 5: Frontend applications (ready to start)"
+echo "Step 5: Starting frontend containers (dev + nginx)"
 echo "=========================================="
 echo ""
-echo "Frontend apps have been installed and are ready to run."
-echo "Start them separately from their directories:"
-echo ""
-echo "User app (port $FE_USER_PORT):"
-echo "  cd $FE_USER_DIR && npm run dev"
-echo "  or with Docker: docker compose up"
-
-echo ""
-echo "Admin app (port $FE_ADMIN_PORT):"
-echo "  cd $FE_ADMIN_DIR && npm run dev"
-echo "  or with Docker: docker compose up"
-echo ""
-echo "Core library:"
-echo "  Already built at: $FE_CORE_DIR/dist/"
+echo "Both frontends run two containers each:"
+echo "  - dev:   Vite dev server on the container's port 5173."
+echo "  - nginx: reverse proxy on the host port ($FE_USER_PORT / $FE_ADMIN_PORT)"
+echo "           — this is what users hit in their browser."
+echo "'make up' only starts 'dev', so we also start 'nginx' to expose"
+echo "the apps on the documented URLs."
 echo ""
 
+# Helper — bring up both dev + nginx for an fe-* repo. Uses --build so
+# image changes between recipe runs are picked up.
+start_frontend() {
+    local dir="$1"
+    local label="$2"
+    (
+        cd "$dir" || exit 1
+        echo "── $label (cwd: $dir) ──"
+        docker compose up dev nginx -d --build
+    )
+}
 
-cd $FE_USER_DIR
-make up
+start_frontend "$FE_USER_DIR"  "vbwd-fe-user"
+start_frontend "$FE_ADMIN_DIR" "vbwd-fe-admin"
 
-cd ..
-cd $FE_ADMIN_DIR
-make up
-cd ..
+# Verify each app responds on its public port — the recipe's summary
+# below claims they're up; this proves it before the user sees it.
+if wait_for_service "vbwd-fe-user"  "${HTTP}://${DOMAIN}:${FE_USER_PORT}/"  60; then
+    echo "✓ User app reachable on ${HTTP}://${DOMAIN}:${FE_USER_PORT}"
+else
+    echo "WARNING: User app didn't answer on ${HTTP}://${DOMAIN}:${FE_USER_PORT} yet."
+    echo "  Check logs with: cd $FE_USER_DIR && docker compose logs -f dev nginx"
+fi
+if wait_for_service "vbwd-fe-admin" "${HTTP}://${DOMAIN}:${FE_ADMIN_PORT}/" 60; then
+    echo "✓ Admin app reachable on ${HTTP}://${DOMAIN}:${FE_ADMIN_PORT}"
+else
+    echo "WARNING: Admin app didn't answer on ${HTTP}://${DOMAIN}:${FE_ADMIN_PORT} yet."
+    echo "  Check logs with: cd $FE_ADMIN_DIR && docker compose logs -f dev nginx"
+fi
 
 
 # Summary
@@ -546,22 +606,29 @@ echo "  - Frontend (User app):  ${HTTP}://${DOMAIN}:$FE_USER_PORT"
 echo "  - Frontend (Admin app): ${HTTP}://${DOMAIN}:$FE_ADMIN_PORT"
 echo "  - Database:             postgresql://vbwd:vbwd@${DOMAIN}:5432/vbwd"
 echo ""
+echo "Default admin login (LOCAL DEV ONLY — rotate before exposing the stack):"
+echo "  - Email:    $ADMIN_EMAIL"
+echo "  - Password: $ADMIN_PASSWORD"
+echo "  - Admin UI: ${HTTP}://${DOMAIN}:$FE_ADMIN_PORT/admin/login"
+echo ""
 echo "Repository Structure:"
 echo "  - Backend:    $BACKEND_DIR"
 echo "  - Core Lib:   $FE_CORE_DIR"
 echo "  - User App:   $FE_USER_DIR (depends on core via git submodule)"
 echo "  - Admin App:  $FE_ADMIN_DIR (depends on core via git submodule)"
 echo ""
-echo "Quick Start - Frontend Apps (run in separate terminals):"
-echo "  - User app:   cd $FE_USER_DIR && npm run dev"
-echo "  - Admin app:  cd $FE_ADMIN_DIR && npm run dev"
+echo "Frontends are already running (dev + nginx containers started above)."
+echo "If you prefer a native dev server with HMR instead of the dockerised dev,"
+echo "stop the 'dev' container and run 'npm run dev' from the repo root."
 echo ""
 echo "Useful commands:"
 echo "  - Backend logs:    cd $BACKEND_DIR && docker compose logs -f api"
-echo "  - User app logs:   cd $FE_USER_DIR && docker compose logs -f"
-echo "  - Admin app logs:  cd $FE_ADMIN_DIR && docker compose logs -f"
-echo "  - Run tests:       cd $BACKEND_DIR && make test"
+echo "  - User app logs:   cd $FE_USER_DIR && docker compose logs -f dev nginx"
+echo "  - Admin app logs:  cd $FE_ADMIN_DIR && docker compose logs -f dev nginx"
+echo "  - Stop user app:   cd $FE_USER_DIR && docker compose down"
+echo "  - Stop admin app:  cd $FE_ADMIN_DIR && docker compose down"
 echo "  - Stop backend:    cd $BACKEND_DIR && docker compose down"
+echo "  - Run tests:       cd $BACKEND_DIR && make test"
 echo ""
 echo "Documentation: $WORKSPACE_DIR/docs/"
 echo ""
