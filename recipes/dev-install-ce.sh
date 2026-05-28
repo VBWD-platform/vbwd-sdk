@@ -408,12 +408,18 @@ for plugin in \
     ghrm-admin meinchat-admin shop-admin subscription-admin \
     taro-admin token-payment-admin; do
     PLUGIN_DIR="$FE_ADMIN_DIR/plugins/$plugin"
-    PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-fe-admin-plugin-${plugin}.git"
+    # fe-admin convention: on-disk dir often ends in `-admin` (cms-admin,
+    # discount-admin, …) but the GitHub repo name DOESN'T duplicate the
+    # `-admin` (the repo prefix `vbwd-fe-admin-plugin-` already states the
+    # role). Strip a trailing `-admin` for the URL; no-op for plugins
+    # like `booking` / `analytics-widget` that never had the suffix.
+    plugin_repo_name="${plugin%-admin}"
+    PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-fe-admin-plugin-${plugin_repo_name}.git"
     if [ -d "$PLUGIN_DIR/.git" ]; then
         echo "Plugin $plugin already installed, pulling..."
         cd "$PLUGIN_DIR" && git pull origin main || true
     else
-        echo "Cloning fe-admin plugin $plugin..."
+        echo "Cloning fe-admin plugin $plugin (from vbwd-fe-admin-plugin-${plugin_repo_name})..."
         rm -rf "$PLUGIN_DIR"
         git clone --depth=1 "$PLUGIN_REPO" "$PLUGIN_DIR"
     fi
