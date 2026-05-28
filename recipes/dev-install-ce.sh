@@ -215,7 +215,9 @@ echo "=========================================="
 echo "Step 1.5: Installing backend plugins"
 echo "=========================================="
 
-for plugin in analytics chat cms email ghrm mailchimp paypal stripe taro; do
+for plugin in \
+    analytics booking chat checkout cms discount email ghrm mailchimp \
+    meinchat paypal shop stripe subscription taro token_payment; do
     PLUGIN_DIR="$BACKEND_DIR/plugins/$plugin"
     PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-plugin-${plugin}.git"
     if [ -d "$PLUGIN_DIR/.git" ]; then
@@ -347,7 +349,10 @@ npm install
 echo "✓ vbwd-fe-user dependencies installed"
 
 echo "Installing vbwd-fe-user plugins..."
-for plugin in chat checkout cms ghrm landing1 paypal-payment stripe-payment taro theme-switcher; do
+for plugin in \
+    booking chat checkout cms ghrm landing1 meinchat \
+    paypal-payment shop stripe-payment subscription taro \
+    theme-switcher token-payment; do
     PLUGIN_DIR="$FE_USER_DIR/plugins/$plugin"
     PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-fe-user-plugin-${plugin}.git"
     if [ -d "$PLUGIN_DIR/.git" ]; then
@@ -395,7 +400,10 @@ npm install
 echo "✓ vbwd-fe-admin dependencies installed"
 
 echo "Installing vbwd-fe-admin plugins..."
-for plugin in analytics-widget cms-admin email-admin ghrm-admin taro-admin; do
+for plugin in \
+    analytics-widget booking cms-admin discount-admin email-admin \
+    ghrm-admin meinchat-admin shop-admin subscription-admin \
+    taro-admin token-payment-admin; do
     PLUGIN_DIR="$FE_ADMIN_DIR/plugins/$plugin"
     PLUGIN_REPO="https://github.com/VBWD-platform/vbwd-fe-admin-plugin-${plugin}.git"
     if [ -d "$PLUGIN_DIR/.git" ]; then
@@ -534,6 +542,211 @@ else
     echo "WARNING: $BACKEND_DIR/bin/create_admin.sh not found — admin not created"
 fi
 
+# ──────────────────────────────────────────────────────────────────────────
+# Step 3.7 — Populate plugin demo data (CMS, booking, shop, ghrm, discount,
+# token_payment). Each plugin's populate-db.sh is idempotent (upserts), so
+# re-running this recipe is safe.
+#
+# Order matters: CMS first (creates layouts/widgets/styles/pages — required
+# by booking + shop + ghrm which themselves emit CMS layouts + pages).
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "=========================================="
+echo "Step 3.7: Populating plugin demo data"
+echo "=========================================="
+
+cd "$BACKEND_DIR"
+POPULATE_PLUGINS=(cms booking shop ghrm discount token_payment)
+
+for plugin in "${POPULATE_PLUGINS[@]}"; do
+    populate_sh="$BACKEND_DIR/plugins/$plugin/bin/populate-db.sh"
+    if [ -f "$populate_sh" ]; then
+        echo ""
+        echo "── Populating $plugin ──"
+        if bash "$populate_sh"; then
+            echo "✓ $plugin demo data populated"
+        else
+            echo "WARNING: $plugin populate failed — check logs"
+        fi
+    else
+        echo "WARNING: $populate_sh not found — skipping $plugin populate"
+    fi
+done
+
+# ──────────────────────────────────────────────────────────────────────────
+# Step 3.8 — CMS images + default-home routing rules
+#
+# (a) Register every file in $BACKEND_DIR/uploads/images/ as a CmsImage row.
+#     Image files are already on disk inside the container via the bind
+#     mount (vbwd-backend bind-mounts the whole repo at /app); this step
+#     just makes them visible in the admin media gallery + reusable in
+#     widgets/pages. Idempotent: each file's slug-derived row is upserted.
+#
+# (b) Routing rules: ensure `/` (default) and `/index.html` both resolve
+#     to the CMS page slug `home`. If a page `home` doesn't exist yet,
+#     clone `home1` → `home` so the rule has a real landing target.
+#     Goes through the CMS service layer — no raw SQL.
+# ──────────────────────────────────────────────────────────────────────────
+echo ""
+echo "=========================================="
+echo "Step 3.8: Importing CMS images + default-home routing"
+echo "=========================================="
+
+cd "$BACKEND_DIR"
+docker compose exec -T api python - <<'PYEOF'
+"""dev-install-ce: register seed CMS images + ensure / and /index.html → /home.
+
+All writes go through the CMS service / repository layer per
+feedback_no_direct_db_for_test_data. Idempotent: re-running is a no-op
+once seeded.
+"""
+import mimetypes
+import os
+import sys
+from pathlib import Path
+
+from vbwd.app_factory import create_app
+from vbwd.extensions import db
+
+app = create_app()
+
+with app.app_context():
+    # ── (a) CMS image gallery seeding ──────────────────────────────────────
+    try:
+        from plugins.cms.src.repositories.cms_image_repository import (
+            CmsImageRepository,
+        )
+        from plugins.cms.src.services.cms_image_service import CmsImageService
+        from plugins.cms.src.services.file_storage import LocalFileStorage
+    except Exception as exc:
+        print(f"  CMS plugin not loadable — skipping image import ({exc})")
+    else:
+        seed_dir = Path("/app/uploads/images")
+        if not seed_dir.is_dir():
+            print(f"  No seed-image dir at {seed_dir} — skipping")
+        else:
+            image_repo = CmsImageRepository(db.session)
+            storage = LocalFileStorage(base_path="/app/uploads")
+            image_service = CmsImageService(image_repo, storage)
+
+            files = sorted(p for p in seed_dir.iterdir() if p.is_file())
+            print(f"  Found {len(files)} seed image(s) at {seed_dir}")
+
+            from plugins.cms.src.services.cms_image_service import _slugify
+
+            registered = skipped = failed = 0
+            for path in files:
+                slug = _slugify(path.stem)
+                if image_repo.find_by_slug(slug):
+                    skipped += 1
+                    continue
+                try:
+                    data = path.read_bytes()
+                    mime, _ = mimetypes.guess_type(str(path))
+                    image_service.upload_image(
+                        file_data=data,
+                        filename=path.name,
+                        mime_type=mime or "application/octet-stream",
+                        caption=path.stem,
+                    )
+                    registered += 1
+                except Exception as exc:
+                    failed += 1
+                    print(f"    ✗ {path.name}: {exc}")
+            print(
+                f"  Images: {registered} registered, "
+                f"{skipped} already present, {failed} failed"
+            )
+
+    # ── (b) Default-home routing rules ─────────────────────────────────────
+    try:
+        from plugins.cms.src.models.cms_page import CmsPage
+        from plugins.cms.src.models.cms_routing_rule import CmsRoutingRule
+    except Exception as exc:
+        print(f"  CMS routing models not loadable — skipping routing ({exc})")
+        sys.exit(0)
+
+    # Ensure a `home` page exists. If absent but `home1` exists, clone it
+    # so the routing target resolves to a real published page.
+    home_page = db.session.query(CmsPage).filter_by(slug="home").first()
+    if home_page is None:
+        home1 = db.session.query(CmsPage).filter_by(slug="home1").first()
+        if home1 is not None:
+            home_page = CmsPage()
+            for column in CmsPage.__table__.columns:
+                if column.name in ("id", "created_at", "updated_at", "version"):
+                    continue
+                setattr(home_page, column.name, getattr(home1, column.name))
+            home_page.slug = "home"
+            home_page.title = (home1.title or "Home") + ""
+            db.session.add(home_page)
+            db.session.commit()
+            print("  + page 'home' created (cloned from 'home1')")
+        else:
+            print(
+                "  ! neither 'home' nor 'home1' page found — "
+                "routing rules will still upsert but pages must be created later"
+            )
+    else:
+        print("  ~ page 'home' already exists")
+
+    def _upsert_rule(*, name, match_type, match_value, target_slug,
+                     redirect_code, is_rewrite, priority):
+        existing = (
+            db.session.query(CmsRoutingRule)
+            .filter_by(match_type=match_type, match_value=match_value,
+                       layer="middleware")
+            .first()
+        )
+        if existing is None:
+            rule = CmsRoutingRule(
+                name=name,
+                match_type=match_type,
+                match_value=match_value,
+                target_slug=target_slug,
+                is_active=True,
+                priority=priority,
+                layer="middleware",
+                redirect_code=redirect_code,
+                is_rewrite=is_rewrite,
+            )
+            db.session.add(rule)
+            print(
+                f"  + routing rule: {match_type}"
+                + (f"={match_value}" if match_value else "")
+                + f" → {target_slug}"
+            )
+        else:
+            existing.target_slug = target_slug
+            existing.is_active = True
+            existing.priority = priority
+            existing.redirect_code = redirect_code
+            existing.is_rewrite = is_rewrite
+            print(
+                f"  ~ routing rule: {match_type}"
+                + (f"={match_value}" if match_value else "")
+                + f" → {target_slug} (updated)"
+            )
+
+    _upsert_rule(
+        name="home", match_type="default", match_value=None,
+        target_slug="home", redirect_code=302, is_rewrite=True, priority=0,
+    )
+    _upsert_rule(
+        name="index.html → home", match_type="path_prefix",
+        match_value="/index.html", target_slug="home",
+        redirect_code=302, is_rewrite=True, priority=-10,
+    )
+    db.session.commit()
+    print("✓ Default-home routing rules upserted")
+PYEOF
+
+if [ $? -eq 0 ]; then
+    echo "✓ CMS image import + routing-rule step complete"
+else
+    echo "WARNING: CMS image / routing step exited non-zero — check logs"
+fi
+
 # Run backend tests
 #echo ""
 #echo "=========================================="
@@ -610,6 +823,17 @@ echo "Default admin login (LOCAL DEV ONLY — rotate before exposing the stack):
 echo "  - Email:    $ADMIN_EMAIL"
 echo "  - Password: $ADMIN_PASSWORD"
 echo "  - Admin UI: ${HTTP}://${DOMAIN}:$FE_ADMIN_PORT/admin/login"
+echo ""
+echo "Seeded demo data (idempotent — re-run this recipe any time):"
+echo "  - CMS:           styles, widgets, layouts, pages + image gallery"
+echo "  - Booking:       resources, schemas, bookings, CMS pages, email templates"
+echo "  - Shop:          products, categories, warehouses, stock, CMS pages"
+echo "  - GHRM:          catalogue + detail layouts/widgets/pages"
+echo "  - Discount:      demo discounts + coupons"
+echo "  - Token payment: demo token bundles + invoice pricing"
+echo ""
+echo "CMS routing: /  and  /index.html  →  /home  (rewrite)"
+echo "  Edit at: ${HTTP}://${DOMAIN}:$FE_ADMIN_PORT/admin/cms/routing"
 echo ""
 echo "Repository Structure:"
 echo "  - Backend:    $BACKEND_DIR"
