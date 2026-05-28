@@ -813,13 +813,34 @@ echo ""
 
 # Helper — bring up both dev + nginx for an fe-* repo. Uses --build so
 # image changes between recipe runs are picked up.
+#
+# Pre-clean orphans first. Docker can leave stale container records from
+# prior partial runs that still reference an older network ID; when the
+# compose project's default network is (re)created, those leftover
+# containers try to attach to the obsolete ID and the daemon errors with
+# "failed to set up container networking: network <id> not found".
+# `compose down --remove-orphans` clears those records without touching
+# named volumes (node_modules + plugin_api_node_modules stay intact, so
+# the next `up` doesn't have to re-run `npm install`).
 start_frontend() {
     local dir="$1"
     local label="$2"
     (
         cd "$dir" || exit 1
         echo "── $label (cwd: $dir) ──"
-        docker compose up dev nginx -d --build
+        # Stop any leftover containers + drop the project network so the
+        # next up attaches everyone to a fresh, consistent network ID.
+        docker compose --profile dev down --remove-orphans >/dev/null 2>&1 || true
+        if ! docker compose --profile dev up dev nginx -d --build; then
+            echo "WARNING: first 'docker compose up' for $label failed."
+            echo "  Pruning unused networks and retrying once..."
+            docker network prune -f >/dev/null 2>&1 || true
+            docker compose --profile dev up dev nginx -d --build || {
+                echo "ERROR: $label still failed to start — inspect:"
+                echo "       cd $dir && docker compose --profile dev logs"
+                return 1
+            }
+        fi
     )
 }
 
