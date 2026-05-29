@@ -1,7 +1,17 @@
 # S28.0 — Config keys + `GET /api/v1/messaging/limits` + iOS/web consumers
 
 **Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](s28-meinchat-e2e-encryption-and-retention.md)
-**Status:** PLANNED — 2026-05-28
+**Status:** PLANNED — 2026-05-28. **Revised 2026-05-28** to absorb the
+critical review:
+- `messages_retention_days_server: 0` is documented as **mutually
+  exclusive with meinchat-plus enabled** — both states force the
+  plugin loader to refuse enable (closes critical-review §C2).
+- `enabled_protocols` removed from the `/limits` response shape — the
+  capability surface moves to `/messaging/capabilities` in S28.3a
+  (one endpoint, one concern; DRY).
+- `attachments_retention_days_server` is documented as **read by the
+  attachment prune** (S28.1 §2.1) — the earlier draft left it
+  ambiguous which key the prune used.
 **Depends on:** none (entry slice).
 **Blocks:** S28.1 (retention prune reads these config keys), S28.2 (client cache reads the suggested-client-retention).
 
@@ -29,19 +39,19 @@ Add to `vbwd-backend/plugins/meinchat/config.json`:
 {
   "messages_retention_days_server": {
     "type": "integer", "default": 2, "min": 0, "max": 365,
-    "description": "How many days the server keeps message rows before pruning. 0 = no server history (server-amnesic; clients keep everything)."
+    "description": "How many days the server keeps message rows before pruning. 0 = server-amnesic (every message deleted on the next cron tick). NOTE: incompatible with `meinchat-plus` enabled — async first-message delivery via prekey bundles requires the server to hold ciphertext until delivery. The plugin loader refuses to enable meinchat-plus while this key is 0."
   },
   "messages_retention_days_client_suggested": {
     "type": "integer", "default": 10, "min": 0, "max": 365,
-    "description": "Suggested client-side retention (days). Clients may shorten but never extend beyond this value."
+    "description": "Suggested client-side retention (days). Well-behaved clients shorten but never extend beyond this value (best-effort UX default — not a security guarantee; a forked client can ignore it)."
   },
   "attachments_retention_days_server": {
     "type": "integer", "default": 2, "min": 0, "max": 365,
-    "description": "Server-side retention for attachment objects (same semantics as messages)."
+    "description": "Server-side retention for attachment objects, read by the S28.1 attachment prune. Same E2E-exemption semantics as messages."
   },
   "ciphertext_max_bytes": {
     "type": "integer", "default": 16384, "min": 1024, "max": 65536,
-    "description": "Upper bound on message envelope size in bytes (ciphertext + header). Allows envelope overhead vs the plaintext 4 000-char cap."
+    "description": "Upper bound on message envelope size in bytes (ciphertext + per-recipient fan-out header + padding). Validates server-side in S28.3b's SignalEnvelopeValidator."
   }
 }
 ```
@@ -64,9 +74,14 @@ def get_limits():
         "messages_retention_days_client_suggested": int(config["messages_retention_days_client_suggested"]),
         "attachments_retention_days_server": int(config["attachments_retention_days_server"]),
         "ciphertext_max_bytes": int(config["ciphertext_max_bytes"]),
-        "enabled_protocols": ["plain"],   # S28.3a will widen this to the registered capability set
     })
 ```
+
+`/limits` carries **operator knobs only**. The capability surface
+(`enabled_protocols` / per-user usable protocols) is a separate concern
+and lives on `/messaging/capabilities[?me=true]` introduced in S28.3a —
+one endpoint, one concern (DRY). The earlier draft included
+`enabled_protocols` in this response; dropped in this revision.
 
 Auth required (same reason as other meinchat reads — minor info leak otherwise).
 Returns 404 with the standard `Plugin not enabled` envelope when meinchat is disabled per-instance.
@@ -81,7 +96,8 @@ New file: `vbwd-backend/plugins/meinchat/tests/unit/routes/test_limits_endpoint.
 | 2 | `test_reflects_admin_changed_config` | flip `messages_retention_days_server` in the config store → next call returns the new value |
 | 3 | `test_auth_required` | no bearer → 401 |
 | 4 | `test_plugin_disabled_returns_404` | meinchat disabled → standard `Plugin not enabled` 404 envelope |
-| 5 | `test_enabled_protocols_plain_only_in_this_slice` | locks the contract: with no downstream plugins this slice's response is `["plain"]` (so S28.3a can widen it without ambiguity) |
+| 5 | `test_response_shape_has_exactly_4_fields` | response carries the four operator knobs and **does not include** `enabled_protocols` (that lives on `/messaging/capabilities` from S28.3a — DRY check) |
+| 6 | `test_zero_days_with_meinchat_plus_refuses_enable` | with `meinchat-plus` enabled and `messages_retention_days_server=0`, the plugin loader raises `IncompatibleRetentionConfigError` at enable time (closes critical-review §C2) |
 
 Plus extend `tests/unit/test_plugin.py` with one spec asserting the four
 new config keys ship with their documented defaults.
@@ -176,8 +192,20 @@ New file: `Tests/MeinChatPluginTests/MeinChatLimitsServiceTests.swift`. **≥ 4 
 ## 7. Engineering-requirements check
 
 - **TDD-first:** every change opens with a red spec. Limits-endpoint specs cover the contract before the route exists.
-- **DRY:** the `RetentionService` of S28.1 will read from the same config keys via the same `config_store.get_config("meinchat")` lookup — no duplicated source-of-truth.
 - **SOLID — D (DI):** route reads from `current_app.config_store` (already a port), not from a module-level singleton.
-- **SOLID — I:** the contract is 5 fields; no kitchen-sink response envelope.
-- **NO OVERENGINEERING:** one new route + 4 new config keys + 2 client consumers. No new abstractions.
+- **SOLID — I:** the contract is 4 fields; no kitchen-sink response envelope. (Earlier draft had 5 — `enabled_protocols` removed, moved to `/capabilities`.)
+- **NO OVERENGINEERING — concrete corrections in this revision.**
+  - **No `enabled_protocols` in `/limits`.** That's a capability concern; `/messaging/capabilities` is its home (S28.3a). Two endpoints with overlapping shapes = DRY violation; one endpoint each = clean.
+  - **No defensive "ensure_keys_present" middleware.** The plugin's
+    `initialize()` merges defaults; missing keys = bug in the merge,
+    not a runtime concern.
+  - **No client polling.** `useMessagingLimits` caches for 24 h; no
+    realtime push channel for ops changes (operators restart the api
+    when they care about live propagation; the cache TTL covers the
+    rest).
+- **DRY — concrete corrections.**
+  - **One config store** reads the four keys; both the `/limits` route
+    AND the S28.1 retention prune AND the S28.2 client-eviction TTL
+    resolver use the same `config_store.get_config("meinchat")`
+    lookup. No duplicated source of truth.
 - **Core agnostic:** all work inside `plugins/meinchat/` + the two client plugin repos. No `vbwd-backend/vbwd/` change.

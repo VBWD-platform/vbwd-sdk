@@ -139,9 +139,10 @@ Two additive edits, no contract changes:
 
 ### What we explicitly did NOT do (deferred to follow-ups)
 - **Per-user JWT-keyed limiter.** The right long-term fix for NAT-shared
-  buckets; deferred as candidate **S28**. Requires decoding the JWT (without
-  signature verification — it's a bucket label, not auth) in the keyfunc.
-  10× lift alone takes today's repro out of the 429 zone.
+  buckets; planned as [S31](../sprints/s31-flask-limiter-per-user-keying.md).
+  Requires decoding the JWT (without signature verification — it's a bucket
+  label, not auth) in the keyfunc. 10× lift alone takes today's repro out
+  of the 429 zone.
 - **Admin-UI tunability.** This is an ops-level knob, not per-tenant. Env
   var + restart is the right control surface; setting it through fe-admin
   would force shipping the value into Flask-Limiter at request time (it
@@ -237,26 +238,29 @@ all changes live on disk; awaiting explicit instruction to commit / push.
 
 ## Out of scope (follow-up candidates, not blockers)
 
-- **S28 — per-user keying for Flask-Limiter.** Replace `get_remote_address`
-  with a keyfunc that prefers `f"user:{jwt.sub}"`. Eliminates the
-  NAT-shared-bucket bug class. Needed if the 10× lift turns out to be
-  insufficient for shared-IP cohorts (corporate networks, mobile carrier
-  CGNAT).
-- **S29 — exempt read paths from the global limiter.** S26's per-user
-  meinchat limiter already handles abuse for those routes; global IP-limiter
-  on top is belt-and-suspenders. Defer to data.
-- **iOS `conv_id` caching.** `ConversationViewModel:46-54` POSTs on every
-  view-model init even though the inbox row already carries the `conv_id`.
-  After S26 the POST is free, so this is pure perf polish.
-- **iOS retry-on-429 amplification.** `ConversationViewModel:61-66` retries
-  429 with exp-backoff. Safe after S26 (won't fire on chat-mount) but worth
-  removing.
-- **macOS rate-limit overrides.** `X-Client-Platform: macos` (Mac Catalyst /
-  native macOS) is sent by `vbwd-ios-core/.../APIClientConfig.swift:24` but
-  this sprint defaults it to the web baseline. Add `rate_macos_*` keys when
-  the macOS client ships to user hands.
-- **429 telemetry.** Log every 429 with route + key + descriptor so the next
-  "users hit the cap" report is data-driven.
-- **Drop legacy `message_rate_per_minute` / `attachment_rate_per_hour` keys**
-  one deploy cycle after S26 ships (when every instance has the new
-  `rate_message_send_*` / `rate_attachment_send_*` pair).
+- **[S31 — per-user keying for Flask-Limiter](../sprints/s31-flask-limiter-per-user-keying.md).**
+  Replace `get_remote_address` with a keyfunc that prefers
+  `f"user:{jwt.user_id}"`. Eliminates the NAT-shared-bucket bug class.
+  Needed if the 10× lift turns out to be insufficient for shared-IP cohorts
+  (corporate networks, mobile carrier CGNAT).
+- **[S32 — macOS rate-limit overrides](../sprints/s32-macos-rate-limit-overrides.md).**
+  Add `rate_macos_*` keys to meinchat so Mac Catalyst clients get the same
+  ceilings as iOS.
+- **[S33 — 429 telemetry](../sprints/s33-429-telemetry.md).**
+  Structured WARN log on every limiter trip (both the meinchat custom +
+  Flask-Limiter global) so the next "users hit the cap" report is
+  `grep`-able instead of screenshot-driven.
+- **[S34 — drop legacy meinchat config keys](../sprints/s34-drop-legacy-meinchat-rate-keys.md)**
+  (DEFERRED — gated on S26 being live on every prod instance + one deploy
+  cycle elapsing). Remove `message_rate_per_minute` /
+  `attachment_rate_per_hour` from `RateLimitPolicy`'s legacy fall-through.
+- **[S35 — iOS: cache conv_id from inbox + drop 429-retry loop](../sprints/s35-ios-cache-conv-id-drop-retry.md).**
+  After S26 the POST is free; this avoids it entirely when the inbox row
+  already carries the `conv.id`. Also removes
+  `ConversationViewModel.swift:61-66` exp-backoff 429 retry — after S26
+  a 429 on chat-open is a real error, not a transient to retry.
+- **Exempt read paths from the global limiter** (not yet numbered). S26's
+  per-user meinchat limiter already handles abuse for those routes; global
+  IP-limiter on top is belt-and-suspenders. Defer to data — ship S31 first;
+  if it makes the global limiter clearly redundant for authenticated
+  routes, queue this then.

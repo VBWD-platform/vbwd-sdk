@@ -1,7 +1,23 @@
 # S28.3a — meinchat extension ports + schema concessions + capability endpoints (refactor)
 
 **Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](s28-meinchat-e2e-encryption-and-retention.md)
-**Status:** PLANNED — 2026-05-28
+**Status:** PLANNED — 2026-05-28. **Revised 2026-05-28** to absorb the
+critical review:
+- Extracted port count cut from 12 → **6** (one port per concrete
+  S28.3b consumer; six speculative ports dropped — NO OVERENGINEERING).
+- Migration adds `ALTER COLUMN body DROP NOT NULL` so ciphertext rows
+  have `body IS NULL` instead of `body = ''` (closes critical-review
+  §C5).
+- Migration adds `message.delivered_to_all_addressed_devices_at` so
+  S28.1's prune can exempt undelivered E2E rows (closes critical-review
+  §C20).
+- `conversation.protocol` is marked immutable (downgrade defence at
+  the schema layer — closes critical-review §C14).
+- `POST /messaging/conversations` negotiation-failure contract is now
+  defined explicitly (closes critical-review §C6).
+- `/messaging/capabilities` + `/messaging/me/capabilities` collapsed
+  into one endpoint `/messaging/capabilities[?me=true]` (DRY — closes
+  critical-review §"3 capability endpoints → 1").
 **Depends on:** S28.0 (config keys + limits endpoint already exist).
 **Blocks:** [S28.3b](s28-3b-meinchat-plus-signal-ratchet.md) — meinchat-plus registers against these ports.
 
@@ -26,62 +42,55 @@ This is what makes S28.3b small (meinchat-plus *only* contributes
 registry impls) and what would later make a hypothetical
 `meinchat-enterprise` slot in cleanly.
 
-## 2. The six ports
+## 2. The six concrete ports
 
-All in a new `plugins/meinchat/meinchat/extensibility/` directory.
+All in a new `plugins/meinchat/meinchat/extensibility/` directory. Each
+port has a **named concrete consumer in S28.3b** — nothing speculative.
 
 ### 2.1 Pipeline (file: `extensibility/pipeline.py`)
 
 ```python
-class IMessageValidator(Protocol):
-    """Pre-write check. All registered impls must pass (any may veto)."""
-    def validate(self, ctx: SendContext) -> None: ...   # raise on failure
-
-
 class IBodyCodec(Protocol):
     """Bidirectional transform — encode on send, decode on read.
-    Single-impl; last-write-wins. Default in meinchat = identity."""
+    Single-impl; last-write-wins. Default in meinchat = identity
+    (passthrough). meinchat-plus's `SignalEnvelopeValidator` replaces
+    it (server-side; holds no keys, never decrypts)."""
     def encode(self, ctx: SendContext) -> EncodedBody: ...
     def decode(self, row: Message, viewer_device: Device | None) -> str: ...
 
 
-class IMessagePersister(Protocol):
-    """Write a row. Single-impl. Default = SQLAlchemy through the existing repo."""
-    def persist(self, ctx: SendContext, encoded: EncodedBody) -> Message: ...
-
-
-class IBroadcaster(Protocol):
-    """Push to live subscribers. Multi-impl, fan-out, error-tolerant.
-    Default in meinchat = [SseBroadcaster]."""
-    def broadcast(self, row: Message) -> None: ...
-
-
 class IPostSendHook(Protocol):
-    """After-the-fact side effects (audit, analytics, …). Multi-impl;
-    a throwing hook is logged at error, never propagated."""
-    def on_sent(self, row: Message) -> None: ...
+    """After-the-fact side effects (delivery tracking, analytics).
+    Multi-impl; a throwing hook is logged at error, never propagated.
+    meinchat-plus registers `MarkDeliveryAttempted` (writes per-device
+    fetch progress for the S28.1 prune)."""
+    def on_sent(self, row: Message, *, fetched_by: Device | None = None) -> None: ...
 ```
 
-`SendContext` is a frozen dataclass with `{sender, recipients, conversation, body_or_envelope, protocol_hint, request_metadata}`.
-`EncodedBody` is `{body: str | None, envelope: bytes | None, protocol: str}` — exactly one of body/envelope set.
+`SendContext` is a frozen dataclass with `{sender, recipients,
+conversation, body_or_envelope, protocol_hint, expected_device_ids,
+request_metadata}`. `expected_device_ids` carries the union of
+`IDeviceDirectory.lookup_active(p.id) for p in recipients` so a
+server-side `IBodyCodec` (e.g. `SignalEnvelopeValidator`) can reject
+envelopes addressed to unknown devices.
+
+`EncodedBody` is `{body: str | None, envelope: bytes | None, protocol: str}`
+— exactly one of body/envelope set.
 
 ### 2.2 Lifecycle (file: `extensibility/lifecycle.py`)
 
 ```python
-class IConversationFactory(Protocol):
-    """Single-impl. Default = today's start-or-get."""
-    def create_or_get(self, initiator: User, peer: User, accepted_protocols: list[str]) -> Conversation: ...
-
-
 class IConversationPolicy(Protocol):
-    """Multi-impl. All-must-allow. Default in meinchat = block-list respected."""
-    def may_start(self, initiator: User, peer: User) -> None: ...   # raise on veto
+    """Multi-impl. All-must-allow. Default in meinchat = block-list
+    respected. meinchat-plus registers `BothPeersHaveDeviceKeys` to veto
+    e2e_v1 starts when any participant lacks a device key."""
+    def may_start(self, initiator: User, peer: User, accepted_protocols: list[str]) -> None: ...
 
 
 class IConversationCapabilities(Protocol):
     """Multi-impl. Union of returned sets is surfaced to the client.
-    Default in meinchat = {'plain'}."""
-    def for_conversation(self, conv: Conversation) -> set[str]: ...
+    Default in meinchat = {'plain'}. meinchat-plus adds {'e2e_v1'}."""
+    def for_conversation(self, conv: Conversation | None) -> set[str]: ...
 ```
 
 ### 2.3 Identity (file: `extensibility/identity.py`)
@@ -92,7 +101,8 @@ class IDeviceDirectory(Protocol):
         lookup_active(...) -> []
         has_any(...) -> False
         register(...) -> raise DirectoryNotEnabledError
-    meinchat-plus replaces with a real impl backed by user_device_key."""
+    meinchat-plus replaces with `UserDeviceKeyDirectory` backed by
+    `meinchat_plus_user_device_key`."""
     def register(self, user_id: UUID, pubkey: bytes, alg: str, label: str | None) -> Device: ...
     def lookup_active(self, user_id: UUID) -> list[Device]: ...
     def revoke(self, device_id: UUID) -> None: ...
@@ -101,14 +111,14 @@ class IDeviceDirectory(Protocol):
 
 ### 2.4 Retention (file: `extensibility/retention.py`)
 
-Already exists conceptually from S28.1 — formalised here as a port so
-a downstream plugin (e.g. a future legal-hold extension) could
-register its own override. **Default in meinchat reads from the config
-keys S28.0 added**; that default stays.
-
 ```python
 class IRetentionPolicy(Protocol):
-    """Single-impl. Default reads from meinchat's config_store."""
+    """Single-impl. Default `ConfigRetentionPolicy` reads days from
+    meinchat's config_store and prunes by `sent_at`. meinchat-plus
+    replaces it with `E2eAwareRetentionPolicy` that ALSO exempts E2E
+    rows whose `delivered_to_all_addressed_devices_at IS NULL` (so
+    async-first-message delivery via prekey bundles survives the prune
+    until the recipient comes online)."""
     def messages_keep_days(self) -> int: ...
     def attachments_keep_days(self) -> int: ...
     def should_prune(self, message: Message, now: datetime) -> bool: ...
@@ -126,12 +136,30 @@ def resolve_all(port_cls: type[T]) -> list[T]:
 def register(port_cls: type[T], impl: T) -> None:
     """Plugin-side registration. Idempotent on same impl identity."""
 
+def unregister(port_cls: type[T], impl: T) -> None:
+    """Plugin-on-disable counterpart of register. Restores defaults
+    cleanly so meinchat-alone behaviour returns on plugin disable."""
+
 def reset_for_tests(port_cls: type[T] | None = None) -> None:
     """Test teardown — wipes the in-memory registry for one port or all."""
 ```
 
-One file, ~50 LOC. Used by every port, no duplication across ports
+One file, ~60 LOC. Used by every port; no duplication across ports
 (matches the existing `paymentDataContributors` / `checkoutPaymentMethods` shape).
+
+### 2.6 Ports we explicitly did NOT extract (overengineering check)
+
+| Port (in the earlier draft) | Why dropped |
+|---|---|
+| `IMessageValidator` | One default impl (length + non-empty), no second consumer in S28.3b. Stays inline in `MessageService._validate(...)`. |
+| `IMessagePersister` | One impl (SQLAlchemy repo). The message-row write is not a meaningful seam — meinchat-plus stores the envelope on the same row. |
+| `IBroadcaster` | One impl (`SseBroadcaster`). "Future push notifications" is speculative; defer until that plugin exists. |
+| `IConversationFactory` | `start_or_get` has no replacement on the horizon; not a meaningful seam. |
+| `INotificationDispatcher` | Speculative; same reasoning as `IBroadcaster`. |
+| `IRateLimitPolicy` | Already exists from S26 inside meinchat; no port name needed at this layer. |
+
+If a real second consumer for any appears, add the port then. Cost of
+an abstraction with one impl is overhead.
 
 ## 3. Schema changes
 
@@ -140,28 +168,50 @@ Single Alembic migration in `plugins/meinchat/migrations/versions/`:
 ```sql
 ALTER TABLE message
     ADD COLUMN envelope BYTEA NULL,
-    ADD COLUMN protocol VARCHAR(32) NOT NULL DEFAULT 'plain';
+    ADD COLUMN protocol VARCHAR(32) NOT NULL DEFAULT 'plain',
+    ADD COLUMN delivered_to_all_addressed_devices_at TIMESTAMPTZ NULL;
 
 ALTER TABLE conversation
     ADD COLUMN protocol VARCHAR(32) NOT NULL DEFAULT 'plain',
     ADD COLUMN capabilities JSONB NOT NULL DEFAULT '[]'::jsonb;
 
--- Preserve the today-existing TEXT length constraint for plain rows only;
--- ciphertext rows are allowed to exceed 4 000.
-ALTER TABLE message DROP CONSTRAINT ck_message_body_len;
+-- Drop body NOT NULL so ciphertext rows can have body IS NULL.
+-- (Earlier draft used body = '' as a workaround — uglier, wastes a byte
+-- per ciphertext row, and broke the >0-length CHECK if one existed.)
+ALTER TABLE message ALTER COLUMN body DROP NOT NULL;
+
+-- Replace the body-length check with a protocol-gated one + invariant
+-- "exactly one of body / envelope is populated, matching the protocol".
+ALTER TABLE message DROP CONSTRAINT IF EXISTS ck_message_body_len;
 ALTER TABLE message ADD CONSTRAINT ck_message_body_len
-    CHECK (protocol != 'plain' OR length(body) <= 4000);
+    CHECK (protocol != 'plain' OR (body IS NOT NULL AND length(body) <= 4000));
+ALTER TABLE message ADD CONSTRAINT ck_message_body_or_envelope
+    CHECK ((protocol = 'plain' AND body IS NOT NULL AND envelope IS NULL)
+        OR (protocol != 'plain' AND body IS NULL AND envelope IS NOT NULL));
+
+-- Schema-pin the protocol on a conversation row: once an e2e_v1
+-- conversation, always an e2e_v1 conversation. Closes the operator
+-- downgrade attack at the storage layer (the route already refuses
+-- to set conversation.protocol post-creation; this is defence-in-depth).
+CREATE TRIGGER trg_conversation_protocol_immutable
+    BEFORE UPDATE OF protocol ON conversation
+    FOR EACH ROW WHEN (OLD.protocol IS DISTINCT FROM NEW.protocol)
+    EXECUTE FUNCTION raise_protocol_immutable_violation();
+-- (DDL for raise_protocol_immutable_violation() is in the same migration
+--  file; the function RAISEs EXCEPTION 'protocol is immutable' so any
+--  attempted downgrade aborts the txn.)
 
 -- Backfill: existing rows are plaintext by definition.
--- (No update needed — DEFAULT handles new rows; existing rows pick up the column NULL/default at ALTER time.)
+-- (No update needed — DEFAULT handles new rows; existing rows pick up
+-- the column NULL/default at ALTER time. `body NOT NULL → NULL allowed`
+-- is a metadata-only change in PG; no rewrite.)
 ```
 
-Backward-compatible. Every today-row keeps `protocol = 'plain'` and
-`envelope = NULL`; `body` semantics unchanged.
-
-`Message.to_dict()` extended to emit `protocol` + (for ciphertext rows)
-`envelope` as base64. Plain rows continue to emit `body` only — wire
-contract preserved for plain.
+Backward-compatible: every today-row keeps `protocol = 'plain'`,
+`envelope = NULL`, and `body` populated. The new columns are NULL or
+default. `Message.to_dict()` extended to emit `protocol` + (for
+ciphertext rows) `envelope` as base64. Plain rows continue to emit
+`body` only — wire contract preserved for plain.
 
 ## 4. Refactoring `MessageService.send_text`
 
@@ -177,78 +227,96 @@ def send_text(self, sender, peer, body):
     return row
 ```
 
-**After 3a** (same external signature, internals via ports):
+**After 3a** (same external signature, only the seams that have a
+concrete consumer become ports):
 
 ```python
-def send_text(self, sender, peer, body):
-    self._enforce_rate(...)                                      # unchanged — rate limit is a meinchat concern
-    conv = resolve_first(IConversationFactory).create_or_get(sender, peer, accepted_protocols=["plain"])
+def send_text(self, sender, peer, body_or_envelope, *, protocol_hint="plain"):
+    self._enforce_rate(...)
+    self._validate_length(body_or_envelope)                                       # inline — no port
+    conv = self._conversation_service.start_or_get(sender, peer)                  # inline — no port
+    for p in resolve_all(IConversationPolicy):
+        p.may_start(sender, peer, accepted_protocols=[protocol_hint])             # raises on veto
     ctx = SendContext(sender=sender, recipients=[peer], conversation=conv,
-                      body_or_envelope=body, protocol_hint=conv.protocol, request_metadata=...)
-    for v in resolve_all(IMessageValidator):
-        v.validate(ctx)                                          # raises on veto
-    encoded = resolve_first(IBodyCodec).encode(ctx)
-    row = resolve_first(IMessagePersister).persist(ctx, encoded)
-    for b in resolve_all(IBroadcaster):
-        try: b.broadcast(row)
-        except Exception as e: logger.error("broadcast %s failed: %s", b, e)
+                      body_or_envelope=body_or_envelope, protocol_hint=protocol_hint,
+                      expected_device_ids=self._collect_device_ids(sender, peer),
+                      request_metadata=...)
+    encoded = resolve_first(IBodyCodec).encode(ctx)                               # default identity; meinchat-plus validates
+    row = self._message_repo.save(Message.from_encoded(ctx, encoded))             # inline — no port
+    self._sse.broadcast(row)                                                      # inline — no port
     for h in resolve_all(IPostSendHook):
         try: h.on_sent(row)
         except Exception as e: logger.error("post-send hook %s failed: %s", h, e)
     return row
 ```
 
+Validator / persister / broadcaster / conversation-factory stay
+**inline** — single impls today, no concrete second consumer in
+S28.3b, so introducing a port is overhead. Adding the port later when
+a real consumer appears is a small refactor (the inline call moves
+behind a `resolve_first(...)`).
+
 Defaults registered in `plugins/meinchat/__init__.py` `on_enable`:
 
 ```python
 register(IBodyCodec, IdentityBodyCodec())
-register(IMessagePersister, SqlAlchemyMessagePersister(...))
-register(IBroadcaster, SseBroadcaster(...))
-register(IConversationFactory, StartOrGetFactory(...))
-# multi-impls default-empty: IMessageValidator, IConversationPolicy,
-# IConversationCapabilities, IPostSendHook
-register(IConversationCapabilities, PlainCapability())   # always emits {"plain"}
-register(IMessageValidator, LengthAndNonEmptyValidator())
 register(IConversationPolicy, BlockListPolicy(...))
+register(IConversationCapabilities, PlainCapability())   # emits {"plain"}
 register(IDeviceDirectory, NullDeviceDirectory())
 register(IRetentionPolicy, ConfigRetentionPolicy(...))
+# IPostSendHook starts empty; meinchat-plus adds MarkDeliveryAttempted.
 ```
 
-All defaults preserve today's behaviour byte-for-byte.
+All defaults preserve today's behaviour byte-for-byte. The "plugin-free
+still works" oracle (§6.5) is the regression net.
 
 ## 5. New routes
 
-### `GET /api/v1/messaging/capabilities`
+### `GET /api/v1/messaging/capabilities[?me=true]` — **one endpoint, two shapes** (DRY)
 
-Returns the union of `{IConversationCapabilities.for_conversation(...)}`
-across **all registered impls**, with no conversation context (a "what
-can this server installation do at all" query). Used by clients to
-decide which onboarding flows to show.
+The earlier draft had three overlapping endpoints (`/limits`,
+`/capabilities`, `/me/capabilities`). Collapsed in this revision:
 
-```json
-{ "capabilities": ["plain"] }
+```
+GET /api/v1/messaging/capabilities
+→ { "server": ["plain", "e2e_v1"] }
+
+GET /api/v1/messaging/capabilities?me=true
+→ { "server": ["plain", "e2e_v1"], "me": ["plain"] }     # e.g. user has no device key
 ```
 
-With meinchat-plus enabled, this becomes `["plain", "e2e_v1"]`.
+`server` is the union of `IConversationCapabilities.for_conversation(None)`
+across all registered impls. `me` (only present with `?me=true`) is
+the intersection with the caller's actual usability (e.g. `e2e_v1` needs
+`IDeviceDirectory.has_any(caller.id)`).
 
-### `GET /api/v1/messaging/me/capabilities`
+### `GET /api/v1/messaging/limits` (unchanged from S28.0)
 
-Same shape but per-user — the subset of server capabilities that this
-user can *actually use* right now (e.g. needs ≥ 1 registered device for
-`e2e_v1`). With meinchat alone: `["plain"]`. With meinchat-plus + no
-device key: `["plain"]`. With meinchat-plus + a device key: `["plain", "e2e_v1"]`.
-
-### `GET /api/v1/messaging/limits` (extended)
-
-Adds `enabled_protocols: [...]` to the response (was hardcoded `["plain"]`
-in S28.0; now resolves from `IConversationCapabilities`).
+The earlier draft added `enabled_protocols` here. **Dropped** — the
+capability surface lives on `/capabilities`. `/limits` stays
+operator-knobs-only (retention windows + envelope size cap).
 
 ### `POST /api/v1/messaging/conversations` (extended)
 
 Accepts optional `accepted_protocols: ["plain", "e2e_v1"]` from the
-initiator. Factory intersects with the peer's capabilities and stores
-the negotiated `protocol` + `capabilities` on the conversation row.
-With meinchat alone, peer's set is `{"plain"}` → intersection is `{"plain"}`.
+initiator. Server intersects with peer's capabilities. **The chosen
+protocol is pinned on the conversation row** (immutable per the §3
+trigger).
+
+#### Negotiation-failure error contract
+
+Closes critical-review §C6. Every failure mode has a deterministic
+status + `code` so the client can render the right hint.
+
+| Cause | HTTP | `code` | `hint` |
+|---|---|---|---|
+| peer has no active device key, initiator demands `e2e_v1` | 409 | `peer_has_no_device_keys` | `Ask @<peer> to enable secure chat on a device.` |
+| `accepted_protocols ∩ peer_capabilities = ∅` | 409 | `protocol_negotiation_empty` | `No protocol accepted by both parties.` |
+| `accepted_protocols` not a subset of server's enabled protocols | 400 | `protocol_not_enabled` | `Protocol '<p>' is not enabled on this instance.` |
+| `accepted_protocols` omitted (back-compat) | 200 | n/a | server returns `protocol: "plain"` |
+
+The meinchat-plus client MUST also verify the response `protocol` matches
+what it demanded (downgrade fail-closed; S28.3b §3.6 / §4.5).
 
 ## 6. TDD plan
 
@@ -357,22 +425,42 @@ for any import of `plugins.meinchat_plus.*` or
   is written. Characterisation block proves byte-for-byte unchanged
   externals.
 - **DevOps-first:** new oracle job in CI; migration validated up/down/up
-  against the existing test schema.
+  against the existing test schema, including the `body DROP NOT NULL`
+  + immutable-protocol trigger.
 - **SOLID — S:** each port has exactly one job; no fat interfaces.
 - **SOLID — O:** new behaviour comes from registered impls. Adding
   meinchat-plus in S28.3b doesn't modify any meinchat file.
-- **SOLID — L:** the identity body codec is a *behaviour-preserving*
+- **SOLID — L:** the identity body codec is a behaviour-preserving
   substitute of the real one (encode/decode round-trips). The null
   device directory honours the same contract (`lookup_active` returns
   a list, `has_any` returns a bool — same shape, just empty).
-- **SOLID — I:** ports are narrow (4 methods max).
+- **SOLID — I:** ports are narrow (4 methods max — `IDeviceDirectory`
+  is the widest).
 - **SOLID — D:** every collaborator is injected — service constructor
   args, not module-level lookups.
-- **DRY:** one resolver pair (`resolve_first`/`resolve_all`) covers
-  every port; one `SendContext` dataclass passed through the pipeline.
+- **NO OVERENGINEERING — concrete corrections in this revision.**
+  - **12 ports → 6.** Dropped `IMessageValidator`, `IMessagePersister`,
+    `IBroadcaster`, `IConversationFactory`, `INotificationDispatcher`,
+    `IRateLimitPolicy`. Each had a single default impl and no concrete
+    S28.3b consumer — the abstraction cost was pure overhead.
+  - **3 capability endpoints → 1.** `/limits` + `/capabilities` +
+    `/me/capabilities` collapsed to `/limits` + `/capabilities[?me=true]`.
+    No shape duplication.
+  - **`send_text` keeps validator/persister/broadcaster inline.**
+    Each has one impl today; introducing a `resolve_first(...)` for
+    them adds overhead without buying extensibility. Add the port if
+    and when a second consumer arrives.
+  - **No `meinchat-enterprise` surface drafted.** Port surface is
+    general enough to host it later without re-touching meinchat.
+- **DRY — concrete corrections.**
+  - **One resolver pair** (`resolve_first`/`resolve_all`) covers every
+    port — no duplicated registration code per port.
+  - **One `SendContext` dataclass** threads through the pipeline (was
+    multiple per-port context types in earlier drafts).
+  - **One `NoDeviceKeysError`** lives here in meinchat (the base) and
+    is re-used by both `BothPeersHaveDeviceKeys` (S28.3b) and
+    `SignalAttachmentCodec` (S28.4).
 - **Liskov on the wire:** plain rows' JSON shape is unchanged
-  (`body` present, `envelope` and `protocol` are new optional fields).
-- **NO OVERENGINEERING:** zero ports added "just in case." Each one
-  has a concrete consumer landing in S28.3b. No `meinchat-enterprise`
-  surface invented.
+  (`body` present; `envelope`, `protocol`,
+  `delivered_to_all_addressed_devices_at` are new optional fields).
 - **Core agnostic:** confirmed by the static-analysis rule (§6.6).

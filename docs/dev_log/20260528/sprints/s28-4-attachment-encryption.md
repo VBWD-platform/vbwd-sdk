@@ -1,7 +1,22 @@
 # S28.4 — Attachment encryption (mirror of S28.3 on the file-write/read path)
 
 **Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](s28-meinchat-e2e-encryption-and-retention.md)
-**Status:** PLANNED — 2026-05-28
+**Status:** PLANNED — 2026-05-28. **Revised 2026-05-28** to absorb the
+critical review:
+- **No separate `IAttachmentCodec` port.** Encryption happens on the
+  client (mirrors the corrected S28.3b model); the server-side write
+  path just stores opaque bytes. A whole new port for a one-shot
+  pass-through was overengineering; folded into the existing
+  attachment-write flow with a `protocol` discriminator (DRY).
+- **Dual-blob thumbnails get a real schema.** Earlier draft said "two
+  ciphertext blobs, one tagged `kind: 'thumb'`" but the migration only
+  added per-row columns. New `meinchat_attachment` child table with
+  `kind` enum (`fullres` / `thumb`) closes critical-review §C19.
+- **Client encrypts, server forwards** (corrects the same server-side
+  encryption hole the critical review flagged for S28.3b — the
+  attachment codec was inheriting the same mistake).
+- `NoDeviceKeysError` lives in `plugins/meinchat/` once and is re-used
+  by both the body codec (S28.3b) and the attachment write (DRY).
 **Depends on:** [S28.3a](s28-3a-meinchat-extension-ports.md) (ports), [S28.3b](s28-3b-meinchat-plus-signal-ratchet.md) (codec + device directory).
 **Blocks:** nothing.
 
@@ -29,99 +44,152 @@ reused — only the *transport* (file-stream vs SQL row) changes.
 
 ## 2. Extend meinchat's attachment pipeline (small refactor)
 
-### 2.1 New port — `IAttachmentCodec`
+### 2.1 NO new port — DRY, fold into existing write path
 
-`plugins/meinchat/meinchat/extensibility/attachments.py`:
+The earlier draft introduced `IAttachmentCodec` mirroring `IBodyCodec`.
+Both ports would have done the same thing (encode→pass-through on
+server, decrypt client-side). **Dropped in this revision** — adding a
+port for one pass-through impl is overengineering. Instead, the
+attachment service learns to accept opaque bytes + a `protocol`
+discriminator, and the meinchat-plus client encrypts before upload.
 
-```python
-class IAttachmentCodec(Protocol):
-    """Encode an attachment payload on the way to storage; decode on the
-    way back. Mirrors IBodyCodec but for byte streams.
+### 2.2 Schema (single Alembic head, additive) — proper dual-blob support
 
-    Single-impl; last-write-wins. Default in meinchat = identity
-    (passthrough) — bytes go to IFileStorage unmodified."""
-
-    def encode(self, ctx: AttachmentSendContext, payload: bytes) -> EncodedAttachment: ...
-    def decode(self, ref: AttachmentRef, viewer_device: Device | None) -> bytes: ...
-```
-
-`EncodedAttachment` carries `{ciphertext: bytes, protocol: str, header: dict}`.
-`AttachmentRef` is the persisted reference (storage URL + protocol +
-header). The header lives in a small new sibling JSONB column
-`message.attachment_envelope_header` (migration in S28.4 only — no
-re-touching of the S28.3a schema additions).
-
-### 2.2 Schema (single Alembic head, additive)
+Earlier draft amended `message` with per-row attachment columns. That
+can't carry the fullres + thumb pair the §3 client wants to upload.
+**Replaced with a child table:**
 
 ```sql
-ALTER TABLE message
-    ADD COLUMN attachment_protocol VARCHAR(32) NOT NULL DEFAULT 'plain',
-    ADD COLUMN attachment_envelope_header JSONB NULL;
+-- One row per attached blob. A "plain" message has zero or one row;
+-- an e2e_v1 message has TWO (fullres + thumb), each independently
+-- client-encrypted with its own ChaChaPoly key.
+CREATE TYPE meinchat_attachment_kind AS ENUM ('fullres', 'thumb');
+
+CREATE TABLE meinchat_attachment (
+    id              UUID PRIMARY KEY,
+    message_id      UUID NOT NULL REFERENCES message(id) ON DELETE CASCADE,
+    kind            meinchat_attachment_kind NOT NULL,
+    storage_url     TEXT NOT NULL,             -- IFileStorage URL
+    protocol        VARCHAR(32) NOT NULL DEFAULT 'plain',
+    envelope_header JSONB NULL,                -- per-recipient key envelopes for e2e_v1; NULL for plain
+    mime            VARCHAR(64) NOT NULL,
+    bytes_count     INTEGER NOT NULL,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CONSTRAINT meinchat_attachment_one_kind_per_message UNIQUE (message_id, kind),
+    CONSTRAINT meinchat_attachment_protocol_or_envelope
+        CHECK ((protocol = 'plain' AND envelope_header IS NULL)
+            OR (protocol != 'plain' AND envelope_header IS NOT NULL))
+);
+
+CREATE INDEX meinchat_attachment_message_idx ON meinchat_attachment (message_id);
+
+-- Backfill: existing single-attachment rows (today's `message.attachment_url`)
+-- migrate into the child table as `kind='fullres', protocol='plain'`. After
+-- the backfill commit, the old `message.attachment_url` column is removed.
+INSERT INTO meinchat_attachment (id, message_id, kind, storage_url, protocol, mime, bytes_count)
+SELECT gen_random_uuid(), id, 'fullres', attachment_url, 'plain',
+       coalesce(attachment_mime, 'application/octet-stream'),
+       coalesce(attachment_bytes, 0)
+  FROM message WHERE attachment_url IS NOT NULL;
+
+ALTER TABLE message DROP COLUMN attachment_url;
+ALTER TABLE message DROP COLUMN attachment_mime;
+ALTER TABLE message DROP COLUMN attachment_bytes;
 ```
 
-Plain attachments (today's flow) leave both at the default — `'plain'`
-and `NULL`. Encrypted attachments set both.
+Plain attachments now live in `meinchat_attachment` rows (one per
+message). E2E attachments are two rows per message (`fullres` + `thumb`),
+each independently encrypted client-side. **Wire contract changes:**
+`Message.to_dict()` emits `attachments: [{kind, storage_url,
+protocol, envelope_header?, mime, bytes_count}]` instead of
+`attachment_url`. Versioned at `protocol = 'plain'` for back-compat —
+old clients reading the API see the first `fullres` row's URL in a
+compatibility shim until they're upgraded.
 
 ### 2.3 `AttachmentService.upload`/`download` refactor
 
 `plugins/meinchat/meinchat/services/attachment_service.py`:
 
 ```python
-def upload(self, sender, conversation, payload: bytes, *, mime: str) -> AttachmentRef:
-    codec = resolve_first(IAttachmentCodec)
-    encoded = codec.encode(AttachmentSendContext(...), payload)
-    ref = self._storage.write(encoded.ciphertext, mime=mime)        # IFileStorage unchanged
-    return AttachmentRef(url=ref.url, protocol=encoded.protocol, header=encoded.header)
+def upload(self, sender, conversation, payload: bytes, *, mime: str,
+           protocol: str, envelope_header: dict | None, kind: AttachmentKind) -> Attachment:
+    # Server is a forwarder — bytes are already client-encrypted when
+    # protocol != 'plain'. Validate shape + size, write to IFileStorage.
+    if protocol != "plain":
+        if envelope_header is None:
+            raise InvalidEnvelopeError("envelope_header required for non-plain protocol")
+        # Optional: parse envelope_header.per_recipient_key_envelopes
+        # and assert each device_id is in the conversation's addressed
+        # set (defence-in-depth; client could already do this).
+    ref = self._storage.write(payload, mime=mime)
+    return Attachment(message_id=..., kind=kind, storage_url=ref.url,
+                      protocol=protocol, envelope_header=envelope_header,
+                      mime=mime, bytes_count=len(payload))
 
-def download(self, attachment_ref: AttachmentRef, viewer_device: Device | None) -> bytes:
-    codec = resolve_first(IAttachmentCodec)
-    ciphertext = self._storage.read(attachment_ref.url)
-    return codec.decode(attachment_ref, viewer_device)
+def download(self, attachment: Attachment) -> bytes:
+    # Returns raw bytes — opaque to the server for protocol != 'plain'.
+    # The client decrypts.
+    return self._storage.read(attachment.storage_url)
 ```
 
-Default `IdentityAttachmentCodec` registered in meinchat's `on_enable` —
-same shape as `IdentityBodyCodec` from S28.3a (encode is passthrough,
-decode is passthrough). Behavior unchanged for any deploy without
-meinchat-plus.
+**The server never holds plaintext attachment bytes** when `protocol !=
+'plain'`. The codec is gone; the discriminator + opaque bytes is
+enough.
 
-## 3. meinchat-plus contribution
+## 3. meinchat-plus contribution — client-side encryption (no server-side codec)
 
-### 3.1 `SignalAttachmentCodec`
+The earlier draft had a `SignalAttachmentCodec` running server-side —
+same E2E violation the critical review flagged for the body codec.
+**Removed.** Attachment encryption happens in the meinchat-plus client
+plugins (web + iOS); the server-side write path just stores opaque
+bytes.
 
-`meinchat-plus/meinchat_plus/services/signal_attachment_codec.py`:
+### 3.1 Client-side attachment encryption flow (hybrid scheme)
 
-```python
-class SignalAttachmentCodec(IAttachmentCodec):
-    def encode(self, ctx, payload: bytes) -> EncodedAttachment:
-        recipients = resolve_first(IDeviceDirectory).lookup_active(ctx.recipient_id)
-        if not recipients:
-            raise NoDeviceKeysError(...)                  # strict fallback
-        # ChaChaPoly stream encrypt with a fresh key per attachment,
-        # then seal the key once per recipient device via the existing
-        # ratchet session. Lets us store a single ciphertext blob in
-        # IFileStorage + a small per-recipient key envelope in the header.
-        key = ChaChaPoly.fresh_key()
-        ciphertext = ChaChaPoly.encrypt(payload, key)
-        per_recipient = {device.id: libsignal.encrypt(key, device.public_key)
-                         for device in recipients}
-        return EncodedAttachment(
-            ciphertext=ciphertext,
-            protocol="e2e_v1",
-            header={"per_recipient_key_envelopes": per_recipient, "alg": "chacha20poly1305"},
-        )
+The hybrid is **symmetric-stream + asymmetric-key-envelope** — an image
+can be MBs, so we don't want N libsignal-encrypt operations over the
+full payload. Per attachment + per kind (`fullres` / `thumb`):
 
-    def decode(self, ref, viewer_device):
-        envelope = ref.header["per_recipient_key_envelopes"][str(viewer_device.id)]
-        key = libsignal.decrypt(envelope, viewer_device.private_key)
-        return ChaChaPoly.decrypt(self._storage.read(ref.url), key)
+```
+client:
+  1. Lookup all addressed devices (peer's + own) via /messaging/users/<id>/devices.
+  2. Generate a fresh 256-bit ChaChaPoly key K_att.
+  3. Encrypt the file bytes once: ciphertext = ChaChaPoly.encrypt(payload, K_att).
+  4. For each addressed device, wrap K_att under the recipient device's
+     Signal session: K_envelope[device.id] = libsignal.encrypt(K_att, session_for(device)).
+  5. POST /messaging/conversations/<id>/messages/attachments with:
+        - the ciphertext bytes (multipart upload)
+        - `protocol=e2e_v1`
+        - `envelope_header = { "per_recipient_key_envelopes": { device.id: K_envelope[device.id] }, "alg": "chacha20poly1305" }`
+        - `kind` in `{"fullres", "thumb"}` — clients upload BOTH (server can't resize ciphertext)
+
+server (validator):
+  - Verify size ≤ ciphertext_max_bytes (per attachment).
+  - Verify envelope_header.per_recipient_key_envelopes covers exactly the
+    addressed device set (defence-in-depth — same as the body codec validator).
+  - Write to IFileStorage; persist meinchat_attachment row.
+
+client on read:
+  1. GET /messaging/conversations/<id>/messages?since=…
+  2. For each attachment with protocol=e2e_v1, fetch the storage URL.
+  3. envelope = response.envelope_header.per_recipient_key_envelopes[my_device_id]
+     K_att = libsignal.decrypt(envelope, my_session)
+  4. plaintext = ChaChaPoly.decrypt(storage_bytes, K_att)
 ```
 
-Registered in meinchat-plus's `on_enable` alongside the body codec.
-**Why the hybrid (symmetric-stream + asymmetric-key-envelope) instead
-of envelope-per-recipient like message bodies:** an image can be MB
-of data and we'd otherwise have to encrypt the full payload N times
-for N recipient devices. The hybrid lets the ciphertext blob be N=1
-and only the small key is per-recipient.
+**No server-side `SignalAttachmentCodec` class.** No server-side keys.
+No server-side encryption code path. The `NoDeviceKeysError` raised
+when `IDeviceDirectory.lookup_active(peer.id)` returns `[]` lives in
+**`plugins/meinchat/`** (re-used by both the body codec and the
+attachment upload — single home, DRY).
+
+### 3.2 Why hybrid (symmetric stream + asymmetric key envelope)
+
+- Image / file can be MB; encrypting the full payload N times for N
+  recipient devices would scale badly.
+- Hybrid: ciphertext blob is `N=1` (one copy in storage); only the
+  256-bit symmetric key is wrapped per-recipient. Linear in device
+  count, constant in payload size.
 
 ### 3.2 Web — `vbwd-fe-user-plugin-meinchat-plus`
 
@@ -211,16 +279,32 @@ specs to assert plain mode is unchanged when meinchat-plus is absent.
 
 ## 7. Engineering-requirements check
 
-- **TDD-first:** ≥ 15 new specs land before the codec or service-refactor body is written.
-- **DRY:** the same registry resolver pattern from S28.3a powers
-  `IAttachmentCodec`. Same `NoDeviceKeysError` is raised by the
-  attachment codec and the body codec — single home for that contract.
-- **SOLID — S/O:** the attachment codec is a separate port (one job),
-  so a future "compress before encrypt" codec could replace it
-  without touching meinchat-plus.
-- **SOLID — L:** identity codec round-trips byte-for-byte; Signal codec
-  round-trips bytes when the keys are right. Substitutable contract.
-- **NO OVERENGINEERING:** one extra port, one schema discriminator,
-  one impl per plugin. No new abstractions.
+- **TDD-first:** ≥ 15 new specs land before the service-refactor body is written.
+- **NO OVERENGINEERING — concrete corrections in this revision.**
+  - **No `IAttachmentCodec` port.** Earlier draft introduced a port
+    mirroring `IBodyCodec` — but both would do the same thing
+    (encode = pass-through; decode = pass-through; clients encrypt).
+    A port with one pass-through impl is pure overhead. Folded into
+    the existing attachment-write flow.
+  - **No server-side `SignalAttachmentCodec`.** Same correction as
+    S28.3b's body codec — encryption happens on the client. Removes a
+    whole server-side ChaChaPoly + libsignal dependency that wasn't
+    earning its keep.
+  - **No streaming server-side encryption.** Server never touches
+    plaintext bytes; streaming optimisation lives on the client
+    (browser WebCrypto stream APIs / iOS URLSession delegates).
+- **DRY — concrete corrections.**
+  - **One `NoDeviceKeysError`** in `plugins/meinchat/` is raised by
+    BOTH the body codec (S28.3b) AND the attachment write path. Single
+    contract for "this conversation has no addressed devices".
+  - **One `protocol` discriminator** on the new `meinchat_attachment`
+    table — matches the shape of `message.protocol`. No second
+    discriminator vocabulary.
+  - **One `meinchat_attachment` child table** carries both `fullres`
+    and `thumb` kinds via an enum, instead of duplicating per-message
+    columns. Cleanly handles plain (1 row) and e2e_v1 (2 rows).
+- **SOLID — L:** wire contract on the read side is uniform across
+  plain + e2e_v1 — every message carries `attachments: [{kind, ...}]`;
+  the only difference is whether `envelope_header` is populated.
 - **Core agnostic:** meinchat changes are confined to the plugin's own
-  files. Everything else lives in meinchat-plus.
+  files. Everything else lives in meinchat-plus client plugins.

@@ -1,6 +1,49 @@
 # S28 — Meinchat extension seams + meinchat-plus (Signal ratchet) + retention windows
 
-**Status:** PLANNED — 2026-05-28. Decided this turn:
+**Status:** PLANNED — 2026-05-28. **Revised 2026-05-28** to absorb a critical
+review that found:
+- A server-side encryption design that broke the E2E claim (codec ran on the
+  server, plaintext visible mid-encryption) → **client now encrypts, server
+  validates + forwards**.
+- An overclaim *"operator sees only ciphertext"* → re-stated honestly as
+  *"operator cannot read message bodies"* with an explicit "what the
+  operator still sees" subsection.
+- 12 speculative ports → **6 concrete ports** with a named consumer for each
+  (NO OVERENGINEERING).
+- Three overlapping capability endpoints → **one** (`/messaging/capabilities`
+  with an optional `me=true` query) (DRY).
+- A protocol-downgrade attack vector → **client fail-closed** on negotiation;
+  conversation `protocol` is pinned per-row.
+- Retention prune deleting undelivered ciphertext → prune predicate now
+  exempts E2E rows whose `delivered_to_all_addressed_devices_at` is null.
+- Prekey-bundle race that could repeat the initial chain key → locked to
+  `SELECT … FOR UPDATE SKIP LOCKED` with `consumed_at` set in the same txn.
+- Sender unable to read own messages on a second device → recipient set
+  now includes the sender's own active devices.
+- Ciphertext length leaking plaintext length → mandatory padding to 256 B
+  multiple before encryption.
+- `body NOT NULL` blocking ciphertext rows → migration adds
+  `ALTER COLUMN body DROP NOT NULL`.
+- Cache contradiction (S28.2 holds decrypted bodies / no plaintext at rest)
+  → cache stores plaintext **at rest under a wrapped key** (WebCrypto on
+  web, Keychain on iOS), reconciled.
+
+**Phase split (S28 decision R4-Q4 + R2-Q2 — 2026-05-28):** this doc
+remains the **strategy / threat-model / locked-decisions index** for
+the whole S28 family. Implementation lives in two phase masters:
+- **[s28-phase1-retention-and-config.md](s28-phase1-retention-and-config.md)** —
+  retention + config + cache (S28.0/1/2). Ships first, independent of
+  crypto. Lifts the operator-amnesia privacy risk even if phase 2
+  never lands.
+- **[s28-phase2-e2e-and-ios.md](s28-phase2-e2e-and-ios.md)** — the
+  meinchat-plus E2E track + the iOS app updates (S28.3a/3b/4/6/7).
+  Ships after phase 1 has been in prod for one deploy cycle.
+
+This strategy doc owns the threat model, the §11 locked decisions,
+and the 16 Q&A decision log (linked from `status.md`); each phase
+master inherits without copy-paste (DRY).
+
+**Decided this turn:**
 - **Two-track delivery.** First refactor `meinchat` so it works alone *and*
   serves as a base for downstream plugins — extract narrow ports, default
   to identity/no-op behaviour so meinchat-alone behaviour is unchanged.
@@ -43,19 +86,40 @@ GREEN; the host apps + the iOS packages green on their respective CIs.
 
 ## 1. Goal (user value)
 
-1. **Confidentiality.** With meinchat-plus enabled, chat bodies are
-   readable only on the participants' currently-trusted devices. The
-   operator, a DB snapshot, and an SSE eavesdropper all see ciphertext.
+1. **Body confidentiality.** With meinchat-plus enabled, chat **bodies**
+   are readable only on the participants' currently-trusted devices.
+   Encryption happens **client-side**; the server stores opaque
+   ciphertext envelopes. The operator and a DB snapshot cannot read
+   bodies. (An SSE eavesdropper sees ciphertext too — the SSE event
+   carries only the `envelope` column, never plaintext.)
 2. **Asymmetric retention.** The server holds at most **2 days** of
-   message rows; every paired device holds up to **10 days** locally.
+   delivered message rows; every paired device holds up to **10 days**
+   locally (at-rest encrypted on disk under a wrapped key). Undelivered
+   E2E rows are exempt from the prune until every addressed device has
+   fetched them (so async-first-message delivery via prekey bundles
+   doesn't lose data — see §6 and S28.1).
 3. **Per-instance ops control.** Both windows + the ciphertext size
    cap are admin-configurable from the meinchat plugin admin UI — no
    redeploy.
 4. **Plugin-ready core.** meinchat is robust standalone (plaintext +
    short-retention chat) **and** is the substrate for meinchat-plus
-   (and any future extension) via narrow ports with null defaults.
+   (and any future extension) via the **six** narrow ports listed in
+   §4 — each has a concrete consumer in S28.3b. No speculative ports.
 5. **Native parity.** iOS and web fetch the current limits at runtime
    from `GET /api/v1/messaging/limits` instead of hard-coding anything.
+6. **Honest threat model.** What the operator can **still** observe even
+   with meinchat-plus enabled:
+   - Identity of conversation participants (`vbwd_user` rows + the
+     `participant_low_id`/`participant_high_id` FKs on `conversation`).
+   - Message *timing* (the `sent_at` column).
+   - Approximate message length (after the §6 padding rounds it to a
+     256-byte multiple — see "padding" in §8).
+   - Per-user device fingerprints (each device registers a public key
+     visible to other authenticated users via
+     `GET /messaging/users/<id>/devices`).
+   - Per-user rate-limit telemetry (the S33 429 log lines).
+   Anything stronger (metadata privacy, anonymous routing) is **out of
+   scope** for S28 — call it out instead of overclaiming.
 
 ---
 
@@ -134,41 +198,58 @@ later.
 
 ---
 
-## 4. meinchat refactor — the six ports
+## 4. meinchat refactor — the six concrete ports
 
-meinchat becomes a *pipeline + registries* with **identity defaults** so
-the standalone behaviour is byte-for-byte unchanged. Each port has a
-default impl in meinchat itself; downstream plugins (meinchat-plus, and
-any future extension) substitute or layer on.
+meinchat becomes a *pipeline + registries* with **identity / null
+defaults** so the standalone behaviour is byte-for-byte unchanged. Every
+port listed has a **named concrete consumer in S28.3b**; nothing
+speculative.
 
-### Port matrix
+### Port matrix (NO OVERENGINEERING — only ports with a real consumer)
 
-| Port | Arity | Default in meinchat | What meinchat-plus registers |
+| Port | Arity | Default in meinchat | Concrete consumer (S28.3b unless noted) |
 |---|---|---|---|
-| `IMessageValidator` | **multi**, all-must-pass | length ≤ N + non-empty | "must be ciphertext when e2e in force for this conversation" |
-| `IBodyCodec` | **single**, default = **identity** | passthrough (`encode(body)→body`) | **`SignalRatchetCodec`** (encrypt on send, decrypt on read) |
-| `IMessagePersister` | **single**, default = DB row | write to `message` table | unchanged |
-| `IBroadcaster` | **multi**, fan-out | `SseBroadcaster` only | unchanged |
-| `IPostSendHook` | **multi**, **never fails the send** | none | `RotateRatchetState` (after-the-fact ratchet bookkeeping) |
-| `IConversationFactory` | **single** | `start_or_get` (current behaviour) | unchanged |
-| `IConversationPolicy` | **multi**, all-must-allow | block-list respected | "both participants must have ≥1 active device key" |
+| `IBodyCodec` | **single**, default = **identity** | passthrough (`encode(body)→body`); decode is identity | **`SignalEnvelopeValidator`** — server-side, *no keys*: validates `protocol == "e2e_v1"`, envelope size ≤ `ciphertext_max_bytes`, fan-out is well-formed. (The actual encryption is **client-side**; see §8 §"Client encrypts, server forwards".) |
+| `IConversationPolicy` | **multi**, all-must-allow | block-list respected | `BothPeersHaveDeviceKeys` — veto a `e2e_v1` start if any participant lacks an active device key |
 | `IConversationCapabilities` | **multi**, set-union | `{"plain"}` | adds `"e2e_v1"` |
-| `IDeviceDirectory` | **single** | **null directory** (`lookup_active → []`; `register` raises `DirectoryNotEnabledError`) | real directory backed by `user_device_key` table owned by `meinchat-plus` |
-| `IRetentionPolicy` | **single** | reads `messages_retention_days_server` / `attachments_retention_days_server` from config | unchanged (the policy is per-instance ops; not crypto's business) |
-| `INotificationDispatcher` | **multi**, fan-out, error-tolerant | none (only SSE today; push lives in a future plugin) | unchanged |
-| `IRateLimitPolicy` | (already exists, S26) | per-platform overrides | meinchat-plus may add a `device_registration` category |
+| `IDeviceDirectory` | **single** | **null directory** (`lookup_active → []`; `register` raises `DirectoryNotEnabledError`) | `UserDeviceKeyDirectory` backed by `meinchat_plus_user_device_key` |
+| `IPostSendHook` | **multi**, **never fails the send** | none | `MarkDeliveryAttempted` — tracks per-device fetch progress so S28.1 can prune delivered E2E rows safely |
+| `IRetentionPolicy` | **single** | reads `messages_retention_days_server` / `attachments_retention_days_server` from config | `E2eAwareRetentionPolicy` — exempts undelivered E2E rows from the prune (S28.1) |
 
-### Resolver shape
+### Ports we explicitly did NOT extract (overengineering check)
 
-Two shared helpers in `meinchat/extensibility/registry.py` so the same
-pattern doesn't get reimplemented per port:
+The earlier draft listed 12 ports. Six were dropped in this revision —
+each had no concrete S28.3b consumer:
+
+- **`IMessageValidator`** — only the default (length + non-empty)
+  existed. Stays inline in `MessageService`; no port. Add the port only
+  when a second validator with a real use case appears.
+- **`IMessagePersister`** — only one consumer (the SQLAlchemy repo).
+  Stays inline; the message-row write is not a meaningful seam.
+- **`IBroadcaster`** — only one consumer (`SseBroadcaster`). The "future
+  push plugin" justification is speculative — defer until that plugin
+  is in flight.
+- **`IConversationFactory`** — `start_or_get` has no replacement on the
+  horizon; the row creation logic is not a meaningful seam.
+- **`INotificationDispatcher`** — speculative (push notifications are
+  a separate plugin idea, not in this slice's port surface).
+- **`IRateLimitPolicy`** — already exists from S26 inside meinchat; no
+  need to re-introduce a port name for it here.
+
+If a real second consumer for any of these appears, **add the port then,
+not now**. (DRY corollary: today's behaviour stays as a single concrete
+method, no abstraction.)
+
+### Resolver shape (DRY — one helper pair backs every port)
+
+Two shared helpers in `meinchat/extensibility/registry.py`:
 
 ```python
-def resolve_first(port_cls):    # single-impl ports (codec, persister, …)
+def resolve_first(port_cls):    # single-impl ports (codec, device dir, retention)
     impls = registry.get(port_cls)
     return impls[-1] if impls else DEFAULTS[port_cls]  # last-write-wins
 
-def resolve_all(port_cls):      # multi-impl ports (validators, broadcasters, …)
+def resolve_all(port_cls):      # multi-impl ports (policy, capabilities, post-send)
     return registry.get(port_cls) or []
 ```
 
@@ -181,21 +262,37 @@ registry pattern (mirrors `paymentDataContributors` /
 ## 5. Schema concessions in meinchat
 
 Small, additive, **backward-compatible** — every existing plaintext row
-keeps working with `protocol = 'plain'` and `envelope = NULL`.
+keeps working with `protocol = 'plain'`, `envelope = NULL`, and `body`
+populated as today.
 
 | Table | Column | Type | Notes |
 |---|---|---|---|
-| `message` | `envelope` | `BYTEA NULL` | ciphertext + ratchet header when `protocol != 'plain'` |
+| `message` | `envelope` | `BYTEA NULL` | client-encrypted ciphertext blob + per-recipient header when `protocol != 'plain'`. **Server never decrypts.** |
 | `message` | `protocol` | `VARCHAR(32) NOT NULL DEFAULT 'plain'` | discriminator |
-| `conversation` | `protocol` | `VARCHAR(32) NOT NULL DEFAULT 'plain'` | the protocol negotiated at create-time |
+| `message` | `delivered_to_all_addressed_devices_at` | `TIMESTAMPTZ NULL` | set by `MarkDeliveryAttempted` (S28.3b `IPostSendHook`) once every recipient device has fetched. Read by `E2eAwareRetentionPolicy` (S28.1) to exempt undelivered async-first-message rows from the prune. NULL for plain rows (they're delivered as soon as they're written). |
+| `conversation` | `protocol` | `VARCHAR(32) NOT NULL DEFAULT 'plain'` | the protocol negotiated at create-time; **immutable** after that (downgrade defence) |
 | `conversation` | `capabilities` | `JSONB NOT NULL DEFAULT '[]'` | the negotiated capability set, surfaced to clients |
 
-`message.body TEXT ≤ 4000` constraint preserved for plain rows
-(`length(body) ≤ 4000 OR protocol != 'plain'`). Ciphertext is allowed
-to exceed 4 000 because the libsignal preamble + payload base will not
-fit otherwise.
+**`body NOT NULL` drops to nullable.** Ciphertext rows have `body IS
+NULL`; plain rows continue to carry `body TEXT`. Migration:
 
-The `user_device_key` table (and any meinchat-plus state) lives in
+```sql
+ALTER TABLE message ALTER COLUMN body DROP NOT NULL;
+ALTER TABLE message DROP CONSTRAINT IF EXISTS ck_message_body_len;
+ALTER TABLE message ADD CONSTRAINT ck_message_body_len
+    CHECK (protocol != 'plain' OR (body IS NOT NULL AND length(body) <= 4000));
+ALTER TABLE message ADD CONSTRAINT ck_message_body_or_envelope
+    CHECK ((protocol = 'plain' AND body IS NOT NULL AND envelope IS NULL)
+        OR (protocol != 'plain' AND body IS NULL AND envelope IS NOT NULL));
+```
+
+Ciphertext envelopes are allowed to exceed 4 000 bytes (libsignal
+preamble + per-recipient fan-out + padding); the size is bounded by the
+admin-configurable `ciphertext_max_bytes` (default 16 384) and validated
+server-side by `SignalEnvelopeValidator` (S28.3b §2.4).
+
+The `meinchat_plus_user_device_key`, `meinchat_plus_signed_prekey`, and
+`meinchat_plus_one_time_prekey` tables live in
 **`plugins/meinchat-plus/migrations/`** — not in meinchat. Follows the
 existing "plugin migrations live in the plugin" convention.
 
@@ -203,51 +300,89 @@ existing "plugin migrations live in the plugin" convention.
 
 ## 6. Wire contract additions
 
-Bounded surface, all read-only auth-gated GETs except where noted.
+Bounded surface, all read-only auth-gated GETs except where noted. **DRY:
+one `/capabilities` endpoint** carries both the server-wide set and the
+caller-specific subset — the earlier draft had three overlapping
+endpoints (`/limits`, `/capabilities`, `/me/capabilities`), reduced to
+two here.
 
 ### `GET /api/v1/messaging/limits`
 
-Returns current retention + size limits + enabled protocols.
+Operator-tunable knobs — retention windows + envelope size cap. Stable
+even when no plugins are loaded.
 
 ```json
 {
   "messages_retention_days_server": 2,
   "messages_retention_days_client_suggested": 10,
   "attachments_retention_days_server": 2,
-  "ciphertext_max_bytes": 16384,
-  "enabled_protocols": ["plain", "e2e_v1"]
+  "ciphertext_max_bytes": 16384
 }
 ```
 
-`enabled_protocols` is the union of every registered
-`IConversationCapabilities` contributor. With meinchat alone it's
-`["plain"]`; with meinchat-plus enabled it's `["plain", "e2e_v1"]`.
+### `GET /api/v1/messaging/capabilities[?me=true]`
 
-### `GET /api/v1/messaging/capabilities`
+Capability surface. Default (no `me` query) returns the union of every
+registered `IConversationCapabilities.for_conversation(None)` — the
+server-wide set:
 
-Server-wide capability surface (same data, different framing — kept as
-a separate endpoint so the client can read it before authenticating if
-we ever want a public landing page).
+```json
+{ "server": ["plain", "e2e_v1"] }
+```
 
-### `GET /api/v1/messaging/me/capabilities`
+With `?me=true` the server intersects with the caller's actual
+usability (e.g. needs ≥ 1 active device key for `e2e_v1`):
 
-Per-user capability surface. With meinchat-plus enabled but the user
-having no device keys: `["plain"]`. After the user registers a key:
-`["plain", "e2e_v1"]`.
+```json
+{ "server": ["plain", "e2e_v1"], "me": ["plain"] }
+```
 
-### `POST /api/v1/messaging/conversations`
+(One endpoint, two shapes by query param. The previous separate
+`/me/capabilities` route is gone — the caller's auth already
+identifies them.)
 
-Extended to accept an optional `accepted_protocols: ["e2e_v1", "plain"]`
-from the initiator. Server returns the negotiated `protocol` +
-`capabilities` in the response. With meinchat alone the field is
-ignored (server returns `"plain"`).
+### `POST /api/v1/messaging/conversations` (extended)
 
-### Client retention enforcement (shorten-only)
+Accepts an optional `accepted_protocols: ["e2e_v1", "plain"]` from the
+initiator. Server intersects with peer's capabilities and pins the
+result on `conversation.protocol`.
+
+Response:
+
+```json
+{
+  "id": "<uuid>",
+  "protocol": "e2e_v1",
+  "capabilities": ["plain", "e2e_v1"]
+}
+```
+
+**Downgrade defence (client-side, mandatory for meinchat-plus clients):**
+when the meinchat-plus client sends `accepted_protocols: ["e2e_v1"]`
+(refuses plaintext fallback), it MUST fail-closed on any response with
+`protocol != "e2e_v1"`. The client SHOULD warn the user that the
+operator returned a weaker protocol than requested. Once a conversation
+is pinned `e2e_v1`, the schema prevents it from being downgraded
+(`conversation.protocol` is immutable; per-row check in S28.3b).
+
+**Negotiation-failure error contract** (covers C6 of the critical
+review):
+
+| Cause | HTTP | `code` | `hint` |
+|---|---|---|---|
+| peer has no active device key, initiator demands e2e_v1 | 409 | `peer_has_no_device_keys` | `Ask @<peer> to enable secure chat on a device.` |
+| `accepted_protocols ∩ peer_capabilities = ∅` | 409 | `protocol_negotiation_empty` | `No protocol accepted by both parties.` |
+| `accepted_protocols` not a subset of server's enabled protocols | 400 | `protocol_not_enabled` | `Protocol <p> is not enabled on this instance.` |
+| `accepted_protocols` missing or empty when omitted from a v2 client | 200 fallback | n/a | server returns `protocol: "plain"` (back-compat) |
+
+### Client retention enforcement (shorten-only — best-effort)
 
 iOS and web settings let the user set a local-retention value in
 `[0, messages_retention_days_client_suggested]`. The UI greys out
-anything above the server's suggestion. Enforced client-side; the
-server has no opinion (it has no way to compel clients).
+anything above the server's suggestion. **This is enforced client-side
+only — a forked or hostile client can ignore the cap.** Honest
+restatement: "the operator publishes a suggested retention; well-behaved
+clients respect it." Not a security guarantee.
 
 ---
 
@@ -273,57 +408,160 @@ meinchat.
 
 ---
 
-## 8. meinchat-plus design (Constellation A)
+## 8. meinchat-plus design (Constellation A) — **client encrypts, server forwards**
 
-### Server-side surface
+### Architecture in one sentence
 
-- **Tables** (in `plugins/meinchat-plus/migrations/`):
-  - `user_device_key (id, user_id FK vbwd_user, public_key BYTEA, algorithm, label, created_at, last_seen_at, revoked_at)`.
-  - Optional `prekey_bundle` table for libsignal one-time prekeys
-    (decision: include from day one — Signal needs it for async first
-    messages).
+The **client** runs libsignal-protocol, encrypts the body once per
+recipient device, packs the resulting envelopes into one blob, and
+POSTs it as `envelope` on `POST /messages`. The **server** validates
+shape + size, stores the blob, broadcasts it, and tracks delivery.
+**The server never sees plaintext** — it has no Signal session store, no
+encryption code, no decryption code.
+
+(This corrects the earlier draft's `SignalRatchetCodec.encode(self,
+ctx)` that ran on the server and saw plaintext mid-encryption. That
+draft was not E2E. Fixed in this revision.)
+
+### Server-side surface (small — by design)
+
+- **Tables** (in `plugins/meinchat-plus/migrations/`, see S28.3b §2.3
+  for the full DDL):
+  - `meinchat_plus_user_device_key (id, user_id FK vbwd_user, public_key BYTEA, algorithm, label, created_at, last_seen_at, revoked_at)`.
+  - `meinchat_plus_signed_prekey (id, device_id FK, signed_prekey BYTEA, signature BYTEA, created_at, rotated_at)` — long-lived per device, periodically rotated by the client.
+  - `meinchat_plus_one_time_prekey (id, device_id FK, prekey BYTEA, consumed_at)` — single-use, consumed via `SELECT … FOR UPDATE SKIP LOCKED` to prevent the race documented in the critical review.
+  - `meinchat_plus_message_delivery (message_id FK, device_id FK, fetched_at)` — one row per (message, addressed device); `MarkDeliveryAttempted` writes here; the prune predicate reads here.
 - **Routes** (under `/api/v1/messaging/`):
-  - `POST /me/devices` — publish a public key + prekey bundle.
-  - `GET /users/{user_id}/devices` — list active devices of a peer.
-    Rate-limited (`device_registration` category, registered with the
-    existing `IRateLimitPolicy`).
-  - `DELETE /me/devices/{id}` — revoke a device.
-- **Codec** registered on enable:
+  - `POST /me/devices` — publish a public key + label. Server stores;
+    does NOT generate keys. Rate-limited (`device_registration`, default `5/h`).
+  - `GET /users/{user_id}/devices` — list active devices (+ public keys)
+    of a peer so the **client** can fan out envelopes.
+    Rate-limited (`device_lookup`, default `60/h`).
+  - `DELETE /me/devices/{id}` — revoke; sets `revoked_at`. Idempotent.
+  - `POST /me/prekeys/signed` — upload / rotate the device's signed prekey.
+  - `POST /me/prekeys/one-time` — upload N (default 100) one-time prekeys.
+  - `GET /devices/{device_id}/prekey-bundle` — atomic consume of one one-time prekey under `FOR UPDATE SKIP LOCKED`. Returns the signed prekey + one consumed one-time prekey. Refill signalled to the client via a `low-water-mark` header when count drops below 20.
+- **Server-side codec is a validator** (NOT an encryptor):
   ```python
-  pipeline.register(IBodyCodec, SignalRatchetCodec())
-  pipeline.register(IDeviceDirectory, UserDeviceKeyDirectory(session))
-  pipeline.register(IConversationCapabilities, lambda: {"e2e_v1"})
-  pipeline.register(IConversationPolicy, BothPeersHaveDeviceKeys())
+  class SignalEnvelopeValidator(IBodyCodec):
+      """Server-side `IBodyCodec`. No keys; validates the envelope is
+      well-formed and within size limits. Encryption happens on the
+      client; we are a dumb forwarder of opaque bytes."""
+      def encode(self, ctx: SendContext) -> EncodedBody:
+          # ctx.body_or_envelope is ALREADY ciphertext (client encrypted).
+          # Validate shape: protocol marker, fan-out header, size cap.
+          envelope = ctx.body_or_envelope
+          if not isinstance(envelope, bytes):
+              raise InvalidEnvelopeError("envelope must be bytes")
+          if len(envelope) > self._max_size:
+              raise EnvelopeTooLargeError(...)
+          header = parse_pack_header(envelope)  # raises on malformed
+          # Optional: assert every device_id in the header is in the
+          # recipient set the conversation knows about. (Defense in depth
+          # against a misbehaving client.)
+          for blob in header.per_recipient:
+              if blob.device_id not in ctx.expected_device_ids:
+                  raise UnknownRecipientDeviceError(blob.device_id)
+          return EncodedBody(body=None, envelope=envelope, protocol="e2e_v1")
+
+      def decode(self, row: Message, viewer_device: Device | None) -> str:
+          # Server never decodes. The route handler returns the raw envelope
+          # to the client; the client picks the blob addressed to its own
+          # device and decrypts locally.
+          raise NotImplementedError("decode is client-side only")
+  ```
+- **Registrations** on enable (one place; idempotent):
+  ```python
+  register(IBodyCodec, SignalEnvelopeValidator(max_size=cfg.ciphertext_max_bytes))
+  register(IDeviceDirectory, UserDeviceKeyDirectory(session))
+  register(IConversationCapabilities, E2eV1Capability())
+  register(IConversationPolicy, BothPeersHaveDeviceKeys())
+  register(IPostSendHook, MarkDeliveryAttempted(delivery_repo))
+  register(IRetentionPolicy, E2eAwareRetentionPolicy(delivery_repo, cfg))
   ```
 - **`PluginMetadata.dependencies = ["meinchat"]`** — the loader will
   refuse to enable meinchat-plus if meinchat is disabled, and refuse to
   disable meinchat while meinchat-plus is enabled. Validated in
   `vbwd/plugins/manager.py:114-118` + `:189-197`.
 
-### Client-side (web + iOS)
+### Wire format for the `envelope` blob
 
-- **Web (`vbwd-fe-user-plugin-meinchat-plus`):** `tweetnacl-js` plus the
-  libsignal-protocol JS port. Private key in IndexedDB under WebCrypto
-  non-exportable cred where available, else encrypted-at-rest LocalStorage.
+The envelope is a length-prefixed CBOR (`cbor2` on the server, `cbor-x`
+on the client; both audited, ~5 KB):
+
+```cbor
+{
+  "v": 1,                                          # protocol version
+  "per_recipient": [
+    {
+      "device_id": <uuid-bytes>,                   # which device this slot is for
+      "ciphertext": <bytes>,                       # libsignal output
+      "header": <bytes>                            # libsignal session header
+    },
+    ...
+  ]
+}
+```
+
+**Padding (closes the length-leak hole from the critical review):**
+before the libsignal encrypt call on the client, the plaintext body is
+padded with random bytes to the next 256-byte multiple. The padding
+length is encoded in the first 2 bytes of the padded plaintext (so the
+recipient can strip it after decrypt). All envelopes for the same
+message thus carry equal ciphertext length, and an observer learns
+plaintext length only to ±256 bytes.
+
+### Client-side (web + iOS) — the actual crypto
+
+- **Web (`vbwd-fe-user-plugin-meinchat-plus`):**
+  `@signalapp/libsignal-client` JS bindings; pad → encrypt → fan out
+  client-side. Device private key in IndexedDB **wrapped under a
+  passphrase-derived KEK** (Argon2id 64 MB memory, 3 iters; fallback to
+  PBKDF2 600k iters where Argon2id isn't available). Locked decision —
+  WebCrypto `extractable=false` is incompatible with libsignal-JS's
+  raw-key API (critical review §C17).
 - **iOS (`vbwd-ios-plugin-meinchat-plus`):** CryptoKit + the libsignal
-  Swift package. Private key in Keychain with
-  `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` (default; tighter
-  `WhenUnlocked` available as a per-user setting if needed).
+  Swift package. Device private key in Keychain with
+  `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` (locked default).
+  No per-user toggle to `WhenUnlocked` in this slice — background tasks
+  (S28.2 cache prune, S28.3b refill-prekeys) need access while locked.
 - **Pairing.** First app open after enabling meinchat-plus generates a
-  fresh keypair and posts the public key to `POST /me/devices`. From
-  that moment, messages addressed to this user route ciphertext
-  envelopes (one per recipient device).
+  fresh keypair, posts the public key to `POST /me/devices`, then uploads
+  N one-time prekeys + the signed prekey. From that moment, messages
+  addressed to this user can be E2E-routed.
+- **Sender fans out client-side.** The sending client calls
+  `GET /messaging/users/<peer>/devices` (which returns the peer's active
+  device ids + public keys) **plus** `GET /messaging/users/<self>/devices`
+  (so the sender's other devices can also decrypt — closes critical
+  review §C7). It encrypts to each, packs the envelopes, POSTs the blob.
+  Single recipient pair count today; trivially extends to multi-device.
+
+### Delivery tracking — closes the "prune deletes undelivered" hole
+
+`MarkDeliveryAttempted` is an `IPostSendHook` that, on each
+authenticated `GET /messages/<conv_id>?since=…` from a device, inserts a
+`meinchat_plus_message_delivery (message_id, device_id, fetched_at)` row
+for every message the response includes (no-op if already present —
+idempotent under unique key). When the count of rows with
+`fetched_at IS NOT NULL` equals the count of devices the envelope
+addressed, the row's `delivered_to_all_addressed_devices_at` is set to
+`now()`. S28.1's `E2eAwareRetentionPolicy` exempts rows where that
+column is NULL.
 
 ### What `meinchat-plus` explicitly does NOT do
 
 - **Group chats** (Sender Keys layer is a separate sprint).
 - **Recovery codes / cross-device history transfer.** New devices read
-  only what the server has ciphertext for, addressed to their own
-  brand-new key (i.e. **nothing** before pairing). The 10-day local
-  cache on each paired device is the offline archive.
+  only ciphertext addressed to their own brand-new key (i.e. **nothing**
+  before pairing). The 10-day local cache on each paired device is the
+  offline archive.
 - **Tier gating via the subscription plugin.** Operator-enabled
-  per-instance, no `subscription` dependency. (Can be added later as a
-  separate slice if needed.)
+  per-instance, no `subscription` dependency.
+- **Server-side ratchet state.** Lives on the client. The server's
+  `signed_prekey` + `one_time_prekey` tables hold only the *public*
+  half — no session state.
+- **Metadata privacy.** Conversation participants, timing, and
+  approximate message length remain visible to the operator (§1.6).
 
 ---
 
@@ -387,42 +625,53 @@ iOS:
 
 ---
 
-## 11. Open decisions (still pending)
+## 11. Open decisions
 
-These need a vote before slice 0 lands.
+The critical review locked most of these in this revision. Only one
+genuine open question remains.
 
-1. **Strict fallback when a peer has no device key (slice 3b).**
-   *Recommended: strict.* If meinchat-plus is enabled for the
-   conversation and any recipient has no active device key, the send
-   fails with a UI hint ("ask @bob to enable secure chat on a device").
-   The alternative (mixed mode — silently fall back to plaintext) leaks
-   under the operator-blind goal.
-2. **iOS device-key storage class.** *Recommended:
-   `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`.* `WhenUnlocked`
-   is tighter (key unreadable while phone is locked) but breaks
-   background-fetch decryption.
-3. **Pipeline-port arity matrix** as per §4 — multi-validator,
-   single-codec, single-persister, multi-broadcaster, multi-posthook.
-   *Recommended: as proposed.* Particular concern: do you want
-   chain-of-responsibility codecs (e.g. compress then encrypt) instead
-   of single? My vote is single — keeps decryption deterministic and
-   the protocol field unambiguous.
-4. **Schema discriminator** — keep `body TEXT` (plain only) + sibling
-   `envelope BYTEA` for ciphertext, with `protocol` discriminator on
-   `message` + `conversation`. *Recommended: as proposed.* The
-   alternative — single `body BYTEA` with discriminator only — is more
-   minimal but loses pgAdmin readability for plain rows and forces
-   client base64 handling everywhere.
-5. **iOS `WhenUnlocked` vs `AfterFirstUnlockThisDeviceOnly` (per-user
-   toggle).** Should there be a settings switch, or is the
-   `AfterFirstUnlockThisDeviceOnly` default enough? *Recommended:
-   default-only for slice 3b; surface a toggle later if anyone asks.*
-6. **`prekey_bundle` table at slice 3b or later?** *Recommended: at
-   slice 3b.* Signal needs prekeys for async first-message delivery
-   (sender encrypts to a recipient whose device is offline). Without
-   them, two users must be online simultaneously to bootstrap a
-   conversation. Including is a small extra migration; deferring is a
-   real UX regression.
+### Locked in this revision (no vote needed)
+
+1. **Strict fallback when a peer has no device key.** **Strict.** Mixed
+   mode silently downgrades and leaks under the operator-blind goal.
+2. **iOS device-key storage class.**
+   `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`. No per-user
+   toggle in this slice (background tasks need access while locked).
+3. **Pipeline-port arity matrix.** Reduced to **six concrete ports**
+   (§4). Six speculative ports dropped per NO OVERENGINEERING.
+4. **Schema discriminator.** `protocol` on both `message` and
+   `conversation`; `body` becomes nullable; CHECK constraints enforce
+   the body-XOR-envelope invariant per protocol.
+5. **`prekey_bundle` table at slice 3b.** Yes — split into
+   `signed_prekey` + `one_time_prekey` (per Signal spec, NOT one merged
+   table — the conflated draft was a DRY violation that masked the
+   different rotation lifecycles).
+6. **Server-side vs client-side encryption.** **Client-side.** The
+   earlier server-side draft was not E2E.
+7. **Padding.** Plaintext padded to next 256-byte multiple before
+   encryption.
+8. **Prekey consumption race.** `SELECT … FOR UPDATE SKIP LOCKED` +
+   `consumed_at = now()` in the same txn. Locked — `advisory_lock` left
+   as an option in the earlier draft was a NO-OVERENGINEERING-violating
+   spec gap.
+9. **Downgrade defence.** Client fail-closed when `accepted_protocols =
+   ["e2e_v1"]` and response `protocol != "e2e_v1"`. Conversation
+   `protocol` is immutable on the row (schema-pinned).
+10. **Sender's own devices in recipient list.** Yes — client fans out
+    to peer's devices AND own active devices. Lets the sender read
+    their own messages on a second device.
+11. **Cache at-rest encryption.** Yes (S28.2 §2.1/§3.1 — locked under
+    a wrapped key on both clients).
+
+### Still open
+
+A. **Server-side delivery telemetry granularity.** `MarkDeliveryAttempted`
+   writes one row per (message, device). For a heavily-active user, this
+   is the same row count as messages × device-fan-out. Probably fine;
+   worth a load-test in the integration suite. Alternative: a single
+   counter column on `message` (`delivered_device_count`), incremented
+   atomically. *Recommendation: stick with the join table — it makes
+   the prune predicate trivially correct and the audit story honest.*
 
 ---
 
@@ -458,10 +707,39 @@ These need a vote before slice 0 lands.
   it later doesn't break the wire contract.
 - **Clean code.** No magic numbers — every retention window is a
   named config key. Ports stay narrow (4 methods or fewer each).
-- **NO OVERENGINEERING.** Only the ports needed to support
-  meinchat-plus are extracted in slice 3a. `meinchat-enterprise` is
-  *not* drafted; the port surface is general enough that it could be
-  built later, no speculative interfaces added now.
+- **NO OVERENGINEERING — concrete corrections in this revision.**
+  - **12 ports → 6.** Dropped `IMessageValidator`,
+    `IMessagePersister`, `IBroadcaster`, `IConversationFactory`,
+    `INotificationDispatcher`, `IRateLimitPolicy` — each had a single
+    default impl and no concrete S28.3b consumer. The cost of an
+    abstraction with one impl is pure overhead. Add the port when a
+    second consumer materialises.
+  - **3 capability endpoints → 1.** `/limits` + `/capabilities` +
+    `/me/capabilities` was three GETs carrying overlapping data. Now
+    `/limits` + `/capabilities[?me=true]` — two endpoints, no shape
+    duplication.
+  - **No `meinchat-enterprise` surface drafted.** Carries no concrete
+    consumer this turn; the port surface is general enough to host one
+    later. Validators-for-DLP, persister-for-archive-mirror,
+    broadcasters-for-webhooks remain non-extracted abstractions.
+  - **No chain-of-responsibility codecs.** Single-codec keeps the
+    decryption path deterministic and the `protocol` column unambiguous.
+    Compress-before-encrypt is a future port (with consumer) if/when needed.
+  - **No server-side ratchet state.** Dropped along with the
+    server-side encryptor — the server is a forwarder. Removes a whole
+    `SignalProtocolStore` subsystem from the backend dependency graph.
+- **DRY — concrete corrections.**
+  - **One resolver pair** (`resolve_first` / `resolve_all`) backs every
+    port; matches the existing `paymentDataContributors` pattern.
+  - **One `NoDeviceKeysError`** lives in meinchat (the base) and is
+    re-used by both the body codec (S28.3b) and the attachment codec
+    (S28.4). No per-plugin redefinition.
+  - **One `RetentionService`** powers both the daily cron and the
+    manual `make meinchat-prune` Makefile target; the prune predicate
+    `should_prune(message, now)` is the single home for the
+    delivered-or-plain rule (S28.1).
+  - **One delivery-tracking table** drives both the prune-predicate and
+    a future "delivered to N/M devices" UX hint — no shadow counter.
 - **Core agnostic.** No core changes in `vbwd-backend/vbwd/`. All
   work lives in `plugins/meinchat/` + `plugins/meinchat-plus/` +
   client plugin trees.

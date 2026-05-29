@@ -1,7 +1,17 @@
 # S28.2 — Client local cache with 10-day TTL (web IndexedDB + iOS CoreData) + shorten-only UI
 
 **Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](s28-meinchat-e2e-encryption-and-retention.md)
-**Status:** PLANNED — 2026-05-28
+**Status:** PLANNED — 2026-05-28. **Revised 2026-05-28** to absorb the
+critical review:
+- §1 said "cache holds decrypted bodies"; §5 said "no plaintext at rest".
+  Contradiction resolved → **cache holds decrypted bodies, but the
+  storage backend is wrapped under a per-device KEK** (WebCrypto-wrapped
+  IDB rows on web; Keychain-protected CoreData store on iOS).
+- "shorten-only client retention" relabelled honestly as **best-effort
+  default** — a forked or hostile client can ignore it; it is not a
+  security guarantee.
+- Cache eviction now runs when **either** the user-set TTL or the
+  server-suggested TTL is reached, whichever is shorter.
 **Depends on:** [S28.0](s28-0-config-and-limits-endpoint.md) (reads `messages_retention_days_client_suggested`).
 **Blocks:** nothing directly; works for both plaintext (today) and ciphertext (after S28.3b).
 
@@ -14,32 +24,66 @@
 ## 1. Goal
 
 Both clients keep a persistent local copy of messages for up to **10
-days** (configurable via the server's suggested value, shorten-only).
-Cold-start of a conversation reads the local cache first, then fetches
-the server's most-recent window to fill gaps + pick up new arrivals.
+days** (configurable via the server's suggested value, shorten-only
+**best-effort**). Cold-start of a conversation reads the local cache
+first, then fetches the server's most-recent window to fill gaps + pick
+up new arrivals.
 
 Decouples client history from the server's intentional amnesia
-(2-day prune from S28.1). The cache is plaintext today; once S28.3b
-ships, the same store holds the decrypted bodies, the wire stays
-ciphertext.
+(2-day prune from S28.1). The cache holds **decrypted body strings**
+(so the conversation paints instantly on cold-start); the **storage
+backend is wrapped under a device-bound KEK**:
+- **Web:** IndexedDB rows are AES-GCM-encrypted client-side under a
+  WebCrypto key derived from the device-pairing passphrase (Argon2id;
+  see S28.3b §3.2). The KEK is cached in `sessionStorage` for the tab
+  session so per-read cost is one decrypt only.
+- **iOS:** the CoreData SQLite file is protected by NSFileProtection
+  (`completeUntilFirstUserAuthentication`) and the row payload column
+  is sealed under a Keychain-stored AES-GCM key
+  (`kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`).
+
+What this DOES guarantee (corrects critical-review §C16):
+- A device-OS-level adversary with only filesystem access cannot read
+  cached bodies — they need the KEK, which is gated by the OS
+  (passphrase + Keychain class).
+- The wire stays ciphertext post-S28.3b; only the **owner's own
+  decrypted view** is cached.
+
+What this does NOT guarantee:
+- A malicious OS-level read with full memory access can recover the
+  KEK at use time. Out of scope.
+- "Shorten-only client retention" is enforced by **well-behaved
+  clients only**. A forked client can keep messages longer; the server
+  has no compelling vote. This is honestly a UX default, not a
+  security control.
 
 ## 2. Web (`vbwd-fe-user/plugins/meinchat`)
 
-### 2.1 New IndexedDB store
+### 2.1 New IndexedDB store — encrypted at rest
 
 `src/composables/useLocalMessageCache.ts`:
 
 ```ts
-interface CachedMessage extends MessageRow {
-  cached_at: number;          // unix ms — used for TTL eviction
+interface CachedMessageEnvelope {
+  conversation_id: string;
+  message_id: string;
+  // AES-GCM-256 sealed payload of the decrypted message JSON. The
+  // payload includes body, sender, sent_at, cached_at. Nothing
+  // searchable lives outside the seal — even sender nicknames are
+  // inside the payload.
+  iv: Uint8Array;             // 12 bytes
+  ciphertext: Uint8Array;     // sealed JSON
+  cached_at: number;          // unix ms — outside the seal so the
+                              // eviction sweep doesn't have to decrypt
+                              // every row
 }
 
-export function useLocalMessageCache() {
+export function useLocalMessageCache(kek: CryptoKey /* DI'd at boot */) {
   return {
-    async putMany(rows: MessageRow[]): Promise<void>,
-    async listByConversation(id: string, limit?: number): Promise<MessageRow[]>,
+    async putMany(rows: MessageRow[]): Promise<void>,             // seals each row
+    async listByConversation(id: string, limit?: number): Promise<MessageRow[]>,  // opens each row
     async removeByConversation(id: string): Promise<void>,
-    async evictOlderThan(ms: number): Promise<number>,   // returns deleted count
+    async evictOlderThan(ms: number): Promise<number>,            // reads cached_at only — no decrypt
   };
 }
 ```
@@ -47,6 +91,15 @@ export function useLocalMessageCache() {
 Backed by `idb` (≤ 8 kB minified, audited). Object store keyed by
 `(conversation_id, message_id)` with an index on `cached_at` for the
 eviction sweep.
+
+**KEK derivation (DI'd, not held module-global):**
+- At first plugin boot, the user is prompted for a passphrase (the
+  same one S28.3b §3.2 uses for the device private key).
+- Argon2id-stretches into a 256-bit KEK; cached in `sessionStorage`
+  (per-tab, cleared on close).
+- The boot helper `await loadKek()` is the only path into
+  `useLocalMessageCache(kek)` — there is no "unencrypted cache"
+  fallback. Reconciliation of the earlier §1 vs §5 contradiction.
 
 ### 2.2 Eviction sweep
 
@@ -116,23 +169,27 @@ against the real IDB API.
 
 ## 3. iOS (`vbwd-ios-plugin-meinchat`)
 
-### 3.1 CoreData entity `CachedMessage`
+### 3.1 CoreData entity `CachedMessage` — sealed payload
 
-In a new `.xcdatamodel`:
+In a new `.xcdatamodel`. The plaintext-bearing columns (body, sender
+nickname, attachment URL, etc.) are NOT direct attributes — they're
+sealed inside `payload`:
 
 ```
 CachedMessage
   id: UUID (primary)
   conversationID: UUID (indexed)
-  senderID: UUID
-  senderNickname: String
-  body: String
-  attachmentURL: String?
-  sentAt: Date (indexed)
-  readAt: Date?
-  cachedAt: Date (indexed)
-  systemKind: String?
+  cachedAt: Date (indexed)                  # outside the seal — eviction sweeps read it
+  iv: Data (12 bytes)
+  payload: Data                             # AES-GCM-256 sealed JSON of MessageRow
 ```
+
+The CoreData SQLite file uses `NSPersistentStoreFileProtectionKey:
+FileProtectionType.completeUntilFirstUserAuthentication`. The
+AES-GCM-256 key lives in Keychain under
+`kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`; loaded into a
+`SymmetricKey` at `MeinChatPlugin.bootstrap()` and DI'd into
+`MessageCacheProtocol` implementations. Reconciles §1 vs §5.
 
 ### 3.2 `MessageCache` service
 
@@ -188,10 +245,18 @@ Plus extend `ConversationViewModelTests` with one spec asserting cache-first pai
 - Backdate a cached row by 11 days → next eviction tick removes it
   (verified by unit spec + manual check).
 - Settings stepper / numeric input clamps to `[0, server_suggested]`
-  in both clients.
-- No client-side persistence of plaintext bodies when the server says
-  `enabled_protocols: ["e2e_v1"]` (post-S28.3b regression — to be
-  re-verified in that slice; in S28.2 the cache stores plaintext).
+  in both clients (best-effort UX default, not a security control).
+- **At-rest encryption check (corrects critical-review §C16):** raw
+  filesystem read of the IDB blob (web) or the CoreData SQLite file
+  (iOS) does NOT contain the plaintext body bytes of any cached row.
+  Pinned by unit specs that read the raw storage and grep for a known
+  plaintext marker — must be absent.
+- **No KEK leak through `localStorage`** — the only persistent storage
+  on web is IDB; the KEK is `sessionStorage` only. Pinned by a unit
+  spec.
+- **iOS Keychain class is `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`**
+  for the symmetric key (verified via a unit spec that queries
+  Keychain attributes).
 - fe-user + iOS test suites GREEN.
 
 ## 5. Out of scope
@@ -206,18 +271,36 @@ Plus extend `ConversationViewModelTests` with one spec asserting cache-first pai
 
 ## 6. Engineering-requirements check
 
-- **TDD-first:** 16 new client specs land before the cache logic is
-  written.
+- **TDD-first:** ≥ 20 new client specs (was 16; added the at-rest
+  encryption pins) land before the cache logic is written.
 - **SOLID — S:** the cache has one job (persist messages + age them
   out). It is NOT the source of truth (server is).
 - **SOLID — L:** `MessageCacheProtocol` is substitutable — a no-op
   in-memory impl can be injected for tests without changing call sites.
-- **SOLID — D:** the cache is injected into the store; ConversationVM
-  on iOS receives it via init.
-- **DRY:** retention value resolution (user setting clamped to server-
-  suggested) is one helper in each client, not duplicated per call site.
-- **NO OVERENGINEERING:** no LRU / no quota / no background sync
-  protocol — just TTL + cache-first read.
-- **Liskov on the wire:** the cache row shape mirrors `MessageRow`
-  exactly (one new field — `cached_at`/`cachedAt`); nothing about the
+- **SOLID — D:** the cache + KEK are injected into the store;
+  ConversationVM on iOS receives it via init.
+- **NO OVERENGINEERING — concrete corrections in this revision.**
+  - **No second eviction strategy.** TTL only — no LRU, no quota, no
+    background sync protocol.
+  - **No SQLCipher dependency on iOS.** NSFileProtection + Keychain
+    key + sealed payload column is enough; a full SQLCipher dependency
+    is heavier than the threat model warrants here.
+  - **No web fallback to LocalStorage** for the KEK. SessionStorage
+    only — the earlier draft mentioned "encrypted-at-rest LocalStorage"
+    as a fallback, but introducing a second persistence surface (with
+    its own threat model) doubles the audit surface for marginal UX
+    benefit.
+  - **No per-conversation key derivation.** One per-device KEK seals
+    every row — simpler invariant. (A per-conversation key would buy
+    little: an attacker with the device KEK can grind through all
+    conversations anyway.)
+- **DRY — concrete corrections.**
+  - **Same KEK on web** powers the device private key wrap (S28.3b
+    §3.2) AND the cache seal — one passphrase, one Argon2 stretch,
+    two consumers.
+  - **One retention-resolver helper per client** answers
+    "current eviction TTL = min(user_setting, server_suggested)"
+    for both the sweep and the settings UI.
+- **Liskov on the wire:** the cache stores a sealed `MessageRow`
+  exactly (the unsealed contents are identical); nothing about the
   server-side contract changes.
