@@ -17,14 +17,17 @@ follow-ups off the rate-limit work (S31–S35).
 |---|--------|------|--------|
 | 26 | [Meinchat rate limits — count creates only + iOS overrides + admin-configurable](done/s26-meinchat-rate-limits.md) | `vbwd-backend` / `plugins/meinchat` | **Done — IMPLEMENTED & VERIFIED 2026-05-28** ([report](reports/02-s26-meinchat-rate-limits-complete.md)) |
 | 27 | [Lift the global Flask-Limiter ceilings (env-configurable)](done/s27-lift-global-flask-limiter.md) | `vbwd-backend` core | **Done — IMPLEMENTED & VERIFIED 2026-05-28** ([report](reports/03-s27-lift-global-flask-limiter-complete.md)) |
-| 28 | [Meinchat extension seams + meinchat-plus (Signal ratchet) + retention (10d clients / 2d server)](sprints/s28-meinchat-e2e-encryption-and-retention.md) — strategy index, split into **[Phase 1](sprints/s28-phase1-retention-and-config.md)** (retention + config + cache, ships first) + **[Phase 2](sprints/s28-phase2-e2e-and-ios.md)** (E2E + iOS, ships after phase 1) | meinchat (`vbwd-backend`/`plugins/meinchat`, `vbwd-fe-user/plugins/meinchat`, `vbwd-ios-plugin-meinchat`) **+ new** `meinchat-plus` (3 new plugin repos, **public from day one**) **+ iOS app update + iOS meinchat-plus plugin (enabled at v1 launch)** | **Planned (revised)** — 2026-05-28; 8 sub-sprints + 2 phase masters absorbed a critical review + 16 Q&A decisions |
-| 29 | [fe-user `/` no-chrome-flash on return with a valid JWT](sprints/s29-fe-user-home-no-chrome-flash.md) | `vbwd-fe-user` (host app `vue/src/`) | **Planned — 2026-05-28** (triggered by [report 04 — chrome flash](reports/04-cms-routing-flash-of-dashboard-on-return.md)). Confirm CMS-default-rule-is-anonymous-only product intent before merging. |
+| 28 | [Meinchat extension seams + meinchat-plus (Signal ratchet) + retention (10d clients / 2d server)](sprints/s28-meinchat-e2e-encryption-and-retention.md) — strategy index, split into **[Phase 1](sprints/s28-phase1-retention-and-config.md)** (retention + config + cache) + **[Phase 2](sprints/s28-phase2-e2e-and-ios.md)** (E2E + iOS) | meinchat (`vbwd-backend`/`plugins/meinchat`, `vbwd-fe-user/plugins/meinchat`, `vbwd-ios-plugin-meinchat`) **+ new** `meinchat-plus` (3 new plugin repos, **public from day one**) **+ iOS app update + iOS meinchat-plus plugin (enabled at v1 launch)** | **Phase 1 DONE — IMPLEMENTED & GREEN 2026-05-29** (backend + web; iOS deferred): [S28.0](done/s28-0-config-and-limits-endpoint.md) · [S28.1](done/s28-1-server-retention-prune.md) · [S28.2](done/s28-2-client-local-cache.md) ([report 05](reports/05-s28-phase1-and-s29-implementation.md)). **Phase 2 still Planned** (3a/3b/4/6/7 + iOS) |
+| 29 | [fe-user `/` no-chrome-flash on return with a valid JWT](done/s29-fe-user-home-no-chrome-flash.md) | `vbwd-fe-user` (host app `vue/src/`) | **Done — IMPLEMENTED & GREEN 2026-05-29** ([report 05](reports/05-s28-phase1-and-s29-implementation.md)). Shipped as the scoped **flash-fix only** (`noLayout:true` on `/`) — a prior CMS-guard refactor already did §3.2. **Secondary deferred:** authed-`/`→`/dashboard` needs a CMS-guard auth-skip (out of S29 scope). |
 | 30 | [Heavy-load test harness fixes (workflow + Locust scenario)](sprints/s30-heavy-load-harness-fixes.md) **+** [Backend code affordances for robust load testing (`flask seed` CLI + `_routes` + `_seed_status`)](sprints/s30-load-test-code-affordances.md) | `VBWD-platform/vbwd-platform` + `vbwd-backend` core | **Planned — 2026-05-28** (triggered by [report 04 — heavy-load](reports/04-heavy-load-26452905684-harness-drift.md)) |
 | 31 | [Flask-Limiter per-user keying (NAT-shared bucket fix)](sprints/s31-flask-limiter-per-user-keying.md) | `vbwd-backend` core | **Planned — 2026-05-28**. Follow-up to S27. **Open: keyfunc design must verify JWT signature** (critical review found a DoS-via-forged-JWT vector if signature is skipped). Release-blocker once that is resolved. |
 | 32 | [macOS rate-limit overrides (meinchat)](sprints/s32-macos-rate-limit-overrides.md) | `vbwd-backend` / `plugins/meinchat` | **Planned — 2026-05-28**. Follow-up to S26 — only matters when Mac Catalyst client ships; non-blocker for v1. |
 | 33 | [429 telemetry (structured WARN log on every rate-limit trip)](sprints/s33-429-telemetry.md) | `vbwd-backend` core + `plugins/meinchat` | **Planned — 2026-05-28**. Strongly recommended before v1 release — observability for S26/S27. |
 | 34 | [Drop legacy meinchat rate-limit config keys (DEFERRED)](sprints/s34-drop-legacy-meinchat-rate-keys.md) | `vbwd-backend` / `plugins/meinchat` | **DEFERRED — DO NOT IMPLEMENT YET.** Gated on S26 reaching prod everywhere + one deploy cycle elapsing without meinchat-rate-limit regressions. |
 | 35 | [iOS: cache conv_id from inbox, drop 429-retry loop](sprints/s35-ios-cache-conv-id-drop-retry.md) | `vbwd-ios/VBWD/Packages/vbwd-ios-plugin-meinchat` | **Planned — 2026-05-28**. iOS app re-release track; couples to whatever iOS release follows. |
+| 36 | [Discounts & coupons at checkout (wire the island into both checkouts)](sprints/s36-discounts-at-checkout.md) | `vbwd-backend` (core seam + `plugins/{discount,subscription,shop}`) · `vbwd-fe-core` · `vbwd-fe-user` · `vbwd-fe-admin` (e2e) | **Planned — 2026-05-28**. Diagnosis: discount backend plugin + fe-admin CRUD ship, but the **consumer checkout path was never built** — no coupon input in either checkout, neither checkout endpoint accepts/applies `coupon_code`, the discount plugin is an island reachable only via `POST /api/v1/coupons/validate`. Wires it end-to-end via a generic core price-adjustment port (agnostic) + a reusable fe-core `CouponInput`; proves it with Playwright (public + private checkout redeeming seeded codes) + seeder-seeds-on-install assertions + an admin-injection→user-checkout e2e. **3 open product Qs.** |
+| 37 | [fe-user "Pay Zero" checkout (port the iOS zero-cost flow, both checkouts)](sprints/s37-fe-user-pay-zero-checkout.md) | `vbwd-fe-core` · `vbwd-fe-user` (no backend change) | **Planned — 2026-05-28**. iOS already does it (`CheckoutViewModel.isZeroTotal` → hide payment selection, "Pay Zero" button, notice) and the **backend already auto-pays a zero-total checkout** (`checkout_handler.py:250` emits `PaymentCapturedEvent`/`zero-price`). Only the fe-user UI branch is missing. Adds one core-store `isZeroTotal` computed + a shared fe-core `ZeroTotalNotice`, consumed identically by the **public and private** checkouts; Playwright proves both. Couples to S36 (100%-discount-to-zero takes the same path). **3 open product Qs.** |
+| 38 | [meinchat SSE event bus — one Redis connection per worker + fail-loud backend](done/s38-meinchat-redis-bus-hardening.md) | `vbwd-backend` / `plugins/meinchat` | **Done — IMPLEMENTED & GREEN 2026-05-29** ([report 06](reports/06-sse-worker-starvation-and-redis-bus-hardening.md)) — 36 event-bus specs incl. cross-worker delivery + connection-count; full meinchat 206 passed; lint/mypy clean. Follow-up to the prod-freeze hotfix (gunicorn `sync`→`gthread`, SSE lifetime cap + DB-conn release — **applied & verified green 2026-05-29**). Hotfix raised the concurrent-stream ceiling ~4→~256, amplifying a latent flaw: `RedisEventBus` opens **one Redis connection per stream** (`redis_event_bus.py:81`); also `_event_bus()` **silently+stickily falls back** to the broken in-process bus on a transient Redis blip (`routes.py:196`). Refactors to one listener thread per worker fanning into the shared queue subscription (DRY), decides the backend once+loud (no silent degrade), adds the missing tests (cross-worker delivery + connection-leak). **3 open Qs.** |
 
 ## Work done today
 
@@ -131,6 +134,45 @@ follow-ups off the rate-limit work (S31–S35).
     `ConversationViewModel.swift:61-66` exp-backoff retry loop.
     Couples to iOS release-train.
 
+## Work done 2026-05-29 (implementation — S29 + S28 Phase 1)
+
+Full write-up: [`reports/05-s28-phase1-and-s29-implementation.md`](reports/05-s28-phase1-and-s29-implementation.md).
+Implemented test-first under the TDD-agent discipline; **not committed**
+(left for user verification per standing rule).
+
+- **S29 — fe-user no-chrome-flash → DONE & green.** Shipped scoped to the
+  flash fix only: `noLayout: true` on the `/` route (`App.vue:39` already
+  short-circuits on it). A prior CMS-guard refactor had already implemented
+  §3.2's synchronous redirect, so that half was dropped; sprint test #5 was
+  vacuous (`Home.vue` no longer imports the api) and dropped. **CMS-default-rule
+  product question resolved:** authed-`/`→`/dashboard` is blocked by the CMS
+  guard's `default` rule (no auth check) and needs a CMS-guard auth-skip —
+  out of S29 scope, deferred. Gate: 557✓/1s unit, 0 lint errors, e2e 4✓
+  (incl. the 2 no-regression stale-session specs).
+- **S28.0 — config + `/limits` → DONE & green.** 4 retention/size keys
+  (`DEFAULT_CONFIG`+`config.json`+`admin-config.json` Retention tab);
+  `GET /api/v1/messaging/limits` (absolute path; four operator knobs only);
+  fe-user `useMessagingLimits` + `MeinchatRetentionSection` via
+  `profileSectionsRegistry` (8 locales). `--plugin meinchat` A/B/C PASS;
+  fe-user lint+test green.
+- **S28.1 — server retention prune → DONE & green.** `IRetentionPolicy` port +
+  `ConfigRetentionPolicy`; idempotent `RetentionService` (injected
+  repo/storage/policy/clock, attachment failures logged-not-raised);
+  `find_older_than`/`delete_by_ids`; `scheduler.py` daily 03:00 UTC with the
+  **`TESTING` guard** + regression test. `--plugin meinchat` SUCCESS
+  (179✓/5s unit, 6 integration).
+- **S28.2 — web client cache → DONE & green.** Encrypted IndexedDB cache;
+  **phase-1 device-bound KEK** via `loadKek()` (non-extractable WebCrypto key
+  in IDB — S28.3b swaps this file only for the passphrase-Argon2id KEK);
+  cache-first `openConversation`; 30-min eviction sweep; shorten-only setting.
+  Added `idb`+`fake-indexeddb`. fe-user lint 0 errors, 579✓/1s.
+- **Phase-2 deferrals (correct — schema/plugin don't exist yet):**
+  meinchat-plus 0-day refusal (S28.0 #6 / S28.1 #12), `E2eAwareRetentionPolicy`
+  + specs #9–#11, `make meinchat-prune`, the `loadKek()` passphrase swap.
+- **Housekeeping:** s29 + s28-0/1/2 moved to `done/`; pre-existing black drift
+  in 3 rate-limit-track meinchat files reformatted (user-approved) for a green
+  gate; unused `pytest` import removed.
+
 ## S28 decisions locked 2026-05-28 (4 rounds, 16 questions)
 
 | # | Question | Answer | Effect |
@@ -177,11 +219,12 @@ under S28.2.
   `meinchat_plus_message_delivery` join table (recommended) or collapse
   to a single `delivered_device_count` column on `message`. See
   [s28#11](sprints/s28-meinchat-e2e-encryption-and-retention.md#11-open-decisions).
-- **S29 product confirmation.** Is the CMS default routing rule
-  *anonymous-only* (sprint's framing — clean) or *all-visitors fallback*
-  (status-quo — but flashy on authed)? §3.2's destination short-circuit
-  hinges on this. If "all-visitors", §3.1 alone (route-meta flag) is
-  the right scope and §3.2 should not land.
+- **S29 — RESOLVED 2026-05-29.** Shipped §3.1 alone (route-meta flag); §3.2
+  was already done by a CMS-guard refactor. **New open follow-up:** authed
+  visitors at `/` are sent to the public CMS default slug by the CMS guard
+  (no auth check) instead of `/dashboard`. Routing them to the dashboard
+  needs a CMS-guard auth-skip — a small standalone follow-up sprint if that
+  behaviour is wanted.
 - **S31 keyfunc signature verification.** Before any implementation:
   the drafted `_rate_limit_key_func` skipped JWT signature verification.
   That opens a DoS vector (forge victim's user_id → fill their bucket
@@ -201,11 +244,11 @@ under S28.2.
 ## Blockers
 
 - **None blocking S26 / S27.** Both shipped and verified.
-- **S28** is design-only until the remaining S28 open decision in
-  §11 + the iOS beta-RC gating are voted on (the design itself is
-  release-ready after the 2026-05-28 critical-review revision).
-- **S29** is implementation-ready iff the CMS-default-rule product
-  question is resolved (see Pending).
+- **S28 Phase 1** is **DONE & green** (S28.0/1/2, backend + web; iOS
+  deferred). **Phase 2** (3a/3b/4/6/7 + iOS) remains design-only and is
+  gated on Phase 1 baking in prod for one deploy cycle (+ the §11 decision +
+  iOS gating). Phase-2 seams (`loadKek()`, `IRetentionPolicy`) are in place.
+- **S29** is **DONE & green** (flash-fix only; see Work done 2026-05-29).
 - **S30** is implementation-ready.
 - **S31** is **blocked by the keyfunc signature-verification fix**
   (see Pending). Without that fix it actively regresses prod security

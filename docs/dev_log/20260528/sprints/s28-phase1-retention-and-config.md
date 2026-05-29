@@ -36,9 +36,9 @@ offline-readable 10-day archive.
 
 | # | Sub-sprint | Repo touch | Backward compat? |
 |---|---|---|---|
-| 0 | [Config keys + `/limits` endpoint + iOS/web consumers](s28-0-config-and-limits-endpoint.md) | meinchat (`vbwd-backend/plugins/meinchat`, `vbwd-fe-user/plugins/meinchat`, `vbwd-ios-plugin-meinchat`) | Yes — additive config + read-only GET |
-| 1 | [Server retention prune (daily APScheduler)](s28-1-server-retention-prune.md) | meinchat (backend only) | Yes — at 2-day default the prune is a real behavioural change on prod; documented in deploy notes |
-| 2 | [Client local cache with 10-day TTL + at-rest encryption](s28-2-client-local-cache.md) | meinchat (web + iOS) | Yes — purely additive |
+| 0 | [Config keys + `/limits` endpoint + iOS/web consumers](../done/s28-0-config-and-limits-endpoint.md) | meinchat (`vbwd-backend/plugins/meinchat`, `vbwd-fe-user/plugins/meinchat`, `vbwd-ios-plugin-meinchat`) | Yes — additive config + read-only GET |
+| 1 | [Server retention prune (daily APScheduler)](../done/s28-1-server-retention-prune.md) | meinchat (backend only) | Yes — at 2-day default the prune is a real behavioural change on prod; documented in deploy notes |
+| 2 | [Client local cache with 10-day TTL + at-rest encryption](../done/s28-2-client-local-cache.md) | meinchat (web + iOS) | Yes — purely additive |
 
 **Dependencies:** S28.1 + S28.2 both consume the config keys S28.0
 adds. Within phase 1: 0 first, then 1 + 2 in parallel.

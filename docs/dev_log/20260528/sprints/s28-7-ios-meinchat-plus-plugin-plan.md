@@ -406,7 +406,7 @@ on-screen for ≥ 250 ms (so a rapid scroll-past doesn't fire). Uses
 
 The same UI is added to `vbwd-fe-user/plugins/meinchat/src/components/MessageBubble.vue`
 in a coordinated edit landing alongside this sprint. See **the
-"fe-user mirror" addendum to [S28.2](s28-2-client-local-cache.md)**
+"fe-user mirror" addendum to [S28.2](../done/s28-2-client-local-cache.md)**
 (client-cache slice — same plugin tree). One CSS class, two
 `<span class="dot">` elements when `deliveredAt`/`readAt` cross
 their thresholds.

@@ -1,6 +1,6 @@
 # S28.2 — Client local cache with 10-day TTL (web IndexedDB + iOS CoreData) + shorten-only UI
 
-**Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](s28-meinchat-e2e-encryption-and-retention.md)
+**Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](../sprints/s28-meinchat-e2e-encryption-and-retention.md)
 **Status:** PLANNED — 2026-05-28. **Revised 2026-05-28** to absorb the
 critical review:
 - §1 said "cache holds decrypted bodies"; §5 said "no plaintext at rest".
@@ -16,7 +16,7 @@ critical review:
 **Blocks:** nothing directly; works for both plaintext (today) and ciphertext (after S28.3b).
 
 **Repos touched:** `vbwd-fe-user/plugins/meinchat`, `vbwd-ios-plugin-meinchat`.
-**Engineering requirements (BINDING):** TDD-first · SOLID · DI · DRY · Liskov · clean code · **NO OVERENGINEERING** — [`_engineering-requirements.md`](_engineering-requirements.md).
+**Engineering requirements (BINDING):** TDD-first · SOLID · DI · DRY · Liskov · clean code · **NO OVERENGINEERING** — [`_engineering-requirements.md`](../sprints/_engineering_requirements.md).
 **Gate:** fe-user `npm run lint && npm run test` GREEN on the plugin; iOS `swift test` GREEN on the package.
 
 ---

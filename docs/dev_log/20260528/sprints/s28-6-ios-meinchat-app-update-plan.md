@@ -1,14 +1,14 @@
 # S28.6 — iOS meinchat plugin update (cache, retention, capabilities — beta-RC safe)
 
 **Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](s28-meinchat-e2e-encryption-and-retention.md)
-**Status:** PLANNED — 2026-05-28. Sister slice of [S28.2](s28-2-client-local-cache.md)
+**Status:** PLANNED — 2026-05-28. Sister slice of [S28.2](../done/s28-2-client-local-cache.md)
 for the iOS package, framed against the **beta-RC** state of the
 `vbwd-ios/VBWD` host app (MARKETING_VERSION `1.0`, CURRENT_PROJECT_VERSION
 `1`, currently in TestFlight). Every change in this slice is **additive
 inside the existing `vbwd-ios-plugin-meinchat` package** — no host-app
 shell changes, no `VBWDCore` SDK breaking changes, no new external
 Swift dependencies.
-**Depends on:** [S28.0](s28-0-config-and-limits-endpoint.md) (backend
+**Depends on:** [S28.0](../done/s28-0-config-and-limits-endpoint.md) (backend
 `/messaging/limits` endpoint + config keys), [S28.3a](s28-3a-meinchat-extension-ports.md)
 (backend `/messaging/capabilities[?me=true]` endpoint + error contract).
 **Blocks:** [S28.7](s28-7-ios-meinchat-plus-plugin-plan.md) — the new
@@ -341,7 +341,7 @@ on-screen for ≥ 250 ms (so a rapid scroll-past doesn't fire). Uses
 The same UI lands in
 `vbwd-fe-user/plugins/meinchat/src/components/MessageBubble.vue` —
 coordinated edit alongside this sprint, scoped under
-**[S28.2](s28-2-client-local-cache.md)**'s fe-user plugin tree (same
+**[S28.2](../done/s28-2-client-local-cache.md)**'s fe-user plugin tree (same
 package, same cache subsystem). One CSS class `.message-receipts`,
 two `<span class="dot">` elements when `deliveredAt` / `readAt`
 cross their thresholds.

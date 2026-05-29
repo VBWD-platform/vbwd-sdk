@@ -393,9 +393,9 @@ acceptance, out-of-scope, engineering-requirements check.
 
 | # | Sub-sprint | Lives in | Depends on | Backward compat? |
 |---|---|---|---|---|
-| 0 | [Config keys + `/limits` endpoint + iOS/web consumers](s28-0-config-and-limits-endpoint.md) | meinchat | none | Yes — surfaces values that are also the today-implicit defaults |
-| 1 | [Server retention prune (daily APScheduler)](s28-1-server-retention-prune.md) | meinchat | S28.0 | Yes — at 2d the prune is a real change on prod; documented in deploy notes |
-| 2 | [Client local cache with 10-day TTL + shorten-only UI](s28-2-client-local-cache.md) | meinchat (web + iOS) | S28.0 | Yes — purely additive |
+| 0 | [Config keys + `/limits` endpoint + iOS/web consumers](../done/s28-0-config-and-limits-endpoint.md) | meinchat | none | Yes — surfaces values that are also the today-implicit defaults |
+| 1 | [Server retention prune (daily APScheduler)](../done/s28-1-server-retention-prune.md) | meinchat | S28.0 | Yes — at 2d the prune is a real change on prod; documented in deploy notes |
+| 2 | [Client local cache with 10-day TTL + shorten-only UI](../done/s28-2-client-local-cache.md) | meinchat (web + iOS) | S28.0 | Yes — purely additive |
 | **3a** | [meinchat extension ports + schema concessions + capability endpoints (refactor)](s28-3a-meinchat-extension-ports.md) | meinchat | S28.0 | Yes — pure refactor + additive schema; "plugin-free still works" oracle proves byte-equal behaviour |
 | **3b** | [`meinchat-plus` (Signal ratchet + device directory + prekey bundles)](s28-3b-meinchat-plus-signal-ratchet.md) | **new repos**: `vbwd-plugin-meinchat-plus` + `vbwd-fe-user-plugin-meinchat-plus` + `vbwd-ios-plugin-meinchat-plus` | S28.3a | n/a — new plugin, opt-in per instance |
 | 4 | [Attachment encryption (mirror of S28.3 on the file path)](s28-4-attachment-encryption.md) | meinchat + meinchat-plus | S28.3a + S28.3b | Plain attachments keep working; e2e conversations write ciphertext blobs |

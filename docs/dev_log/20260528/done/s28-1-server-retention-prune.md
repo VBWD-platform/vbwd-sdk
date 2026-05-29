@@ -1,6 +1,6 @@
 # S28.1 — Server retention prune (daily APScheduler job)
 
-**Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](s28-meinchat-e2e-encryption-and-retention.md)
+**Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](../sprints/s28-meinchat-e2e-encryption-and-retention.md)
 **Status:** PLANNED — 2026-05-28. **Revised 2026-05-28** to absorb the
 critical review:
 - Prune predicate now exempts **undelivered e2e_v1 rows** (closes
@@ -13,11 +13,11 @@ critical review:
 - The `prune_messages` signature gains an injected predicate so
   meinchat-plus's `E2eAwareRetentionPolicy` replaces the default via
   `IRetentionPolicy` (S28.3a §2.4).
-**Depends on:** [S28.0](s28-0-config-and-limits-endpoint.md) (reads the config keys it created); coordinated with [S28.3a](s28-3a-meinchat-extension-ports.md) §2.4 `IRetentionPolicy` port + [S28.3b](s28-3b-meinchat-plus-signal-ratchet.md) §2.3 delivery-tracking table.
+**Depends on:** [S28.0](s28-0-config-and-limits-endpoint.md) (reads the config keys it created); coordinated with [S28.3a](../sprints/s28-3a-meinchat-extension-ports.md) §2.4 `IRetentionPolicy` port + [S28.3b](../sprints/s28-3b-meinchat-plus-signal-ratchet.md) §2.3 delivery-tracking table.
 **Blocks:** nothing directly; lifts a privacy risk independently of the crypto track.
 
 **Repos touched:** `vbwd-backend/plugins/meinchat/` only.
-**Engineering requirements (BINDING):** TDD-first · DevOps-first · SOLID · DI · DRY · Liskov · clean code · **core agnostic** · **NO OVERENGINEERING** — [`_engineering-requirements.md`](_engineering-requirements.md).
+**Engineering requirements (BINDING):** TDD-first · DevOps-first · SOLID · DI · DRY · Liskov · clean code · **core agnostic** · **NO OVERENGINEERING** — [`_engineering-requirements.md`](../sprints/_engineering_requirements.md).
 **Gate:** `bin/pre-commit-check.sh --plugin meinchat` GREEN (both `--quick` and `--full`); integration suite GREEN.
 
 ---

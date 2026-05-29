@@ -1,6 +1,6 @@
 # S28.0 — Config keys + `GET /api/v1/messaging/limits` + iOS/web consumers
 
-**Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](s28-meinchat-e2e-encryption-and-retention.md)
+**Parent sprint:** [S28 — meinchat extension seams + meinchat-plus + retention](../sprints/s28-meinchat-e2e-encryption-and-retention.md)
 **Status:** PLANNED — 2026-05-28. **Revised 2026-05-28** to absorb the
 critical review:
 - `messages_retention_days_server: 0` is documented as **mutually
@@ -16,7 +16,7 @@ critical review:
 **Blocks:** S28.1 (retention prune reads these config keys), S28.2 (client cache reads the suggested-client-retention).
 
 **Repos touched:** `vbwd-backend/plugins/meinchat/`, `vbwd-fe-user/plugins/meinchat`, `vbwd-ios-plugin-meinchat`.
-**Engineering requirements (BINDING):** TDD-first · SOLID · DI · DRY · clean code · **core agnostic** · **NO OVERENGINEERING** — [`_engineering-requirements.md`](_engineering-requirements.md).
+**Engineering requirements (BINDING):** TDD-first · SOLID · DI · DRY · clean code · **core agnostic** · **NO OVERENGINEERING** — [`_engineering-requirements.md`](../sprints/_engineering_requirements.md).
 **Gate:** `bin/pre-commit-check.sh --plugin meinchat` GREEN; fe-user `npm run lint && npm run test` GREEN; iOS package `swift test` GREEN.
 
 ---
