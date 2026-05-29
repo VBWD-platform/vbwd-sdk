@@ -129,6 +129,15 @@ Exposed as a CLI: **`flask seed-rbac`** (core, ungated — NOT behind `TEST_DATA
 - **Q6 → subscription-only (basic + pro).** Core seeds roles/permissions only; no core base user access level. Cleanest agnostic split.
 - **Q7 → SEPARATE sprint.** The fe-admin `UserEdit.vue` silent-`catch {}` fix (surface load errors instead of hiding the block) is out of scope here; this sprint is backend RBAC seeding only.
 
+## 8b. Addendum (2026-05-29) — foundational COUNTRIES seeding
+
+Same "foundational reference data, seeded by default, ungated, idempotent" pattern as RBAC. The ~72-country list + `ENABLED_CODES={DE,AT,CH,FR,IT,PL,ES,TH}` (DACH must be enabled — `test_admin_countries.test_list_includes_dach_enabled`) currently lives **inline in the gated `bin/install_demo_data.py`** (lines ~467-518), so a non-demo instance has 0 countries (the `/admin/settings` country list is empty).
+
+- **Extract** the list + seed logic into `vbwd/services/country_seeder.py` → `seed_countries(session) -> CountrySeedResult` (upsert by `code`, idempotent; `is_enabled` + `position` per `ENABLED_CODES`).
+- **`flask seed-countries`** CLI (ungated), registered in `app.py`, wired into `deploy.sh` next to `seed-rbac`.
+- **`bin/install_demo_data.py`** uses the extracted `seed_countries()` (DRY — single source; remove the inline copy).
+- Tests: seeds all countries; DACH enabled; idempotent re-run; install_demo_data delegates to the shared seeder.
+
 ## 9. Engineering-requirements check
 
 - **TDD-first:** ≥ 14 specs land RED before the seeder body.
