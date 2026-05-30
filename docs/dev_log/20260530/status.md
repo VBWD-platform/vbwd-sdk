@@ -42,6 +42,7 @@ Regression gate: `plugins/meinchat` + `plugins/cms` tests **192 passed**.
 | 40 | [CMS SEO plugin](sprints/s40-cms-seo-plugin.md) | `plugins/cms` | **DRAFT for negotiation** |
 | 41 | [CMS AI helper](sprints/s41-cms-ai-helper.md) | `plugins/cms` | **DRAFT for negotiation** |
 | 42 | [vbwd-press](sprints/s42-vbwd-press.md) (parent) + [42.0](sprints/s42-0-data-model-terms-crud.md)/[42.1](sprints/s42-1-post-list-and-term-widget.md)/[42.2](sprints/s42-2-fts-search-and-widget.md)/[42.3](sprints/s42-3-content-type-renderer-registry.md)/[42.4](sprints/s42-4-rss-feeds.md) | `plugins/*press*` | **DRAFT for negotiation** |
+| 43 | [DB table-naming normalization](sprints/s43-db-table-naming-normalization.md) (plugin-prefix every table) | `vbwd-backend` + plugins meinchat/taro/discount/booking/subscription/toss + ghrm | **PLANNED — 2026-05-30** (from [report 02](reports/02-db-table-naming-audit.md); decisions locked: keep `discount`, rename `subscription`→`subscription_*` incl. ghrm lockstep, 15 tables) |
 
 Engineering requirements (binding): [`sprints/_engineering_requirements.md`](sprints/_engineering_requirements.md).
 
