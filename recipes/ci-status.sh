@@ -37,6 +37,10 @@ EXPECTED=(
   vbwd-plugin-meinchat
   vbwd-fe-user-plugin-meinchat
   vbwd-fe-admin-plugin-meinchat
+  # S28.3b/S28.4 — meinchat-plus (E2E encrypted chat; iOS lives in the iOS app)
+  vbwd-plugin-meinchat-plus
+  vbwd-fe-user-plugin-meinchat-plus
+  vbwd-fe-admin-plugin-meinchat-plus
 )
 
 # ── Colours ───────────────────────────────────────────────────────────────────

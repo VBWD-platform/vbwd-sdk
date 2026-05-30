@@ -1,6 +1,10 @@
 # 2026-05-28 — Daily status
 
-> **Resume tomorrow from [`handoff-s28.md`](handoff-s28.md)** (S28 E2E track).
+> **➡️ Active status moved to [`../20260530/status.md`](../20260530/status.md)** (2026-05-30).
+> The still-PLANNED/DRAFT sprints (S30–S37, S40–S42, S28.6/7) were carried into
+> `../20260530/sprints/`; this folder keeps the resolved S26/S27/S28(web)/S29/S38
+> work + the S28 epic strategy docs + S39.
+> **Resume from [`handoff-s28.md`](handoff-s28.md)** (S28 E2E track).
 > End-of-day wrap-up: [`reports/07-daily-wrapup-2026-05-29.md`](reports/07-daily-wrapup-2026-05-29.md).
 
 ## Theme
@@ -20,7 +24,7 @@ follow-ups off the rate-limit work (S31–S35).
 |---|--------|------|--------|
 | 26 | [Meinchat rate limits — count creates only + iOS overrides + admin-configurable](done/s26-meinchat-rate-limits.md) | `vbwd-backend` / `plugins/meinchat` | **Done — IMPLEMENTED & VERIFIED 2026-05-28** ([report](reports/02-s26-meinchat-rate-limits-complete.md)) |
 | 27 | [Lift the global Flask-Limiter ceilings (env-configurable)](done/s27-lift-global-flask-limiter.md) | `vbwd-backend` core | **Done — IMPLEMENTED & VERIFIED 2026-05-28** ([report](reports/03-s27-lift-global-flask-limiter-complete.md)) |
-| 28 | [Meinchat extension seams + meinchat-plus (Signal ratchet) + retention (10d clients / 2d server)](sprints/s28-meinchat-e2e-encryption-and-retention.md) — strategy index, split into **[Phase 1](sprints/s28-phase1-retention-and-config.md)** (retention + config + cache) + **[Phase 2](sprints/s28-phase2-e2e-and-ios.md)** (E2E + iOS) | meinchat (`vbwd-backend`/`plugins/meinchat`, `vbwd-fe-user/plugins/meinchat`, `vbwd-ios-plugin-meinchat`) **+ new** `meinchat-plus` (3 new plugin repos, **public from day one**) **+ iOS app update + iOS meinchat-plus plugin (enabled at v1 launch)** | **Phase 1 DONE — IMPLEMENTED & GREEN 2026-05-29** (backend + web; iOS deferred): [S28.0](done/s28-0-config-and-limits-endpoint.md) · [S28.1](done/s28-1-server-retention-prune.md) · [S28.2](done/s28-2-client-local-cache.md) ([report 05](reports/05-s28-phase1-and-s29-implementation.md)). **Phase 2 IN PROGRESS:** [S28.3a](done/s28-3a-meinchat-extension-ports.md) ✅ DONE & GREEN 2026-05-29 (backend: ports/registry + e2e schema + capabilities + negotiation; 241 specs). 3b (meinchat-plus, new plugin) STARTED 2026-05-29 — server `SignalEnvelopeValidator` (holds no keys) + scaffold + config + cbor2 dep, 9 specs green; remaining: models/migration/repos/prekey services (FOR UPDATE SKIP LOCKED)/routes/round-trip. Then 4 (attachment enc), 6/7 (iOS, in progress by iOS agent) |
+| 28 | [Meinchat extension seams + meinchat-plus (Signal ratchet) + retention (10d clients / 2d server)](sprints/s28-meinchat-e2e-encryption-and-retention.md) — strategy index, split into **[Phase 1](sprints/s28-phase1-retention-and-config.md)** (retention + config + cache) + **[Phase 2](sprints/s28-phase2-e2e-and-ios.md)** (E2E + iOS) | meinchat (`vbwd-backend`/`plugins/meinchat`, `vbwd-fe-user/plugins/meinchat`, `vbwd-ios-plugin-meinchat`) **+ new** `meinchat-plus` (3 new plugin repos, **public from day one**) **+ iOS app update + iOS meinchat-plus plugin (enabled at v1 launch)** | **Phase 1 DONE — IMPLEMENTED & GREEN 2026-05-29** (backend + web; iOS deferred): [S28.0](done/s28-0-config-and-limits-endpoint.md) · [S28.1](done/s28-1-server-retention-prune.md) · [S28.2](done/s28-2-client-local-cache.md) ([report 05](reports/05-s28-phase1-and-s29-implementation.md)). **Phase 2 IN PROGRESS:** [S28.3a](done/s28-3a-meinchat-extension-ports.md) ✅ DONE & GREEN 2026-05-29 (backend: ports/registry + e2e schema + capabilities + negotiation; 241 specs). [3b](done/s28-3b-meinchat-plus-signal-ratchet.md) (meinchat-plus, new plugin) **BACKEND DONE & GREEN 2026-05-29** — 4 models + migration, 3 repos (one-time consume `FOR UPDATE SKIP LOCKED`), device directory + signed/one-time prekey services (Ed25519 verify; concurrent-consume race spec), policy/capability/`MarkDeliveryAttempted`/`E2eAwareRetentionPolicy`, `ProtocolAwareCodec` (plain↔e2e dispatch), 6 device/prekey routes, full `on_enable`/`on_disable`; **49 unit + 7 integration green; `--plugin meinchat_plus --full` GREEN** ([report 08](reports/08-s28-3b-backend-persistence.md)). **ENABLED 2026-05-29** in plugins.json/config.json after the **meinchat-wiring slice** (send `expected_device_ids` + `envelope_b64`, GET delivery hook, scheduler `IRetentionPolicy` resolution) — **full e2e server round-trip green** ([report 09](reports/09-s28-3b-meinchat-wiring-and-enable.md)); meinchat `--full` + meinchat_plus `--full` both GREEN. Remaining: fe-user + iOS client crypto (libsignal). **S28.4 (attachment enc) increment 1 DONE & green 2026-05-29** — server ciphertext storage layer: `meinchat_attachment` child table + migration (additive) + `AttachmentRepository` + `AttachmentService.store_encrypted`/`read_blob` (server stores opaque blobs, never decodes/resizes); 6 unit + 4 integration; meinchat `--full` GREEN ([report 10](reports/10-s28-4-attachment-encryption-storage.md)). **Increment 2 DONE & green** — e2e attachment routes (`POST /messages/<id>/attachments`, `GET /attachments/<id>`) + `Message.to_dict() attachments[]` (additive) + `add_e2e_attachment`/`get_attachment_blob`; 7 unit + 2 integration round-trip; both gates GREEN ([report 11](reports/11-s28-4-attachment-routes-and-to-dict.md)). **Increments 3+4 DONE & green** ([report 12](reports/12-s28-4-schema-unification-and-fe-migration.md)): retention prunes child blobs; ALL attachments folded into `meinchat_attachment` (plain `send_attachment` writes fullres+thumb child rows; +nullable width/height); legacy `message.attachment_*` columns DROPPED (migration `20260603_1000`, **no backfill — pre-rollout**); `to_dict` emits only `attachments[]`; fe-user + fe-admin migrated to `attachments[]` (plain renders, e2e shows 🔒). Backend meinchat/meinchat_plus `--full` GREEN; fe-user 68 + fe-admin 4 specs GREEN. **iOS client must migrate to `attachments[]`** (iOS agent). **Remaining S28.4 = increment 5 (client crypto, greenfield, SCOPED/deferred)**: fe-user libsignal plugin + iOS (iOS agent). |
 | 29 | [fe-user `/` no-chrome-flash on return with a valid JWT](done/s29-fe-user-home-no-chrome-flash.md) | `vbwd-fe-user` (host app `vue/src/`) | **Done — IMPLEMENTED & GREEN 2026-05-29** ([report 05](reports/05-s28-phase1-and-s29-implementation.md)). Shipped as the scoped **flash-fix only** (`noLayout:true` on `/`) — a prior CMS-guard refactor already did §3.2. **Secondary deferred:** authed-`/`→`/dashboard` needs a CMS-guard auth-skip (out of S29 scope). |
 | 30 | [Heavy-load test harness fixes (workflow + Locust scenario)](sprints/s30-heavy-load-harness-fixes.md) **+** [Backend code affordances for robust load testing (`flask seed` CLI + `_routes` + `_seed_status`)](sprints/s30-load-test-code-affordances.md) | `VBWD-platform/vbwd-platform` + `vbwd-backend` core | **Planned — 2026-05-28** (triggered by [report 04 — heavy-load](reports/04-heavy-load-26452905684-harness-drift.md)) |
 | 31 | [Flask-Limiter per-user keying (NAT-shared bucket fix)](sprints/s31-flask-limiter-per-user-keying.md) | `vbwd-backend` core | **Planned — 2026-05-28**. Follow-up to S27. **Open: keyfunc design must verify JWT signature** (critical review found a DoS-via-forged-JWT vector if signature is skipped). Release-blocker once that is resolved. |
@@ -86,8 +90,8 @@ follow-ups off the rate-limit work (S31–S35).
     - [S28.1](sprints/s28-1-server-retention-prune.md) — server retention prune (E2E-aware: exempts undelivered ciphertext from the prune).
     - [S28.2](sprints/s28-2-client-local-cache.md) — client local cache with 10-day TTL + **at-rest encryption** under a wrapped Keychain/WebCrypto key.
     - [S28.3a](sprints/s28-3a-meinchat-extension-ports.md) — meinchat **six** extension ports + schema concessions + unified `/capabilities[?me=true]` endpoint + negotiation-failure error contract.
-    - [S28.3b](sprints/s28-3b-meinchat-plus-signal-ratchet.md) — `meinchat-plus` (**client-encrypts** Signal ratchet + split `signed_prekey` / `one_time_prekey` tables + `FOR UPDATE SKIP LOCKED` consume + 256B padding + downgrade fail-closed + delivery tracking), 3 new plugin repos.
-    - [S28.4](sprints/s28-4-attachment-encryption.md) — attachment encryption (client encrypts; new `meinchat_attachment` child table with `kind` enum for fullres + thumb dual blobs).
+    - [S28.3b](done/s28-3b-meinchat-plus-signal-ratchet.md) — `meinchat-plus` (**client-encrypts** Signal ratchet + split `signed_prekey` / `one_time_prekey` tables + `FOR UPDATE SKIP LOCKED` consume + 256B padding + downgrade fail-closed + delivery tracking), 3 new plugin repos. **Backend done & green 2026-05-29.**
+    - [S28.4](done/s28-4-attachment-encryption.md) — attachment encryption (client encrypts; new `meinchat_attachment` child table with `kind` enum for fullres + thumb dual blobs). **Done & green 2026-05-30** (backend storage+routes, fe-reader migration, client hybrid crypto). UI glue remains.
     - [S28.6](sprints/s28-6-ios-meinchat-app-update-plan.md) — **iOS app update** (capabilities discovery + at-rest-encrypted local cache + retention UI), additive only; beta-RC safe.
     - [S28.7](sprints/s28-7-ios-meinchat-plus-plugin-plan.md) — **new `vbwd-ios-plugin-meinchat-plus`** (Signal client + device pairing + downgrade fail-closed), disabled-by-default in beta-RC TestFlight.
 
@@ -176,6 +180,144 @@ Implemented test-first under the TDD-agent discipline; **not committed**
   in 3 rate-limit-track meinchat files reformatted (user-approved) for a green
   gate; unused `pytest` import removed.
 
+## Work done 2026-05-29 (session 2 — S28.3b meinchat-plus backend)
+
+Full write-up: [`reports/08-s28-3b-backend-persistence.md`](reports/08-s28-3b-backend-persistence.md).
+Strictly TDD; **not committed** (plugins are gitignored in vbwd-backend → on-disk only).
+
+- **S28.3b backend persistence → DONE & green** (handoff §3 steps 1–8). In
+  `vbwd-backend/plugins/meinchat_plus/`: 4 models + migration
+  `20260601_1000_meinchat_plus` (alembic path registered; "one active signed
+  prekey per device" = **partial unique index**, no `btree_gist`); 3 repos
+  (one-time consume `FOR UPDATE SKIP LOCKED`, BYTEA→bytes); `UserDeviceKeyDirectory`,
+  `SignedPrekeyService` (Ed25519 verify via `cryptography`, injectable verifier,
+  rotation supersedes), `OneTimePrekeyService` (**concurrent-consume race spec
+  green**); `BothPeersHaveDeviceKeys`/`E2eV1Capability`/`MarkDeliveryAttempted`/
+  `E2eAwareRetentionPolicy`; **`ProtocolAwareCodec`** (the registered IBodyCodec
+  dispatches plain→Identity, e2e_v1→Validator so enabling never breaks plaintext);
+  6 device/prekey routes; full `on_enable`/`on_disable`.
+- **Gate:** `bin/pre-commit-check.sh --plugin meinchat_plus --full` **GREEN**
+  (49 unit + 7 integration). meinchat unchanged **241/5**; both suites together
+  **290 passed / 5 skipped** — no registry cross-leakage.
+- **Plugin kept DORMANT** (not in `plugins.json`): global enable would register
+  `E2eV1Capability` and break meinchat's S28.3a oracle
+  `test_default_registry_returns_plain` (asserts exactly `{"server":["plain"]}`).
+  Route/integration specs activate it hermetically via the `enabled_plugin`
+  fixture (gate-patch + registry wiring + full teardown reset).
+- **Deferred to the meinchat-wiring slice (next):** (1) meinchat send/negotiation
+  route populates `SendContext.expected_device_ids` + accepts `envelope_b64`;
+  (2) `scheduler.py` resolves `IRetentionPolicy` from the registry; (3) flip the
+  meinchat capability/negotiate oracles to expect `e2e_v1` when meinchat-plus is
+  enabled. THEN add `meinchat_plus` to plugins.json/config.json + the full
+  client↔client round-trip (four §2.10 ciphertext assertions). Then **S28.4**.
+- **Gate gotcha:** rebuild BOTH `test` AND `test-integration` compose images for
+  `cbor2` (separate images off the same `Dockerfile.test`) or Part C fails
+  `ModuleNotFoundError: cbor2`.
+- **Housekeeping:** `s28-3b` sprint moved `sprints/ → done/`.
+
+## Work done 2026-05-29 (session 3 — meinchat-plus repo extraction + fe client crypto)
+
+- **3 private repos created** under `VBWD-platform` (visibility: private for now,
+  per the session decision — diverges from the locked "public from day one"
+  until crypto is finished): `vbwd-plugin-meinchat-plus` (backend),
+  `vbwd-fe-user-plugin-meinchat-plus` (web), `vbwd-fe-admin-plugin-meinchat-plus`
+  (admin). iOS is developed in the separate iOS app — **not built here**.
+- Backend plugin dir got a `.gitignore` + `README.md` (prep for seeding). **No
+  git init/commit/push performed yet** (deferred per user).
+- **fe-user `meinchat-plus` crypto plugin — BUILT & green** (26 vitest specs,
+  eslint clean) — [report 13](reports/13-meinchat-plus-repos-and-fe-user-crypto.md).
+  `@signalapp/libsignal-client` is Node-native (not browser-safe) → audited
+  pure-JS primitives (`@noble/curves`/`@noble/ciphers`/`@noble/hashes` + `hash-wasm`
+  Argon2id + `cbor-x`). Implements X3DH + Double Ratchet (forward secrecy,
+  tamper-detect, fan-out, own-device decrypt), 256B padding, CBOR envelope
+  matching the server validator, passphrase KEK, downgrade fail-closed, key
+  registration. *Ratchet is in-order (no skipped-key cache) → flagged for crypto
+  audit.* **Not yet wired** into the meinchat store UI (needs a store seam).
+- **fe-admin `meinchat-plus`** scaffolded + tested (3 specs): device-key view only
+  (E2E → no content inspector).
+- **Recipes** (`ci-status.sh`, `push-plugins.sh`) wired for the 3 new repos.
+- **Git push DEFERRED** (per user): repos exist empty; all code on disk. iOS NOT
+  built (separate app). **iOS must migrate to `attachments[]`** (backend dropped
+  `attachment_url`).
+- **Store crypto wiring DONE & green 2026-05-30** ([report 14](reports/14-meinchat-store-crypto-wiring.md)):
+  crypto-provider seam in the meinchat store (`messageCryptoRegistry`); backend
+  conversation serializer emits `protocol` (additive); `sendText` routes e2e via
+  the provider (fail-closed without one); `_hydrateE2eRows`/`_decryptInPlace`
+  decrypt e2e rows for display on read + SSE; `MeinchatPlusProvider` (fan-out
+  encrypt + own-slot decrypt) + `registerCryptoProvider` hook. **All gates green:
+  backend meinchat/meinchat_plus `--full`; fe-user 102 specs, eslint clean.**
+- **SessionStore (last crypto layer) DONE & green 2026-05-30** ([report 15](reports/15-meinchat-plus-session-store.md)):
+  prekey-message header carries X3DH init; `SessionManager.ensureOutbound`
+  (X3DH-from-bundle, sig-verified) + `establishInbound` (responder cold-start,
+  same-SK proven); provider cold-start wiring; ratchet-state serialize +
+  **KEK-sealed IndexedDB** persistence (`createIdbKeyValueStore`). **Full
+  no-prior-session bidirectional round-trip green.** fe-user **111 specs**,
+  eslint clean.
+- **Pairing flow DONE & green 2026-05-30** ([report 16](reports/16-meinchat-plus-pairing-flow.md)):
+  `device-store.ts` (device material sealed under KEK + salt) + `pairing.ts`
+  (`pairNewDevice`/`unlockDevice`/`isPaired`/`lock`/`saveSessions`). pair → send →
+  persist → unlock → receive **end-to-end green**; wrong passphrase rejected.
+  fe-user **114 specs**, eslint clean. **meinchat-plus web crypto is feature-complete.**
+  Remaining = UI glue only (passphrase prompt wiring `pairNewDevice`/`unlockDevice`
+  with `createIdbKeyValueStore` + the api module; composer/attachment UI) + hardening
+  (ratchet skipped-key cache + audit, spk rotation/multi-device) + git push.
+- **S28.4 attachment client crypto DONE & green 2026-05-30** — `crypto/attachment.ts`
+  hybrid (one ChaCha20-Poly1305 blob + per-recipient ratchet-wrapped key envelope):
+  `encryptAttachment`/`decryptAttachment`; 2-device fan-out + tamper specs (fe-user
+  **118 specs**, eslint clean). Completes S28.4 §3 crypto → **sprint moved
+  `sprints/ → done/`**. UI glue (image picker → encrypt → upload; download →
+  decrypt → render) remains, same as the text composer.
+- **Composer precheck DONE & green 2026-05-30** (spec §3.7) — `composer-precheck.ts`
+  `precheckPeerSecureChat` (peer has no active device → block Send + hint; transient
+  lookup error → optimistic enable + flag); 4 specs.
+- **Vue glue building blocks DONE & green 2026-05-30** ([report 17](reports/17-meinchat-plus-vue-glue.md)):
+  `usePairing` state machine + `PairingSheet.vue` (passphrase prompt) + `useComposerPrecheck`
+  + attachment transport (`uploadAttachment`/`downloadAttachment` api + `encryptAndUploadAttachment`/
+  `downloadAndDecryptAttachment` round-trip). fe-user **136 specs**, eslint clean; all exported from
+  `index.ts`.
+- **App-level view wiring DONE & green 2026-05-30** ([report 18](reports/18-meinchat-plus-view-wiring.md)):
+  meinchat UI seams (`conversationExtensions` overlay + composer-precheck registries, core-agnostic);
+  `ConversationView` renders the overlay + runs the precheck (guarded → meinchat-alone unaffected);
+  meinchat-plus `SecureChatGate.vue` (pairing prompt for e2e until ready; persists sessions on tab-hide)
+  + `activate()` registers overlay/precheck. fe-user **145 specs**, eslint clean. **TEXT E2E IS NOW
+  WIRED END-TO-END** (pair via gate → encrypted send → decrypted read; Send disabled for device-less peer).
+- **Attachment image UI DONE & green 2026-05-30** ([report 19](reports/19-meinchat-plus-attachment-image-ui.md)):
+  provider `sendEncryptedImage` (client-resize → encrypt fullres → upload; local preview) + `hydrateRow`
+  (decrypt text THEN attachment IN ORDER → body + blob URLs); `store.sendAttachment` e2e route (fail-closed);
+  `_hydrateE2eRows`/`_decryptInPlace` use hydrateRow; `MessageBubble` renders e2e image from `attachmentUrls`.
+  **v1 uploads fullres only** (one ratchet msg/image — no thumb to desync the in-order ratchet). fe-user
+  **151 specs**, eslint clean. **meinchat-plus WEB CLIENT IS FEATURE-COMPLETE — text + image E2E work
+  end-to-end through the UI.** Remaining = hardening only (skipped-key cache [re-enables e2e thumbs] +
+  crypto audit + spk rotation/multi-device) + git push 3 repos (deferred). iOS = separate app.
+
+## Work done 2026-05-30 (session 4 — meinchat-plus hardening + crypto audit + e2e smoke)
+
+Full write-up: [`reports/20-meinchat-plus-hardening-audit-e2e.md`](reports/20-meinchat-plus-hardening-audit-e2e.md).
+The "outstanding hardening + ops" list cleared. **Not committed** (deferred per user).
+
+- **Ratchet skipped-message-key cache (Signal MKSKIPPED) DONE & green** — `crypto/ratchet.ts`
+  `RatchetState.skipped` map (serialized), `trySkippedMessageKey`/`skipMessageKeys`, `ratchetDecrypt`
+  rewritten to tolerate out-of-order + cross-DH-ratchet skips, bounded by `MAX_SKIP=1000` (rejects a
+  malicious huge-`n`). 4 specs (out-of-order, cross-ratchet, single-use replay, MAX_SKIP guard).
+- **E2E thumbnails re-enabled** — `sendEncryptedImage` now uploads BOTH fullres + thumb (the skipped-key
+  cache removes the in-order-ratchet desync that forced fullres-only); `hydrateRow` decrypts both in order.
+- **Signed-prekey rotation DONE** — `establishInbound` matches an incoming X3DH `spk` against the current
+  OR `previousSignedPrekeys`, so a peer who fetched a now-rotated bundle still cold-starts. 1 round-trip spec.
+  (Accepting a rotated prekey only; no periodic local-rotation job yet — flagged in the audit.)
+- **Multi-device** documented as a v1 limitation (fan-out only; no cross-device sync / verify-other-device) —
+  audit §5, not built (no-overengineering).
+- **Crypto audit doc** — `plugins/meinchat-plus/docs/crypto-audit.md` (implementer self-review, explicitly
+  NOT independent): primitives, X3DH+DR+hybrid-attachment construction, security properties, threat model,
+  and **known limitations before public** — headline gap: **no identity-key verification UX (safety
+  numbers / TOFU)**. README de-staled (dropped "in-order only" / "not yet wired").
+- **Playwright e2e smoke** — `tests/e2e/prod-e2e.spec.ts` (env-gated, mirrors meinchat's `prod-chat.spec.ts`):
+  manifest-enabled → device register → signed prekey → one-time prekeys → bundle fetch + **client-side
+  signature verify** → conversation negotiates `e2e_v1`. Keys minted in-spec via `@noble/curves`.
+- **Type-safety cleanup** — provider reworked to return the canonical meinchat `MessageRow`/`MessageAttachment`
+  (was local `RowLike`) and accept a DRY-derived ISP `InboundRow` on the read path; **meinchat-plus now passes
+  `vue-tsc` with zero errors** (project-wide tsc still red on pre-existing payment-plugin errors — out of scope).
+- **Gates:** fe-user meinchat + meinchat-plus **156 vitest specs** GREEN, eslint clean, meinchat-plus tsc clean.
+
 ## S28 decisions locked 2026-05-28 (4 rounds, 16 questions)
 
 | # | Question | Answer | Effect |
@@ -248,9 +390,12 @@ under S28.2.
 
 - **None blocking S26 / S27.** Both shipped and verified.
 - **S28 Phase 1** is **DONE & green** (S28.0/1/2, backend + web; iOS
-  deferred). **Phase 2** (3a/3b/4/6/7 + iOS) remains design-only and is
-  gated on Phase 1 baking in prod for one deploy cycle (+ the §11 decision +
-  iOS gating). Phase-2 seams (`loadKek()`, `IRetentionPolicy`) are in place.
+  deferred). **Phase 2:** S28.3a ✅ + **S28.3b backend ✅ DONE & green**
+  (meinchat-plus dormant). Next: the **meinchat-wiring slice** (send-path
+  `expected_device_ids` + `envelope_b64`, scheduler `IRetentionPolicy`
+  resolution, oracle updates) to unlock global-enable + the full round-trip,
+  **then S28.4** (attachment encryption). 6/7 (iOS) in progress by the iOS
+  agent. Phase-2 seams (`loadKek()`, `IRetentionPolicy`) are in place.
 - **S29** is **DONE & green** (flash-fix only; see Work done 2026-05-29).
 - **S30** is implementation-ready.
 - **S31** is **blocked by the keyfunc signature-verification fix**

@@ -66,7 +66,8 @@ for plugin in analytics chat checkout cms email ghrm mailchimp paypal stripe tar
               c2p2 truemoney conekta promptpay meinchat; do
   push_plugin "$BACKEND/plugins/$plugin" "VBWD-platform/vbwd-plugin-$plugin"
 done
-for mapping in "mercado_pago:mercado-pago" "toss_payments:toss-payments"; do
+for mapping in "mercado_pago:mercado-pago" "toss_payments:toss-payments" \
+               "meinchat_plus:meinchat-plus"; do
   dir_slug="${mapping%%:*}"; gh_slug="${mapping##*:}"
   push_plugin "$BACKEND/plugins/$dir_slug" "VBWD-platform/vbwd-plugin-$gh_slug"
 done
@@ -78,7 +79,7 @@ for slug in chat checkout cms ghrm landing1 paypal-payment stripe-payment taro \
             theme-switcher yookassa-payment \
             c2p2-payment truemoney-payment mercado-pago-payment \
             toss-payments-payment conekta-payment promptpay-payment \
-            meinchat; do
+            meinchat meinchat-plus; do
   push_plugin "$FE_USER/plugins/$slug" "VBWD-platform/vbwd-fe-user-plugin-$slug"
 done
 
@@ -88,7 +89,7 @@ echo "=== fe-admin plugins ==="
 for slug in analytics-widget cms-admin email-admin ghrm-admin taro-admin \
             c2p2-admin truemoney-admin mercado-pago-admin \
             toss-payments-admin conekta-admin promptpay-admin \
-            meinchat-admin; do
+            meinchat-admin meinchat-plus; do
   push_plugin "$FE_ADMIN/plugins/$slug" "VBWD-platform/vbwd-fe-admin-plugin-$slug"
 done
 

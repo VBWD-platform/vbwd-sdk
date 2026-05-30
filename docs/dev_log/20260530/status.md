@@ -1,0 +1,60 @@
+# 2026-05-30 — Daily status
+
+> Wrap-up: [`reports/01-daily-wrapup-2026-05-30.md`](reports/01-daily-wrapup-2026-05-30.md).
+> Carried forward from [`../20260528/status.md`](../20260528/status.md) (S26/S27/S28/S29/S38 resolved there).
+
+## Theme
+
+S28 meinchat-plus E2E **hardening completed** (skipped-key cache, thumbnails,
+signed-prekey rotation, crypto audit, e2e smoke — 156 specs, tsc-clean), then a
+**live-debug session** on the running localhost stack fixed a prod-class
+migration 500 (`conversation.protocol`), image rendering (`.webp` → `image/webp`),
+and large-image upload limits (nginx + meinchat config). Planned sprints carried
+into this folder.
+
+## Done today
+
+| Item | Area | Status |
+|------|------|--------|
+| S28 meinchat-plus hardening (skipped-key cache, thumbnails, SPK rotation, crypto audit, e2e smoke, type cleanup) | `vbwd-fe-user/plugins/meinchat{,-plus}` | **DONE & GREEN** — 156 specs, eslint + tsc clean ([report 20](../20260528/reports/20-meinchat-plus-hardening-audit-e2e.md)) |
+| Live 500 `conversation.protocol` — DB never migrated | `vbwd-backend` (alembic) | **FIXED** — `alembic upgrade heads` (+widened `alembic_version` to 255) ([report 21](../20260528/reports/21-localhost-meinchat-demo-and-protocol-500-fix.md)) |
+| Images served as `octet-stream` → wouldn't render | `plugins/cms` `serve_upload` | **FIXED** — register `.webp`/`.avif`/`.svg` + explicit mimetype → `image/webp` |
+| Allow large image files | `nginx.{dev,prod}` + `plugins/meinchat` config | **DONE** — nginx `client_max_body_size 40m`; `attachment_max_bytes` 25 MB, dim 4096 |
+| Bob ↔ Alice browser demo (conversation / token / image) | `plugins/meinchat` e2e | **3/3 PASSED** on localhost:8080 + screenshots |
+
+Regression gate: `plugins/meinchat` + `plugins/cms` tests **192 passed**.
+**Not committed** (standing rule).
+
+## Planned sprints (carried into `sprints/`)
+
+| # | Sprint | Area | Status |
+|---|--------|------|--------|
+| 28.6 | [iOS meinchat app update](sprints/s28-6-ios-meinchat-app-update-plan.md) | `vbwd-ios` | Planned (iOS app, separate) |
+| 28.7 | [iOS meinchat-plus plugin](sprints/s28-7-ios-meinchat-plus-plugin-plan.md) | `vbwd-ios` | Planned (iOS app, separate) |
+| 30 | [Heavy-load harness fixes](sprints/s30-heavy-load-harness-fixes.md) + [load-test code affordances](sprints/s30-load-test-code-affordances.md) | platform + `vbwd-backend` | Planned |
+| 31 | [Flask-Limiter per-user keying](sprints/s31-flask-limiter-per-user-keying.md) | `vbwd-backend` | Planned — **blocked on keyfunc JWT-signature verification** |
+| 32 | [macOS rate-limit overrides](sprints/s32-macos-rate-limit-overrides.md) | `plugins/meinchat` | Planned (non-blocker until Mac Catalyst ships) |
+| 33 | [429 telemetry](sprints/s33-429-telemetry.md) | `vbwd-backend` + `plugins/meinchat` | Planned (recommended pre-v1) |
+| 34 | [Drop legacy meinchat rate keys](sprints/s34-drop-legacy-meinchat-rate-keys.md) | `plugins/meinchat` | **DEFERRED** — gated on S26 in prod everywhere |
+| 35 | [iOS cache conv_id, drop 429-retry](sprints/s35-ios-cache-conv-id-drop-retry.md) | `vbwd-ios` | Planned (iOS release-train) |
+| 36 | [Discounts & coupons at checkout](sprints/s36-discounts-at-checkout.md) | backend + fe-core + fe-user + fe-admin | Planned (3 open product Qs) |
+| 37 | [fe-user "Pay Zero" checkout](sprints/s37-fe-user-pay-zero-checkout.md) | fe-core + fe-user | Planned (3 open product Qs) |
+| 40 | [CMS SEO plugin](sprints/s40-cms-seo-plugin.md) | `plugins/cms` | **DRAFT for negotiation** |
+| 41 | [CMS AI helper](sprints/s41-cms-ai-helper.md) | `plugins/cms` | **DRAFT for negotiation** |
+| 42 | [vbwd-press](sprints/s42-vbwd-press.md) (parent) + [42.0](sprints/s42-0-data-model-terms-crud.md)/[42.1](sprints/s42-1-post-list-and-term-widget.md)/[42.2](sprints/s42-2-fts-search-and-widget.md)/[42.3](sprints/s42-3-content-type-renderer-registry.md)/[42.4](sprints/s42-4-rss-feeds.md) | `plugins/*press*` | **DRAFT for negotiation** |
+
+Engineering requirements (binding): [`sprints/_engineering_requirements.md`](sprints/_engineering_requirements.md).
+
+**Not carried (left in `../20260528/`):** S28 epic strategy docs
+(master + phase1 + phase2 — the now-delivered web epic record); **S39**
+(core RBAC seeding — *implemented backend* 2026-05-29).
+
+## Blockers / notes
+
+- **S31** must not be implemented as drafted — the keyfunc skips JWT signature
+  verification (DoS-via-forged-JWT). Verify HS256 in the keyfunc first.
+- **S34** deferred by design.
+- **S36 / S37 / S40 / S41 / S42** carry open product questions / are pre-negotiation
+  drafts.
+- Small follow-ups from today: shorten the two >32-char meinchat migration ids;
+  reconcile `image_max_size_bytes` (admin) vs `attachment_max_bytes` (service).
