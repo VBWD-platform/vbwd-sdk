@@ -44,3 +44,4 @@ Thumbs.db
 # state populated from each app's plugins/config.json (already gitignored).
 var/plugins/*-config.json
 vbwd-demo-instances
+vbwd-platform
