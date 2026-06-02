@@ -53,12 +53,14 @@ S43 CI) were pushed; core + fe-admin changes left uncommitted on disk.
 | 34 | [Drop legacy meinchat rate keys](sprints/s34-drop-legacy-meinchat-rate-keys.md) | `plugins/meinchat` | **DEFERRED** — gated on S26 in prod everywhere |
 | 35 | [iOS cache conv_id, drop 429-retry](sprints/s35-ios-cache-conv-id-drop-retry.md) | `vbwd-ios` | Planned (iOS release-train) |
 | 36 | [Discounts & coupons at checkout](done/s36-discounts-at-checkout.md) | backend + fe-core + fe-user + fe-admin | ✅ **DONE & GREEN — 2026-06-02** ([report 07](reports/07-s36-discounts-at-checkout-complete.md)). Coupon island wired into both checkouts via a generic core seam; backend 24 tests, fe-core 6, fe-user 18 unit + **7 Playwright e2e** (public/private/admin-injected), fe-admin 2 e2e; lint + agnosticism oracles green. Moved to `done/`. |
-| 37 | [fe-user "Pay Zero" checkout](sprints/s37-fe-user-pay-zero-checkout.md) | fe-core + fe-user | Planned (3 open product Qs) |
+| 37 | [fe-user "Pay Zero" checkout](done/s37-fe-user-pay-zero-checkout.md) | fe-core + fe-user + backend (booking) | ✅ **DONE & GREEN — 2026-06-02** ([report 09](reports/09-pay-zero-ghrm-and-booking.md)). €0 checkout completes with no payment step (invoice PAID + entitlement created) for free GHRM packages **and** free bookings; live-verified on `localhost:8080`. Booking gained a backend zero-total auto-pay via the shared `emit_payment_captured` seam (subscription already auto-paid). Backend booking integration guard + fe-user unit 673 passed; ESLint clean. Moved to `done/`. |
 | 40 | [CMS SEO plugin](sprints/s40-cms-seo.md) | `plugins/cms` | **DRAFT for negotiation** |
 | 41 | [CMS AI helper](sprints/s41-cms-ai-helper.md) | `plugins/cms` | **DRAFT for negotiation** |
 | 42 | [vbwd-press](sprints/s42-vbwd-press.md) (parent) + [42.0](sprints/s42-0-data-model-terms-crud.md)/[42.1](sprints/s42-1-post-list-and-term-widget.md)/[42.2](sprints/s42-2-fts-search-and-widget.md)/[42.3](sprints/s42-3-content-type-renderer-registry.md)/[42.4](sprints/s42-4-rss-feeds.md) | `plugins/*press*` | **DRAFT for negotiation** |
 | 43 | [DB table-naming normalization](sprints/s43-db-table-naming-normalization.md) (plugin-prefix every table) | `vbwd-backend` + plugins meinchat/taro/discount/booking/subscription/toss + ghrm | ✅ **DONE & GREEN — 2026-05-31** (18 tables, data-preserving migrations; [report 03](reports/03-s43-db-table-naming-complete.md)). 7/8 plugin CIs green; booking **backend** green, its **e2e** red = pre-existing auth-harness rot, not S43. |
 | 44 | [`snippets` — third-party script injection](sprints/s44-snippets-third-party-scripts.md) (be + fe-user duo: admin pastes GA/Pixel/Matomo/ads JS into a widget → injected on the site) | new `vbwd-plugin-snippets` + `vbwd-fe-user-plugin-snippets` | **PLANNED — 2026-05-30** (TDD-first; security: trusted admin-only code injection + CSP/consent hooks) |
+| 45 | [`telegram_connect` — Telegram bot bridge](sprints/s45-telegram-connect.md) (backend: exported outbound `TelegramService` + inbound command dispatch; `chat`/`taro` plug in — `/hello-llm` → token-billed LLM chat in Telegram) | new `vbwd-plugin-telegram-connect` + fe-admin trio | **PLANNED — D1–D5 LOCKED 2026-06-02**, ready to implement (dependency-inversion seam · webhook+dev-poll · deep-link+anonymous · encrypted token · fe-admin trio @ 45.5) |
+| 46 | [Unified Data Exchange](sprints/s46-unified-data-exchange.md) — core import/export for every entity: registry + `EntityExchanger` port + VBWD-standard envelope/ZIP + generic Settings→Import/Export page + per-list buttons; two-layer perms (`<entity>.export`/`.import`, superadmin bypass); migrate countries+CMS off one-offs; plugins register exchangers | **core** `vbwd-backend` + `vbwd-fe-core` + `vbwd-fe-admin` + plugins cms/subscription/booking/ghrm/shop/discount | **DRAFT for negotiation — 2026-06-02** (generalizes the CMS `CmsImportExport.vue` + countries `country_io` patterns; core stays agnostic via the registry seam) |
 
 Engineering requirements (binding): [`sprints/_engineering_requirements.md`](sprints/_engineering_requirements.md).
 
@@ -72,8 +74,10 @@ Engineering requirements (binding): [`sprints/_engineering_requirements.md`](spr
   verification (DoS-via-forged-JWT). Verify HS256 in the keyfunc first.
 - **S34** deferred by design.
 - **S36** ✅ **DONE & GREEN 2026-06-02** (discounts/coupons wired into both
-  checkouts; 7 e2e green; report 07). **S37 / S40 / S41 / S42** carry open
-  product questions / are pre-negotiation drafts.
+  checkouts; 7 e2e green; report 07).
+- **S37** ✅ **DONE & GREEN 2026-06-02** (Pay Zero: €0 checkout completes with no
+  payment step for free GHRM packages + free bookings; report 09). Moved to `done/`.
+- **S40 / S41 / S42** carry open product questions / are pre-negotiation drafts.
 - **fe-user e2e rot (pre-existing, NOT S36):** the `navigateToCheckout` helper
   targets `/checkout/:slug` but the real route is `/dashboard/checkout/:slug` —
   this stale helper is why many legacy checkout e2e fail. S36's new specs use the

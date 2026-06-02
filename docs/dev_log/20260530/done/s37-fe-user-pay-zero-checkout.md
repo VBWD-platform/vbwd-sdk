@@ -1,9 +1,18 @@
 # S37 — fe-user "Pay Zero" checkout (port the iOS zero-cost flow to web, both checkouts)
 
-**Status:** PLANNED — 2026-05-28.
+**Status:** ✅ DONE & GREEN — 2026-06-02 ([report 09](../reports/09-pay-zero-ghrm-and-booking.md)).
+A €0 checkout completes with no payment step (invoice marked PAID, entitlement
+created) for both free GHRM packages and free bookings — live-verified on
+`localhost:8080`. Booking additionally got a backend zero-total auto-pay path via
+the shared `emit_payment_captured` seam (the only backend change; subscription was
+already auto-paying). Tests: backend booking integration guard + fe-user unit
+suite 673 passed; ESLint clean.
 **Repos:** `vbwd-fe-core` (shared zero-total notice + label) · `vbwd-fe-user`
-(core checkout store + both checkout views + e2e). **No backend change** — the
-backend already auto-pays a zero-total checkout (see §2c).
+(core checkout store + both checkout views + e2e) · `vbwd-backend`
+(`plugins/booking` only). **As-built backend note:** subscription needed no
+backend change (it already auto-pays a zero-total checkout — see §2c), but
+**booking had no zero-total path** and gained one in `plugins/booking/booking/
+routes.py` via the shared `emit_payment_captured` seam (no new core coupling).
 **Engineering requirements (BINDING):** TDD-first · DevOps-first · SOLID · DI ·
 DRY · Liskov · clean code · NO OVERENGINEERING —
 [`_engineering_requirements.md`](_engineering_requirements.md). Core stays
