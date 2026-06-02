@@ -47,7 +47,7 @@ S43 CI) were pushed; core + fe-admin changes left uncommitted on disk.
 | 28.6 | [iOS meinchat app update](sprints/s28-6-ios-meinchat-app-update-plan.md) | `vbwd-ios` | Planned (iOS app, separate) |
 | 28.7 | [iOS meinchat-plus plugin](sprints/s28-7-ios-meinchat-plus-plugin-plan.md) | `vbwd-ios` | Planned (iOS app, separate) |
 | 30 | [load-test code affordances](done/s30-load-test-code-affordances.md) (`flask seed`, `/_routes`, `/_seed_status`) | `vbwd-backend` | ✅ **DONE & GREEN — 2026-06-02** ([report 11](reports/11-s30-load-test-affordances-complete.md)). 3 debug-gated affordances; 26 specs + agnosticism oracle green, `--quick` 2468 passed; core seed-marker migration. Moved to `done/`. Unblocks the harness sprint's nicer path. |
-| 29 | [Heavy-load harness fixes](sprints/s30-heavy-load-harness-fixes.md) (workflow + Locust scenario + thresholds) | `vbwd-platform` | 🟡 **CODE COMPLETE & LOCALLY GREEN — 2026-06-02** ([report 12](reports/12-s29-heavy-load-harness-complete.md)). 4 slices done: register/`tokens-balance`/`token-payment-quote`/admin-pagination contract fixes (verified vs backend source), `/_routes` pre-load smoke, typed `thresholds.py` evaluator, `flask seed all` + `/_seed_status` gate in the workflow. 15 harness unit specs green + new `loadtest_unit` CI job. **Awaiting §5 dispatch gate** (needs commit+push to vbwd-platform main, then a billed 50-VU run — user-authorized). NB: doc titled "S29", filed `s30-heavy-load…`. |
+| 29 | [Heavy-load harness fixes](done/s30-heavy-load-harness-fixes.md) (workflow + Locust scenario + thresholds) | `vbwd-platform` | ✅ **DONE & VALIDATED — 2026-06-02** ([report 13](reports/13-heavy-load-validated-engine-speed.md)). §5 gate met: run `26848354627` (50 VU·2m·all) runs end-to-end and fails **only on a real signal** (`/tarif-plans/<slug>` 100%), not harness drift. Engine fast — p95 **88 ms**, p99 330 ms, ~37 req/s, checkout write p50 27 ms / 0 fails. Caught 2 real bugs en route (S30 seed-argv `4f2c8d4`, smoke slash-match `0a1a880`), each fixed + regression-tested. Moved to `done/`. |
 | 31 | [Flask-Limiter per-user keying](sprints/s31-flask-limiter-per-user-keying.md) | `vbwd-backend` | Planned — **blocked on keyfunc JWT-signature verification** |
 | 32 | [macOS rate-limit overrides](sprints/s32-macos-rate-limit-overrides.md) | `plugins/meinchat` | Planned (non-blocker until Mac Catalyst ships) |
 | 33 | [429 telemetry](done/s33-429-telemetry.md) | `vbwd-backend` + `plugins/meinchat` | ✅ **DONE & GREEN — 2026-06-02** ([report 10](reports/10-s33-429-telemetry-complete.md)). Both limiters emit one WARN structured line per 429 (global: `route/key/descriptor`; meinchat: `category/user_id/retry_after`). Core `--quick` 2443 passed, meinchat `--quick` 261 passed. Global key uses `get_remote_address` today (picks up per-user key free once S31 lands). Moved to `done/`. |
@@ -71,6 +71,14 @@ Engineering requirements (binding): [`sprints/_engineering_requirements.md`](spr
 
 ## Blockers / notes
 
+- **S33 + S30 + S29** ✅ **DONE & GREEN/VALIDATED 2026-06-02** (rows above). The
+  hardened heavy-load harness now produces trustworthy signal at 50 VU (p95 88 ms,
+  ~37 req/s).
+- **NEW real signal (from S29 run 26848354627):** `GET /api/v1/tarif-plans/<slug>`
+  fails **100%** under load while the list endpoint is fine — the detail route's
+  currency/tax **pricing-resolution** path likely 500s on seeded data. This is the
+  first real reliability ticket the hardened harness surfaced; needs its own
+  backend investigation sprint.
 - **S31** must not be implemented as drafted — the keyfunc skips JWT signature
   verification (DoS-via-forged-JWT). Verify HS256 in the keyfunc first.
 - **S34** deferred by design.

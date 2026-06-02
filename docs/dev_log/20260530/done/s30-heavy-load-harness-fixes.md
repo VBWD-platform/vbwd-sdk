@@ -1,13 +1,16 @@
 # S29 — Heavy-load test harness fixes (workflow + Locust scenario)
 
-**Status:** 🟡 CODE COMPLETE & LOCALLY GREEN — 2026-06-02 ([report 12](../reports/12-s29-heavy-load-harness-complete.md)).
-All 4 slices implemented in `vbwd-platform` (`tests/load/` + workflows); 15 harness
-unit specs green locally + new `loadtest_unit` CI job. **Awaiting the §5 acceptance
-gate: a heavy-load workflow re-dispatch** — which needs these changes committed +
-pushed to `vbwd-platform` main first (billed 50-VU run, user-authorized). As-built:
-the doc guessed `loadtest/…`; reality is `tests/load/locustfile.py`, and the file
-was newer than report 04 — actual drift verified against backend source (register
-`name`, `tokens/balance`, `plugins/token-payment/quote` GET+query, admin limit/offset).
+**Status:** ✅ DONE & VALIDATED — 2026-06-02 ([report 12](../reports/12-s29-heavy-load-harness-complete.md) code; [report 13](../reports/13-heavy-load-validated-engine-speed.md) live run).
+All 4 slices implemented + 15 harness unit specs + `loadtest_unit` CI job. The §5
+acceptance gate is **met**: heavy-load run `26848354627` (50 VU · 2m · plugins=all)
+runs end-to-end and **fails only on a real backend signal** (`/tarif-plans/<slug>`
+100% — a genuine reliability finding), NOT harness drift. Latency/throughput green
+(p95 88 ms, p99 330 ms, ~37 req/s). The path here caught two real defects loudly:
+the S30 `flask seed` argv bug (backend `4f2c8d4`) and a slash-matching false
+positive in the smoke (platform `0a1a880`) — each fixed with a regression test.
+As-built: doc guessed `loadtest/…`; reality `tests/load/locustfile.py`, drift
+verified vs backend source (register `name`, `tokens/balance`,
+`plugins/token-payment/quote` GET+query, admin limit/offset).
 **Original status:** PLANNED — 2026-05-28
 **Triggered by:** [Run #26452905684 — 46.61 % error rate caused by harness drift](../reports/04-heavy-load-26452905684-harness-drift.md).
 **Repo:** `VBWD-platform/vbwd-platform` (workflow + Locust scenario + threshold module).
