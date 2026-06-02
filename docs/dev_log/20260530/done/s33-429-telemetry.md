@@ -1,11 +1,13 @@
 # S33 — 429 telemetry (structured log on every rate-limit trip)
 
-**Status:** PLANNED — 2026-05-28. Follow-up to [S26](s26-meinchat-rate-limits.md)
-+ [S27](s27-lift-global-flask-limiter.md). Today's 429 reports were diagnosed
-by reading the error string off a user's screenshot. After this sprint, every
-429 emits one structured log line — route + bucket key + descriptor — so the
-next "users hit the cap" report can be answered with `grep` instead of
-guesswork.
+**Status:** ✅ DONE & GREEN — 2026-06-02 ([report 10](../reports/10-s33-429-telemetry-complete.md)).
+Both limiters now emit one WARN structured line per 429. Core `--quick` gate
+green (2443 passed); `--plugin meinchat --quick` green (261 passed). Follow-up to
+[S26](s26-meinchat-rate-limits.md) + [S27](s27-lift-global-flask-limiter.md).
+**As-built deviation:** the global handler logs the bucket key via the keyfunc
+in use today (`get_remote_address`), not the `_rate_limit_key_func()` from §2.1
+— that helper only exists after S31 (on hold). When S31 lands, the line picks up
+the per-user key with no further change.
 **Track:** independent. **Repo:** `vbwd-backend`.
 **Engineering requirements (BINDING):** TDD-first · NO OVERENGINEERING.
 

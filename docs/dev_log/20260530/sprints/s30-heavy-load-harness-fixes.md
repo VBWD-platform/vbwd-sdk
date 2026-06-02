@@ -1,6 +1,14 @@
 # S29 — Heavy-load test harness fixes (workflow + Locust scenario)
 
-**Status:** PLANNED — 2026-05-28
+**Status:** 🟡 CODE COMPLETE & LOCALLY GREEN — 2026-06-02 ([report 12](../reports/12-s29-heavy-load-harness-complete.md)).
+All 4 slices implemented in `vbwd-platform` (`tests/load/` + workflows); 15 harness
+unit specs green locally + new `loadtest_unit` CI job. **Awaiting the §5 acceptance
+gate: a heavy-load workflow re-dispatch** — which needs these changes committed +
+pushed to `vbwd-platform` main first (billed 50-VU run, user-authorized). As-built:
+the doc guessed `loadtest/…`; reality is `tests/load/locustfile.py`, and the file
+was newer than report 04 — actual drift verified against backend source (register
+`name`, `tokens/balance`, `plugins/token-payment/quote` GET+query, admin limit/offset).
+**Original status:** PLANNED — 2026-05-28
 **Triggered by:** [Run #26452905684 — 46.61 % error rate caused by harness drift](../reports/04-heavy-load-26452905684-harness-drift.md).
 **Repo:** `VBWD-platform/vbwd-platform` (workflow + Locust scenario + threshold module).
 **Track:** independent. **No `vbwd-backend` change in this sprint** — code-side affordances live in [S30](s30-load-test-code-affordances.md).

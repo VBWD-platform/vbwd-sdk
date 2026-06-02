@@ -1,6 +1,13 @@
 # S30 — Backend code affordances for robust load testing
 
-**Status:** PLANNED — 2026-05-28
+**Status:** ✅ DONE & GREEN — 2026-06-02 ([report 11](../reports/11-s30-load-test-affordances-complete.md)).
+All 3 slices shipped: `flask seed [plugin|all]` CLI (exit-code propagation),
+`GET /api/v1/_routes` + `GET /api/v1/_seed_status` (debug-gated, 404 in prod),
+core `vbwd_plugin_seed_marker` table. 26 specs (≥20 planned) + agnosticism oracle
+green; `--quick` 2468 passed; migration anchored on core head `20260526_2200_md_jsonb`,
+up/down/up validated. **As-built deviations** (real plugin-manager API; no-seed
+plugin = no-op success; `--reset` flag) — see report §Deviations. Unblocks S29 §3.0/§3.2.
+**Original status:** PLANNED — 2026-05-28
 **Triggered by:** [Run #26452905684 — harness drift](../reports/04-heavy-load-26452905684-harness-drift.md)
 + the recognition that the same harness pain (contract drift, silent
 partial seed) will recur every time the API changes shape unless the
