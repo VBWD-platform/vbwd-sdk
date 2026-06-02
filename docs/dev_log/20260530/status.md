@@ -25,6 +25,21 @@ into this folder.
 Regression gate: `plugins/meinchat` + `plugins/cms` tests **192 passed**.
 **Not committed** (standing rule).
 
+## Done 2026-05-31 → 06-01 (continued)
+
+| Item | Area | Status |
+|------|------|--------|
+| **S43** DB table-naming normalization (18 tables, data-preserving migrations) | `vbwd-backend` + 8 plugins | ✅ **DONE & GREEN** ([report 03](reports/03-s43-db-table-naming-complete.md)); all 8 plugin CIs green incl. booking |
+| Booking **e2e** red root-caused + fixed — CI ran `alembic upgrade head` (singular) on the multi-head graph, masked by `\|\| true` → empty DB → no admin → login timeout | `vbwd-plugin-booking` CI | ✅ **FIXED** — `create_all` + loud seed; **18/18 e2e green** ([report 04](reports/04-booking-e2e-investigation.md)) |
+| Core `pre-commit-check.sh --full` **fully GREEN** — RBAC test-fixture `user_roles`/access-level cleanup (14 errors), `test_infrastructure` made plugin-agnostic, foundational seeding (`seed-rbac/countries/payment-methods/test-data`) wired into the integration gate + **new `seed_payment_methods` service+CLI** | `vbwd-backend` | ✅ **GREEN** — A: lint, B: 2424 unit, C: 337 integration ([report 05](reports/05-core-gate-fixes-and-countries-export-import.md)) |
+| **Countries manual export/import** (VBWD-standard JSON, 2 buttons on Settings→Countries) | `vbwd-backend` + `vbwd-fe-admin` | ✅ **SHIPPED** — be 9 unit + 5 integration, fe 4 unit, e2e round-trip verified ([report 05](reports/05-core-gate-fixes-and-countries-export-import.md)) |
+| Local fe-user test-user degraded (no token widgets, store routes bounce) — **access levels had 0 permission grants**; `subscription.tokens.view` ungranted | local DB (seeding gap) | ✅ **FIXED** — granted subscription user-perms to basic/pro via admin service; dashboard now matches prod (screenshot). `seed_user_access_levels` still grants none → **durable fix = bake into demo_seed (offered, pending)** |
+| **Super admin can delete system access levels** (the `admin` role + system user-levels) | `vbwd-backend` + `vbwd-fe-admin` | ✅ **SHIPPED** — be 4 unit + live-verified, fe 3 unit, screenshot as `admin@vbwd.local` ([assets](reports/assets/superadmin-delete/)) |
+| **S36** discounts-at-checkout — diagnosis re-verified against live tree | backend + fe-core/user/admin | ✅ **RE-VERIFIED READY** — unblocked once the 3 §9 decisions are made (see sprint doc §0) |
+
+**Not committed** (standing rule). Plugin-repo fixes (booking/meinchat/subscription
+S43 CI) were pushed; core + fe-admin changes left uncommitted on disk.
+
 ## Planned sprints (carried into `sprints/`)
 
 | # | Sprint | Area | Status |
@@ -37,7 +52,7 @@ Regression gate: `plugins/meinchat` + `plugins/cms` tests **192 passed**.
 | 33 | [429 telemetry](sprints/s33-429-telemetry.md) | `vbwd-backend` + `plugins/meinchat` | Planned (recommended pre-v1) |
 | 34 | [Drop legacy meinchat rate keys](sprints/s34-drop-legacy-meinchat-rate-keys.md) | `plugins/meinchat` | **DEFERRED** — gated on S26 in prod everywhere |
 | 35 | [iOS cache conv_id, drop 429-retry](sprints/s35-ios-cache-conv-id-drop-retry.md) | `vbwd-ios` | Planned (iOS release-train) |
-| 36 | [Discounts & coupons at checkout](sprints/s36-discounts-at-checkout.md) | backend + fe-core + fe-user + fe-admin | Planned (3 open product Qs) |
+| 36 | [Discounts & coupons at checkout](done/s36-discounts-at-checkout.md) | backend + fe-core + fe-user + fe-admin | ✅ **DONE & GREEN — 2026-06-02** ([report 07](reports/07-s36-discounts-at-checkout-complete.md)). Coupon island wired into both checkouts via a generic core seam; backend 24 tests, fe-core 6, fe-user 18 unit + **7 Playwright e2e** (public/private/admin-injected), fe-admin 2 e2e; lint + agnosticism oracles green. Moved to `done/`. |
 | 37 | [fe-user "Pay Zero" checkout](sprints/s37-fe-user-pay-zero-checkout.md) | fe-core + fe-user | Planned (3 open product Qs) |
 | 40 | [CMS SEO plugin](sprints/s40-cms-seo.md) | `plugins/cms` | **DRAFT for negotiation** |
 | 41 | [CMS AI helper](sprints/s41-cms-ai-helper.md) | `plugins/cms` | **DRAFT for negotiation** |
@@ -56,7 +71,15 @@ Engineering requirements (binding): [`sprints/_engineering_requirements.md`](spr
 - **S31** must not be implemented as drafted — the keyfunc skips JWT signature
   verification (DoS-via-forged-JWT). Verify HS256 in the keyfunc first.
 - **S34** deferred by design.
-- **S36 / S37 / S40 / S41 / S42** carry open product questions / are pre-negotiation
-  drafts.
+- **S36** ✅ **DONE & GREEN 2026-06-02** (discounts/coupons wired into both
+  checkouts; 7 e2e green; report 07). **S37 / S40 / S41 / S42** carry open
+  product questions / are pre-negotiation drafts.
+- **fe-user e2e rot (pre-existing, NOT S36):** the `navigateToCheckout` helper
+  targets `/checkout/:slug` but the real route is `/dashboard/checkout/:slug` —
+  this stale helper is why many legacy checkout e2e fail. S36's new specs use the
+  correct routes. Fixing the legacy suite is a separate cleanup.
+- **S43 follow-up:** the local test-user permission grant is live but not durable
+  — `seed_user_access_levels` (subscription demo_seed) still grants no perms, so a
+  DB reset loses it. Bake the grant into demo_seed (offered) to make it survive.
 - Small follow-ups from today: shorten the two >32-char meinchat migration ids;
   reconcile `image_max_size_bytes` (admin) vs `attachment_max_bytes` (service).

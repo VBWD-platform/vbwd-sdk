@@ -1,6 +1,10 @@
 # S36 — Discounts & coupons at checkout (wire the island into both checkouts)
 
-**Status:** PLANNED — 2026-05-28.
+**Status:** ✅ **DONE & GREEN — 2026-06-02.** All three parts implemented
+TDD-first; coupon island wired into both checkouts, proven by 7 Playwright specs
+vs the live stack ([report 07](../reports/07-s36-discounts-at-checkout-complete.md)).
+Backend 24 tests · fe-core 6 · fe-user 18 unit + 7 e2e · fe-admin 2 e2e · lint +
+agnosticism oracles green. §9 decisions honoured.
 **Repos:** `vbwd-backend` (core seam + `plugins/discount` + `plugins/subscription` + `plugins/shop`),
 `vbwd-fe-core` (reusable coupon input), `vbwd-fe-user` (public + private checkout wiring + e2e),
 `vbwd-fe-admin` (e2e only — admin CRUD already ships).
@@ -11,6 +15,43 @@ Liskov · clean code · NO OVERENGINEERING —
 `import` the discount plugin — they reach it only through a generic port).
 Gate: `bin/pre-commit-check.sh --full` green on **every** touched repo +
 the new Playwright specs green against the docker stack.
+
+---
+
+## 0. Readiness (re-verified 2026-06-01)
+
+Every grounded claim in §2 was re-checked against the current tree and **still
+holds** — the consumer checkout path is still unwired. Confirmed present:
+
+- `DiscountService.{validate_coupon,calculate_discount,redeem_coupon,record_application}`
+  and `POST /api/v1/coupons/validate` exist; that endpoint is still the **only**
+  caller of the discount math.
+- `subscription/.../routes/user_checkout.py` and `shop/shop/routes.py` still
+  accept **no** `coupon_code` (grep clean).
+- Core registries to mirror exist (`vbwd/events/line_item_registry.py`,
+  `vbwd/services/deletion_dependency_registry.py`); the planned
+  `checkout_price_adjustment_registry.py` does **not** exist yet.
+- fe-user `CheckoutSource` has `getOrderTotal()` only — no `applyCoupon`; neither
+  checkout view renders a coupon field; `vbwd-fe-core/src/components/CouponInput.vue`
+  does not exist; fe-admin `discount-admin/` ships CRUD but has **no** `tests/e2e/`.
+- `populate_db.py` seeds `SUMMER2026 / WELCOME5 / FREESHIP / SUB30 / EARLYBIRD`.
+- `DiscountScope` = `GLOBAL / ECOMMERCE / SUBSCRIPTION`; `DiscountRule.stackable`
+  exists.
+
+**⚠ S43 naming drift (since this doc was written):** Sprint 43 renamed the
+discount tables/classes. The model is now **`DiscountRule`** (table
+**`discount_rule`**), `Coupon` → table **`discount_coupon`**, `CouponUsage` →
+**`discount_coupon_usage`** (`discount_application` unchanged). All code paths in
+§2/§7 are still valid (files unchanged: `discount/models/discount.py` etc.); only
+the **class name** `Discount` → `DiscountRule` and the table names changed. New
+code + tests must use `DiscountRule` / the `discount_*` table names.
+
+**Verdict:** the plan is sound, current, and architecturally consistent (the
+adjustment-registry seam mirrors two existing core registries and keeps core
+agnostic). The three §9 decisions are **LOCKED** (2026-06-01) to the recommended
+defaults — **no remaining blockers.** Ready to implement TDD-first, RED on every
+layer, starting with Part A (the core `checkout_price_adjustment_registry` + the
+discount plugin's adjustment registration).
 
 ---
 
@@ -325,13 +366,16 @@ Two specs proving the admin-created discount reaches the buyer:
   ([[feedback_no_noqa_without_permission]]); no commits unless instructed
   ([[feedback_no_commit_without_ask]]).
 
-## 9. Open questions for the user
+## 9. Decisions — LOCKED 2026-06-01
 
-1. **Discount persistence shape** — negative `DISCOUNT` line item (assumed,
-   recommended) vs. a new `invoice.discount_total` column (Alembic migration)?
-2. **Stacking** — v1 single coupon per checkout (recommended; matches the single
-   `coupon_code` field), or honour `Discount.stackable` now?
-3. **Admin-injection e2e sequencing** — drive coupon creation through the
-   fe-admin **UI** then redeem in fe-user (true cross-app), or create via the
-   admin **API** in `beforeAll` then redeem via UI (more CI-robust)? §5.3
-   covers both; pick one for the gate.
+All three resolved to the recommended defaults; the sprint is fully unblocked.
+
+1. **Discount persistence shape** → ✅ **Negative `DISCOUNT` line item.** No
+   schema migration; `sum(line_items) == total_amount` preserved; both checkout
+   writers append the negative line.
+2. **Stacking** → ✅ **Single coupon per checkout (v1).** One `coupon_code`
+   field; `DiscountRule.stackable` is NOT honoured this sprint (deferred).
+3. **Admin-injection e2e sequencing** → ✅ **Create via authenticated admin API
+   in `beforeAll`, redeem via UI** (CI-robust), PLUS a separate fe-admin spec
+   proving the admin-UI CRUD is visible/operable (§5.3). No full UI cross-app
+   sequencing.
