@@ -1,5 +1,7 @@
 # S42 — vbwd-press: a WordPress-style blog built on the CMS plugin (master)
 
+> ⛔ **SUPERSEDED (2026-06-03) by [S47 — Unified Content + SEO](../sprints/s47-unified-content-seo.md).** Press is no longer a separate entity/plugin — posts are `cms_post(type=post)` in the unified module; terms/lists/FTS/RSS/renderers fold into cms. Kept (incl. `s42-0…4`) for rationale only; build S47.
+
 **Status:** DRAFT for negotiation — 2026-05-29
 **What it is:** an **agnostic plugin on top of `cms`** that delivers basic WordPress functionality — posts, an extensible taxonomy (terms = categories / tags / plugin-defined types), listing + search widgets, extensible post content types, and optional RSS. SEO is **inherited from S40** (posts are public CMS-grade content).
 **Repos (own repos, per platform convention):** `vbwd-plugin-press` (backend → `vbwd-backend/plugins/press/`), `vbwd-fe-user-plugin-press` (→ `vbwd-fe-user/plugins/press/`), `vbwd-fe-admin-plugin-press` (→ `vbwd-fe-admin/plugins/press-admin/`).

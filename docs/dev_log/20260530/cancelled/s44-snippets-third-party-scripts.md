@@ -1,12 +1,14 @@
 # Sprint 44 — `snippets`: admin-managed third-party script injection (be + fe-user duo)
 
+> ⛔ **SUPERSEDED (2026-06-03) by [S47.7 — Snippets & head/body injection](../sprints/s47-7-snippets-and-head-injection.md)** (part of [S47 — Unified Content + SEO](../sprints/s47-unified-content-seo.md)). Snippets are now folded into the cms head pipeline: **baked into the prerendered head/body** (fire on first paint for anon/bots) with a **server CSP nonce**, via a shared head-injection seam — an upgrade over this SPA-only design. Kept for rationale only; build S47.7.
+
 **Status:** PLANNED — 2026-05-30
 **Area:** new module duo — backend `vbwd-plugin-snippets` + fe-user `vbwd-fe-user-plugin-snippets`. Each in its own repo ([[feedback_plugins_always_in_own_repos]]).
 **Context:** integration-bridges marketing strategy (`docs/marketing/bizdev/03-integration-bridges-strategy.md`).
 
 ## Engineering requirements (BINDING)
 
-**TDD-first** · **SOLID** · **Liskov** · **DI** · **DRY** · clean code · **NO OVERENGINEERING** (narrowest change that satisfies the requirement). **`bin/pre-commit-check.sh` is the quality guard** — `--plugin snippets --full` green = "done". Tables follow the [S43](s43-db-table-naming-normalization.md) convention `<plugin_id>_<model>`. vbwd core stays agnostic — all logic lives in the plugin.
+**TDD-first** · **SOLID** · **Liskov** · **DI** · **DRY** · clean code · **NO OVERENGINEERING** (narrowest change that satisfies the requirement). **`bin/pre-commit-check.sh` is the quality guard** — `--plugin snippets --full` green = "done". Tables follow the [S43](../sprints/s43-db-table-naming-normalization.md) convention `<plugin_id>_<model>`. vbwd core stays agnostic — all logic lives in the plugin.
 
 ## Goal
 

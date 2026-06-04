@@ -1,5 +1,7 @@
 # S40 — Full-scale CMS SEO (built into the `cms` plugin) + a core sitemap/robots seam
 
+> ⛔ **SUPERSEDED (2026-06-03) by [S47 — Unified Content + SEO](../sprints/s47-unified-content-seo.md).** SEO is now part of the unified `post` entity + one pipeline (Python-template prerender + cache-bypass serving). Kept for rationale only; build S47.
+
 **Status:** DRAFT for negotiation — 2026-05-29
 **Architecture decision (LOCKED 2026-05-29):** SEO is **built into the `cms` plugin**, not a separate `cms-seo` plugin. The page's SEO data, authoring UI, and rendering already live in cms; per-page SEO is intrinsic to the page and splitting it out would only create a useless-without-cms plugin reaching into cms internals (fails cohesion; NO OVERENGINEERING). The **only** piece lifted to core is the cross-cutting, agnostic `sitemap.xml`/`robots.txt` aggregation seam that *all* content plugins feed (cms today, shop tomorrow). *(Filename keeps the legacy `-plugin` suffix; this is an in-plugin enhancement, not a new plugin.)*
 
