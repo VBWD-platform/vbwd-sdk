@@ -18,6 +18,8 @@ It **proves** the abstraction (D6/D10): the `chat`/`taro` consumers (and later t
 
 No transport models (in-process); optional config (`debug_mode`, `bot_conversation_id`). Migration only if any persistence is needed (likely none).
 
+**No fe-admin companion.** meinchat has no token, no webhook, and automatic identity (no linked accounts), so its only settings — `enabled`, `bot_conversation_id`, `debug_mode` — ride the generic plugin `admin-config.json` surface. A dedicated `fe-admin-bot-meinchat` is **not** built (add one only if meinchat later grows real config). See [umbrella §Admin / configuration surfaces](s45-bot-base-bridge.md).
+
 ## TDD plan (tests FIRST)
 - `MeinchatProvider.parse_update`: a meinchat message in the bot conversation → `BotInbound` with identity resolved from the authenticated sender; a tapped button → `action_data`.
 - `send` posts a meinchat message and renders `choices` natively / falls back to a numbered menu.

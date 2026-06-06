@@ -1,6 +1,6 @@
 # Sprint 45.4 — fe-admin companion (`bot-telegram` management) — D5
 
-**Parent:** [S45 umbrella](s45-bot-base-bridge.md) · **Depends on:** [45.1 bot-telegram](s45-1-bot-telegram-adapter.md) (+ [45.0](s45-0-bot-base-foundation.md) for linked-accounts). · **Repo:** `vbwd-fe-admin-plugin-bot-telegram` ([[feedback_plugins_always_in_own_repos]]).
+**Parent:** [S45 umbrella](s45-bot-base-bridge.md) · **Depends on:** [45.1 bot-telegram](s45-1-bot-telegram-adapter.md) (+ [45.0](s45-0-bot-base-foundation.md) for linked-accounts). · **Repo:** `fe-admin-bot-telegram` ([[feedback_plugins_always_in_own_repos]]). · **Only fe-admin companion in the family** — meinchat/base need none (umbrella §Admin / configuration surfaces).
 
 ## Engineering requirements (BINDING)
 **TDD-first** · **DevOps-first** · **SOLID** · **DRY** · **NO OVERENGINEERING**. Full readable names ([[feedback_variable_naming]]). Generic UI styles via `var(--vbwd-*)` from fe-core; entity navigation = canonical detail views, never inline modals ([[feedback_entity_navigation]]). **Gate:** fe-admin `npm run lint` + unit (Vitest) + e2e (Playwright) green. e2e: navigate by URL, seed both `admin_token` + `admin_token_user` (see [[project_fe_admin_e2e_auth_harness]] / [[project_fe_admin_navbar_e2e_helper_rot]]).

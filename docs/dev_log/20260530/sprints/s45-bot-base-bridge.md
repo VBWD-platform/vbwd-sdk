@@ -9,10 +9,12 @@ The bridge is **not** one plugin — it is a `bot-base` core plus thin **adapter
 
 | plugin | repo | role | sub-sprint |
 |---|---|---|---|
-| **`bot-base`** | `vbwd-plugin-bot-base` | provider-neutral core: DTOs, `IMessengerProvider` SPI + provider registry, `MessengerService` (outbound), `CommandRegistry`/`UpdateDispatcher` (inbound), conversation mode, `LinkService`, built-in `/hello`·`/start`·`/stop`·`/help` | [45.0](s45-0-bot-base-foundation.md) |
-| **`bot-telegram`** | `vbwd-plugin-bot-telegram` | Telegram adapter: `TelegramProvider`, Bot-API client, encrypted bot-token store, webhook + secret-token, long-poll dev worker, `t.me` deep-link | [45.1](s45-1-bot-telegram-adapter.md) |
-| **`bot-meinchat`** | `vbwd-plugin-bot-meinchat` | meinchat adapter: in-process transport, automatic identity, E2E bot-conversation | [45.5](s45-5-bot-meinchat-adapter.md) |
-| **`bot-zapier`** | `vbwd-plugin-bot-zapier` | Zapier meta-adapter: generic inbound/outbound webhooks → any Zapier-connected channel | [45.6](s45-6-bot-zapier-adapter.md) (opt.) |
+| **`bot-base`** | `bot-base-backend` | provider-neutral core: DTOs, `IMessengerProvider` SPI + provider registry, `MessengerService` (outbound), `CommandRegistry`/`UpdateDispatcher` (inbound), conversation mode, `LinkService`, built-in `/hello`·`/start`·`/stop`·`/help` | [45.0](s45-0-bot-base-foundation.md) |
+| **`bot-telegram`** | `bot-telegram` | Telegram adapter: `TelegramProvider`, Bot-API client, encrypted bot-token store, webhook + secret-token, long-poll dev worker, `t.me` deep-link | [45.1](s45-1-bot-telegram-adapter.md) |
+| **`bot-meinchat`** | `bot-meinchat` | meinchat adapter: in-process transport, automatic identity, E2E bot-conversation | [45.5](s45-5-bot-meinchat-adapter.md) |
+| **`bot-zapier`** | *(deferred)* | Zapier meta-adapter: generic inbound/outbound webhooks → any Zapier-connected channel | [45.6](s45-6-bot-zapier-adapter.md) — **DEFERRED** |
+
+**Frontend (fe-admin) companions:** only **`fe-admin-bot-telegram`** ships (45.4) — Telegram is the only adapter with real configuration (secret bot tokens, webhook, test-send) + the linked-accounts view. See §Admin / configuration surfaces.
 
 ## Sub-sprint index
 
@@ -24,10 +26,23 @@ The bridge is **not** one plugin — it is a `bot-base` core plus thin **adapter
 | **45.3** | [taro bot consumer](s45-3-taro-bot-consumer.md) | 45.0 (+45.1 to demo) | `--plugin taro --full` green; taro command round-trips |
 | **45.4** | [fe-admin companion](s45-4-fe-admin-bot-telegram.md) | 45.1 | fe-admin lint + unit + e2e green |
 | **45.5** | [bot-meinchat adapter](s45-5-bot-meinchat-adapter.md) | 45.0, `meinchat` | `--plugin bot_meinchat --full` + `--plugin meinchat --full` green; same consumers, 2nd provider, no edit |
-| **45.6** | [bot-zapier adapter](s45-6-bot-zapier-adapter.md) (opt.) | 45.0 | `--plugin bot_zapier --full` green; round-trip via a fake Zapier hook |
+| **45.6** | [bot-zapier adapter](s45-6-bot-zapier-adapter.md) | 45.0 | **DEFERRED** — future adapter on the same port, no `bot-base` change when un-deferred |
 | **S53** | [bot commerce storefront](s53-bot-commerce-storefront.md) | 45.0 | (separate sprint — D8) |
 
-**Suggested order:** 45.0 → 45.1 → (45.2 ∥ 45.3) → 45.4 → 45.5 → 45.6. 45.0 is the keystone; everything else is additive and can be parallelized after it.
+**Suggested order:** 45.0 → 45.1 → (45.2 ∥ 45.3) → 45.4 → 45.5. `bot-zapier` (45.6) is deferred. 45.0 is the keystone; everything else is additive and can be parallelized after it.
+
+## Admin / configuration surfaces (which adapters need a fe-admin plugin?)
+
+A fe-admin plugin is warranted **only where an adapter has configuration that can't ride the generic plugin `admin-config.json` toggle surface** — i.e. **secrets or per-row entities**.
+
+| plugin | config it needs | surface |
+|---|---|---|
+| `bot-base` | `link_token_ttl`, `conversation_idle_timeout`, `debug_mode` (scalars) | generic `admin-config.json` — **no dedicated fe-admin** |
+| `bot-telegram` | **bot entities** (name, **token = secret**, default, `webhook_secret`, enabled) + set-webhook + test-send + linked-accounts | **`fe-admin-bot-telegram` (45.4) — REQUIRED** (secrets/entities can't live in a static toggle file) |
+| `bot-meinchat` | `enabled`, designated `bot_conversation_id`, `debug_mode` (scalars; **no** token/webhook, identity automatic) | generic `admin-config.json` — **no dedicated fe-admin** |
+| `bot-zapier` *(deferred)* | endpoint entities (`inbound_secret`, `outbound_url` = secret) | would need `fe-admin-bot-zapier` when un-deferred |
+
+**Net:** ship **`fe-admin-bot-telegram`** only. Skip `fe-admin-bot-meinchat` and `fe-admin-bot-base` — their scalar settings ride the generic plugin admin surface; the linked-accounts view (backed by `bot-base` `GET /admin/links`) lives in the Telegram companion for now and is promoted to a bot-base admin only when a second *linking* provider ships.
 
 ## Engineering requirements (BINDING — restated in every sub-sprint)
 

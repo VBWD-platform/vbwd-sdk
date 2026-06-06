@@ -1,7 +1,7 @@
 # Sprint 45.6 — `bot-zapier` adapter (Zapier meta-provider) — optional
 
 **Parent:** [S45 umbrella](s45-bot-base-bridge.md) · **Depends on:** [45.0 bot-base](s45-0-bot-base-foundation.md) · **`dependencies=["bot-base"]`.**
-**Status:** OPTIONAL — ship only if cheap; otherwise a documented future adapter on the same port (no `bot-base` change either way).
+**Status:** **DEFERRED** (decided 2026-06-06) — a documented future adapter on the same port. When un-deferred it adds a plugin only; **no `bot-base` or consumer change** (Open/Closed, D10). It would also need a `fe-admin-bot-zapier` companion (endpoint entities carry secrets). Spec retained below so it's ready to pick up.
 
 ## Engineering requirements (BINDING)
 **TDD-first** · **DevOps-first** · **SOLID** (Liskov) · **DI** · **DRY** · **NO OVERENGINEERING**. Full readable names ([[feedback_variable_naming]]). **Gate:** `bin/pre-commit-check.sh --plugin bot_zapier --full` green. Migration in the plugin; secrets encrypted at rest (D4). Baseline config files ([[feedback_plugin_baseline_config_files]]). No core change.
