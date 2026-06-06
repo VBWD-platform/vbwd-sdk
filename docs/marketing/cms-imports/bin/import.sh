@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# Import a vertical's pages.json into a running VBWD instance.
+# Import a vertical's pages.json (cms_post import envelope) into a running
+# VBWD instance via POST /api/v1/admin/cms/posts/import.
+# Import is an UPSERT keyed on (type, slug): existing pages are UPDATED,
+# new ones CREATED — server returns {"created": N, "updated": N}.
 #
 # Usage:
 #   ./import.sh <vertical> <base-url> <admin-email> <admin-password>
@@ -44,7 +47,7 @@ if [ -z "$TOKEN" ]; then
 fi
 
 echo "=> importing $PAGES_FILE into $BASE_URL ($VERTICAL)"
-RESULT=$(curl -sS -X POST "$BASE_URL/api/v1/admin/cms/pages/import" \
+RESULT=$(curl -sS -X POST "$BASE_URL/api/v1/admin/cms/posts/import" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   --data-binary "@$PAGES_FILE")

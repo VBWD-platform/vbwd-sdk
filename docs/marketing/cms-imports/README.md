@@ -31,27 +31,49 @@ Paddle, Authorize.Net, 2Checkout (Verifone), Wise Business, Revolut
 Business, Coinbase Commerce, BitPay, Apple Pay (direct), Google Pay
 (direct), Alipay, WeChat Pay, SEPA Direct Debit, iDEAL, Sofort / Bancontact.
 
-## Import format
+## Import format (new CMS data structure — `cms_post`)
 
-`pages.json` is an array of records matching
-`CmsPageService.import_pages` — see
-`vbwd-backend/plugins/cms/src/services/cms_page_service.py`. Import is
-idempotent at the slug level: existing slugs are **skipped**, not updated.
-To replace a page, delete it first or bump its slug.
+Pages are now **`cms_post` records of `type: "page"`**. `pages.json` is the
+canonical import envelope consumed by `PostImportExportService.import_posts` —
+see `vbwd-backend/plugins/cms/src/services/post_import_export_service.py`:
 
-Each record carries:
+```jsonc
+{
+  "version": 1,
+  "entity": "cms_post",
+  "items": [ /* one record per page */ ]
+}
+```
 
-- `slug`, `name`, `language`, `is_published`, `sort_order`
+Import is an **UPSERT keyed on `(type, slug)`**: an existing page is **updated**,
+a new one is **created** (the server returns `{"created": N, "updated": N}`).
+This replaces the old create-only, skip-by-slug `pages/import` behaviour — you no
+longer delete a page to re-import it.
+
+Each item carries:
+
+- `type` (`"page"`), `slug`, `title`, `language`, `status`
+  (`"published"` | `"draft"` | `"private"` | `"trash"`), `sort_order`
 - `content_json` (TipTap doc — empty shell) and `content_html` (the real content)
+- `source_css` — page-scoped CSS (always applied; see *Styling*)
 - Full SEO fields: `meta_title`, `meta_description`, `meta_keywords`,
   `og_title`, `og_description`, `robots`
-- `use_theme_switcher_styles: true` so the page picks up the active theme
+- `terms` — array of `{"term_type": "category"|"tag", "slug": "..."}` (empty on
+  these marketing pages)
+- Optional slug references resolved on import: `style_slug`, `layout_slug`,
+  `parent_slug` (a parent page within the same type)
+
+**Removed legacy fields** (no longer emitted): `name` → now `title`;
+`is_published` → now `status`; `use_theme_switcher_styles` (the theme-switcher is
+gone — `source_css` always wins); `required_access_level_ids` (not a portable
+post field). Terms/categories are now referenced by slug under `terms`, not by
+`category_id`.
 
 ## Importing into a running instance
 
-The admin endpoint is `POST /api/v1/admin/cms/pages/import` and accepts the
-raw JSON body. Log in as an admin (`admin@example.com` / `AdminPass123@` on
-dev), then:
+The admin endpoint is `POST /api/v1/admin/cms/posts/import` and accepts the
+raw JSON envelope as the body. Log in as an admin (`admin@example.com` /
+`AdminPass123@` on dev), then:
 
 ```bash
 # Import into the `core` instance
@@ -62,7 +84,7 @@ bash docs/marketing/cms-imports/bin/import.sh hotel http://localhost:5000 admin@
 ```
 
 The script logs in, grabs the JWT, POSTs `pages.json` to the import
-endpoint and prints the server response (`{"created": N, "skipped": N}`).
+endpoint and prints the server response (`{"created": N, "updated": N}`).
 
 ## Styling
 
@@ -79,8 +101,8 @@ colour and gradient so instances feel distinct at a glance:
 | `doctor`        | Emerald `#059669` | emerald → cyan |
 | `ghrm`          | Orange `#ea580c` | orange → red |
 
-`use_theme_switcher_styles` is set to `false` so the per-page CSS always
-wins — you get the designed look with or without the theme plugin.
+There is no theme-switcher any more: each record's `source_css` is always
+applied, so you get the designed look unconditionally.
 
 ## Previewing locally
 
@@ -121,10 +143,11 @@ accent. Concretely:
 - `_generate_ctas.py` emits **only `cta-partner`** for `core` (no
   `cta-contact` / `cta-buy`).
 - `core/home.json` is a standalone landing record (deck cover + the
-  four "for whom" use-cases). It is **not** emitted by `_generate.py`;
-  regenerate it with the snippet in that file's header if the core CSS
-  changes (it reuses `gen.build_css(VERTICALS["core"])` so it stays in
-  lockstep). It is imported by the same `pages/import` endpoint.
+  four "for whom" use-cases) — a one-item `cms_post` envelope. It is **not**
+  emitted by `_generate.py`; regenerate it with the snippet in that file's
+  header if the core CSS changes (it reuses `gen.build_css(VERTICALS["core"])`
+  so it stays in lockstep). It imports through the same `posts/import` endpoint
+  (upsert on `(page, home)`); `bin/restore-home.sh` does exactly this.
 - Every other vertical's `pages.json` stays byte-for-byte identical —
   the new builders are wired only into `core`.
 

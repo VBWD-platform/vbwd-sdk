@@ -216,13 +216,14 @@ def page_cta_contact(cfg):
         f'</article>'
     )
     return {
+        "type": "page",
         "slug": "cta-contact",
-        "name": f"Get in touch — {title}",
+        "title": f"Get in touch — {title}",
         "language": "en",
         "content_json": {"type": "doc", "content": []},
         "content_html": html,
         "source_css": render_css(cfg),
-        "is_published": True,
+        "status": "published",
         "sort_order": 100,
         "meta_title":       f"Get in touch — {title}",
         "meta_description": f"Talk to the {title} team. 30-min call. Bring your stack, your billing problem, your timeline.",
@@ -230,8 +231,7 @@ def page_cta_contact(cfg):
         "og_title":         f"Get in touch — {title}",
         "og_description":   f"Talk to the {title} team. 30-min call. No sales engineering, no scripted demo.",
         "robots": "index,follow",
-        "use_theme_switcher_styles": False,
-        "required_access_level_ids": [],
+        "terms": [],
     }
 
 
@@ -284,13 +284,14 @@ def page_cta_buy(cfg):
         f'</article>'
     )
     return {
+        "type": "page",
         "slug": "cta-buy",
-        "name": f"Buy a license — {title}",
+        "title": f"Buy a license — {title}",
         "language": "en",
         "content_json": {"type": "doc", "content": []},
         "content_html": html,
         "source_css": render_css(cfg),
-        "is_published": True,
+        "status": "published",
         "sort_order": 110,
         "meta_title":       f"Buy a license — {title}",
         "meta_description": f"{title} licences. Four tiers, annual, self-hosted. Community free, Starter $499/yr, Pro $1,499/yr, Enterprise $4,999/yr.",
@@ -298,8 +299,7 @@ def page_cta_buy(cfg):
         "og_title":         f"Buy a license — {title}",
         "og_description":   f"{title} licences from $0 (Community) to $4,999 / year (Enterprise). Self-hosted, no usage limits.",
         "robots": "index,follow",
-        "use_theme_switcher_styles": False,
-        "required_access_level_ids": [],
+        "terms": [],
     }
 
 
@@ -359,13 +359,14 @@ def page_cta_partner(cfg):
         f'</article>'
     )
     return {
+        "type": "page",
         "slug": "cta-partner",
-        "name": f"Become a partner — {title}",
+        "title": f"Become a partner — {title}",
         "language": "en",
         "content_json": {"type": "doc", "content": []},
         "content_html": html,
         "source_css": render_css(cfg),
-        "is_published": True,
+        "status": "published",
         "sort_order": 120,
         "meta_title":       f"Become a partner — {title}",
         "meta_description": f"Resell {title} to your {cfg['partner_label']} clients. Three tiers, 20–30% commission, inbound leads.",
@@ -373,8 +374,7 @@ def page_cta_partner(cfg):
         "og_title":         f"Become a partner — {title}",
         "og_description":   f"Sell {title} to your clients. Three tiers — Registered (free), Certified ($999/yr), Premier ($2,499/yr).",
         "robots": "index,follow",
-        "use_theme_switcher_styles": False,
-        "required_access_level_ids": [],
+        "terms": [],
     }
 
 
@@ -395,7 +395,9 @@ def append_ctas(vertical_key, cfg):
     if not target.exists():
         print(f"  skip {vertical_key} — no pages.json")
         return
-    existing = json.loads(target.read_text())
+    doc = json.loads(target.read_text())
+    # pages.json is the cms_post envelope ({"version", "entity", "items": [...]}).
+    existing = doc["items"] if isinstance(doc, dict) else doc
 
     # Drop any previous CTA pages so re-runs stay idempotent.
     cta_slugs = {"cta-contact", "cta-buy", "cta-partner"}
@@ -408,7 +410,8 @@ def append_ctas(vertical_key, cfg):
         cta_pages = [page_cta_partner(cfg)]
     else:
         cta_pages = [page_cta_contact(cfg), page_cta_buy(cfg), page_cta_partner(cfg)]
-    target.write_text(json.dumps(existing + cta_pages, indent=2, ensure_ascii=False) + "\n")
+    envelope = {"version": 1, "entity": "cms_post", "items": existing + cta_pages}
+    target.write_text(json.dumps(envelope, indent=2, ensure_ascii=False) + "\n")
     print(f"  + {vertical_key}/pages.json — {len(existing)} existing "
           f"+ {len(cta_pages)} CTA(s) = {len(existing) + len(cta_pages)}")
 

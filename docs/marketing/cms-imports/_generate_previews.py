@@ -19,18 +19,25 @@ OUTPUT_ROOT = Path(__file__).parent
 VERTICALS = ["core", "softwarestore", "hotel", "doctor", "ghrm"]
 
 
+def _items(doc):
+    """Unwrap the cms_post import envelope ({"items": [...]}) to a flat list.
+    Tolerates a bare list or single record for backward compatibility."""
+    if isinstance(doc, dict):
+        return doc.get("items", [doc])
+    return doc
+
+
 def render_preview(vertical: str) -> str | None:
     pages_file = OUTPUT_ROOT / vertical / "pages.json"
     if not pages_file.exists():
         return None
-    pages = json.loads(pages_file.read_text())
+    pages = _items(json.loads(pages_file.read_text()))
 
     # home.json is a standalone landing record (not in pages.json). Prepend it
     # so the preview shows the full site, landing first.
     home_file = OUTPUT_ROOT / vertical / "home.json"
     if home_file.exists():
-        home = json.loads(home_file.read_text())
-        pages = (home if isinstance(home, list) else [home]) + pages
+        pages = _items(json.loads(home_file.read_text())) + pages
 
     # Emit a single preview.html with all pages stacked. Each page brings its
     # own scoped CSS; we include it once per page (cheap, since browsers
@@ -59,7 +66,7 @@ def render_preview(vertical: str) -> str | None:
 
     for p in pages:
         parts.append(f'<section class="preview-page" id="{p["slug"]}">')
-        parts.append(f'<div class="preview-label">/{p["slug"]} &middot; {p["name"]}</div>')
+        parts.append(f'<div class="preview-label">/{p["slug"]} &middot; {p.get("title") or p.get("name", "")}</div>')
         parts.append(f'<style>{p.get("source_css", "")}</style>')
         parts.append(p.get("content_html", ""))
         parts.append("</section>")

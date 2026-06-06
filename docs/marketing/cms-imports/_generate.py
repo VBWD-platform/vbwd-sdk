@@ -1583,14 +1583,21 @@ def build_page_record(vertical_key, slug, config, css):
                        f"under VBWD-platform, BSL 1.1. Read the code, fork "
                        f"it, ship it.",
     }.get(slug, f"{config['title']} — {NAMES[slug]}.")
+    # New CMS data structure: pages are cms_post records of type "page".
+    #   name        -> title
+    #   is_published -> status ("published" | "draft")
+    #   categories/tags -> terms[] (none on these marketing pages)
+    # `use_theme_switcher_styles` (removed/legacy) and `required_access_level_ids`
+    # (not a portable post field) are dropped.
     return {
+        "type": "page",
         "slug": slug,
-        "name": name,
+        "title": name,
         "language": "en",
         "content_json": {"type": "doc", "content": []},
         "content_html": html,
         "source_css": css,
-        "is_published": True,
+        "status": "published",
         "sort_order": SORT_ORDER[slug],
         "meta_title": name,
         "meta_description": meta_desc,
@@ -1599,9 +1606,14 @@ def build_page_record(vertical_key, slug, config, css):
         "og_title": name,
         "og_description": meta_desc,
         "robots": "index,follow",
-        "use_theme_switcher_styles": False,
-        "required_access_level_ids": [],
+        "terms": [],
     }
+
+
+def post_envelope(items):
+    """Wrap post items in the canonical cms_post import envelope consumed by
+    POST /api/v1/admin/cms/posts/import (PostImportExportService)."""
+    return {"version": 1, "entity": "cms_post", "items": items}
 
 
 def main():
@@ -1616,7 +1628,7 @@ def main():
         out_dir.mkdir(parents=True, exist_ok=True)
         out_file = out_dir / "pages.json"
         out_file.write_text(
-            json.dumps(pages, ensure_ascii=False, indent=2) + "\n",
+            json.dumps(post_envelope(pages), ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
         print(f"wrote {out_file} ({len(pages)} pages, "

@@ -43,5 +43,9 @@ Thumbs.db
 # install recipes. The *-config.json files are runtime per-environment
 # state populated from each app's plugins/config.json (already gitignored).
 var/plugins/*-config.json
+# GHRM GitHub App private key (and any other secret material under var/) —
+# host-mounted into the backend at /app/var; never commit secrets.
+var/**/*.pem
+var/ghrm/auth/*.pem
 vbwd-demo-instances
 vbwd-platform
