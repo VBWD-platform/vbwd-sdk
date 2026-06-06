@@ -1,8 +1,9 @@
 # Sprint 50 — Domain vocabulary leaves core
 
-**Status:** READY (scheduled **after** S49) — 2026-06-04
+**Status:** DONE / LOCKED — 2026-06-06 (shipped via S50.1–S50.4 + S50.6 + S50.5 lock)
 **Area:** `vbwd-backend` core (`vbwd/`) + plugins `subscription`, `cms`, `stripe`/`paypal`/`yookassa`, `ghrm` + `vbwd-fe-admin-plugin-subscription`
 **Depends on:** **S49** (GHRM). S49 declares ghrm→subscription and repoints ghrm's catalog reads, removing `catalog_read_model`'s last consumer — so S50.1 is mostly a *verify + delete*.
+**Blocks / overlaps:** **S50.1–S50.3 block [S46 (Unified Data Exchange)](s46-unified-data-exchange.md)** — S46's invoice/user exchangers + per-list controls build on the post-S50.3 seams. **S50.4 (money-path events) is independent of S46's surface**, so S46 may start once S50.1–S50.3 are locked and S50.4 can run in parallel/after.
 **Trigger:** the 2026-06-04 agnosticism review (turns leading to S49.0's rework). Core currently *names plugin domains* — `subscription`, `tarif`/`plan`, `seo`, `catalog` — in services, ports, event classes, and even event **fields**. This sprint removes that vocabulary from `vbwd/` entirely.
 
 ## Engineering requirements (BINDING)
@@ -72,8 +73,13 @@ Order = cheapest/independent first, riskiest (money path) last, oracle locked at
 - Flip `test_core_no_domain_vocabulary.py` from report mode to **enforcing**; finalize the documented allowlist.
 - Final `--full` across every touched repo (core + subscription + cms + 3 payment + ghrm + fe-admin subscription plugin). `git grep -nE 'subscription|tarif|\bseo\b|sitemap|catalog' vbwd/` returns only allowlisted, justified hits.
 
-## Open decision (must close in S50.0, blocks S50.4)
-- **B-returns:** do the payment webhooks need `record_provider_renewal`/`link_provider_subscription` return values synchronously, or can subscription derive the renewal invoice / link from the invoice's line items so payment fires-and-forgets? **Fire-and-forget → S50.4 is pure events (~3d).** **Needs synchronous return → S50.4 uses a generic, domain-neutral request/response registry instead of (or alongside) events, and grows (~5d).** Either way the seam names no domain.
+## Open decision — CLOSED 2026-06-06 (S50.0 spike)
+- **B-returns: RESOLVED → fire-and-forget events (pure events, ~3d path).**
+  - **Evidence:** the only return consumer is the renewal path. `stripe/stripe/routes.py:270-297` calls `record_provider_renewal(...) -> renewal_invoice_id`, then uses that id *solely* to `emit_payment_captured(invoice_id=renewal_invoice_id, …)`. `paypal/paypal/routes.py:350` is identical. `link_provider_subscription` returns `None` (no consumer). yookassa uses no renewal return.
+  - **Why no synchronous return is needed:** the core EventBus dispatches **synchronously in-process** (`publish` calls subscribers inline, same request/transaction). So the payment plugin can publish a generic `payment.recurring_charge` fact (`{provider, provider_ref_id, amount, currency, provider_reference, metadata}`); the subscription plugin's subscriber — running inline — finds the matching subscription, **creates the renewal invoice, and itself emits `payment.captured`** (forwarding the provider `metadata`). Behaviour and transactionality are preserved; the payment plugin never needs the invoice id back.
+  - **Why events, not a moved port:** the contract is payment↔subscription, but **payment must stay subscription-free** (a payment install with no plan concept). A moved port would force payment→subscription import; the string-keyed bus keeps payment publishing blindly (no subscriber ⇒ no-op). Core keeps only `events/domain.py` + `bus.py`; no lifecycle port anywhere.
+  - **Naming:** event names + payload keys must be domain-neutral (oracle-clean) — no `subscription`/`plan`/`tarif`. Use e.g. `provider_ref_id` (the provider's recurring/subscription object id) not `provider_subscription_id`.
+  - **Consequence for S50.4:** delete `vbwd/services/subscription_lifecycle.py` entirely (no replacement port); the 5 lifecycle methods become published events (`payment.recurring_charge`, `payment.provider_cancelled`, `payment.recurring_failed`, `payment.invoice_failed`, `payment.provider_linked`) that subscription subscribes to.
 
 ## Risks & mitigations
 - **Money path (S50.4):** highest risk. Mitigate by keeping the existing stripe/paypal/yookassa integration + e2e tests as the gate, and by validating the "subscription-disabled" no-op path explicitly.
@@ -83,3 +89,20 @@ Order = cheapest/independent first, riskiest (money path) last, oracle locked at
 
 ## Definition of done
 Core (`vbwd/`) names **no** plugin domain: `subscription_read_model.py`, `subscription_lifecycle.py`, `catalog_read_model.py`, `seo_registry.py`, `seo_renderable.py`, `routes/seo.py`, and `events/subscription_events.py` are gone; `payment_events.py` carries no `subscription_id`/`tarif_plan_id`; SEO is served by cms, invoice/add-on enrichment by generic registries + the subscription plugin, and payment↔subscription is event-driven. The Kind-1 generic seams + `entitlement` remain untouched. The new vocabulary oracle is **enforcing** and green; `test_core_agnosticism.py` green; `--full` green on every touched repo; no behaviour change for end users (admin invoice/user views and the sitemap render identically).
+
+## S50.5 outcome — oracle finalized & LOCKED (2026-06-06)
+S50 shipped via **S50.1–S50.4** (the 5 major Kind-2 ports removed: `catalog_read_model`, SEO feature → cms, `subscription_read_model` → generic invoice extra-fields registry + fe-admin injection, `subscription_lifecycle` → fire-and-forget events) + **S50.6** (checkout events made generic + SSE event-name whitelist generic) + **S50.5** (this lock).
+
+`tests/unit/test_core_no_domain_vocabulary.py` is now **enforcing** (`ENFORCING = True`) and **code-only**:
+- **AST-based, not line-based.** Comments and docstrings are never scanned — comments are absent from the AST; module/class/function docstrings (the first `ast.Expr`/`str`-`Constant`) are explicitly excluded. The scan inspects only **identifiers** (Name/attribute/arg/func+class names/import module+alias) and **non-docstring string-literal Constants**. This dropped ~120 pure-prose hits (e.g. `entitlement.py`'s "core knows nothing about subscriptions" docstring, `transaction.py`'s `Usage:` examples), leaving ~23 structural hits. A self-test (`test_oracle_scans_code_not_prose`) proves a banned term as an identifier IS flagged while the same word in a comment/docstring is NOT.
+- **`catalog` dropped from `BANNED_TERMS`** — generic English word in legitimate core identifiers (`permission_catalog`, `collect_permission_catalog`, `catalog_item_id`, `routes_catalog`, country/payment-method "catalog"). The real leak (`catalog_read_model`) was deleted in S50.1 and is independently guarded by `test_core_agnosticism` (bans `from plugins.*`). Final `BANNED_TERMS`: `subscriptions`, `subscription`, `tarif_plan`, `tarif`, `plan_id`, `plan_name`, `sitemap`, `seo`.
+- **Whole-word matching** means compound identifiers (`subscription_id`, `get_subscription_invoices`, `find_by_subscription`) never match the standalone word — so most spec-anticipated invoice files need no allowlist entry.
+
+**Documented allowlist (12 entries, minimal — no dead entries):**
+- **(a) D4 invoice residuals** (Sprint 11: invoice↔subscription via SUBSCRIPTION line item, no FK): `repositories/invoice_repository.py` (`LineItemType.SUBSCRIPTION`), and the line-item-result dict keys `items_*["subscription"]` in `handlers/payment_handler.py`, `services/restore_service.py`, `services/refund_service.py`.
+- **(b) Core line-item / status enums** (the generic discriminator core routes on): `models/enums.py` (`LineItemType.SUBSCRIPTION`, `TokenTransactionType.SUBSCRIPTION`).
+- **(c) Core webhook event-type enums** (`SUBSCRIPTION_*` / `"subscription.*"`): `webhooks/enums.py`, `webhooks/handlers/mock.py`. **FUTURE:** like the SSE whitelist (S50.6), these could become an extensible registry — deferred.
+- **(d) Demo/test seeders (DEFERRED follow-up)** — core demo seeds delegate plan/addon to the subscription plugin's `demo_seed` but still name tables/keys: `cli/_demo_seeder.py` (raw-SQL `tarif_plan`/`subscription`), `cli/reset_demo.py` (CLI confirm-prompt text). Own follow-up sprint.
+- **(e) Decided in S50.5 (not in the original spec buckets)** — two domain-NEUTRAL structural hits: `plugins/payment_route_helpers.py` (`determine_session_mode` returns the **Stripe Checkout Session `mode`** literal `"subscription"|"payment"` — provider-protocol vocabulary core computes generically via `line_item_registry.is_recurring_line_item`; like (c), could later move behind the registry); `routes/settings.py` (default Terms & Conditions fallback **content prose** naming "Subscription Services" — editable user content, not a seam).
+
+Gate: `pytest tests/unit/test_core_no_domain_vocabulary.py tests/unit/test_core_agnosticism.py` → 3 passed; core `bin/pre-commit-check.sh --quick` green (lint + 2753 unit).

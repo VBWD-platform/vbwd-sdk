@@ -2,6 +2,7 @@
 
 **Status:** **LOCKED 2026-06-06** — entity-data exchange across core + plugins. **Plugin-config exchange is explicitly OUT of scope** (secret-leak risk — see R6). Two tabs collapsed to one **General** tab (+ extension-contributed tabs). All 2026-06-02 + 2026-06-06 negotiation points resolved; one implementation dependency flagged (core-settings persistence).
 **Area:** **core** — `vbwd-backend` (core), `vbwd-fe-core`, `vbwd-fe-admin` (core), plus exchanger adapters in plugins `cms`, `subscription`, `booking`, `ghrm`, `shop`, `discount/promotions`.
+**Depends on:** **S50 — specifically S50.1–S50.3** (catalog/SEO/invoice-user seams leave core). S46's `users`/`invoices` exchangers and the per-list controls build on the *post-S50.3* invoice/user admin surface (generic invoice-extra-fields registry + fe-admin injection), so building S46 first would mean reworking it when S50.3 lands. **S50.4 (the money-path event refactor) is independent of S46's surface** — S46 may start once S50.1–S50.3 are locked, without waiting for S50.4.
 **Context:** Today every entity invents its own export/import. CMS pages have a full bulk UI (`CmsImportExport.vue`, sections + `add`/`index`/`drop_all` strategy); Settings→Countries has the cleaner **"VBWD-standard JSON"** envelope (`country_io.py`). Two good patterns, zero reuse. This sprint promotes them to **one core abstraction** so import/export is a platform feature inherited by every list, every plugin, the CLI, and the install recipes.
 
 ## Engineering requirements (BINDING)

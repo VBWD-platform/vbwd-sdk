@@ -1,6 +1,6 @@
 # S48.00 — Measurement & charting tool (capacity sweep → XY charts)
 
-**Status:** PLANNED — 2026-06-06. Parent: [S48](s48-load-capacity-and-resilience.md).
+**Status:** BUILT — 2026-06-06 (tool + tests + workflow wiring landed; pending a heavy-load re-dispatch to validate end-to-end). Parent: [S48](s48-load-capacity-and-resilience.md).
 **Area:** `vbwd-platform` — a new `tests/load/chart/` package (sweep runner + parser + plotter). Wraps the **existing** Locust harness (`tests/load/locustfile.py`); does **not** change the harness or the app.
 
 ## Engineering requirements (BINDING)
