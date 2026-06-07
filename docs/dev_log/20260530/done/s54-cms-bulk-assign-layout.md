@@ -1,6 +1,6 @@
 # Sprint 54 — CMS: bulk-assign layout + default-layout fallback
 
-**Status:** DRAFT for negotiation — 2026-06-06.
+**Status:** DONE — 2026-06-07 (owner-confirmed).
 **Repos touched:** `vbwd-backend` (`plugins/cms`: bulk action + config key + render-time resolution) · `vbwd-fe-admin` (`plugins/cms-admin`: bulk "Assign layout" control + settings field) · `vbwd-fe-user` (`plugins/cms`: consume the resolved layout). No core change — all logic lives in the `cms` plugin trio ([[feedback_core_never_depends_on_plugins]]).
 **Engineering requirements (BINDING):** TDD-first · DevOps-first · SOLID · DI · DRY · Liskov · clean code · **core agnostic** · **NO OVERENGINEERING** (narrowest change that satisfies the requirement) · **plugin baseline config files** ([[feedback_plugin_baseline_config_files]]) · test/demo data only through services ([[feedback_no_direct_db_for_test_data]]). **Gate:** `bin/pre-commit-check.sh --plugin cms --full` green on the backend; `npm run lint && npm run test` green on both fe apps.
 

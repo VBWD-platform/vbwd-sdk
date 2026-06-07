@@ -5,7 +5,7 @@
 `ApiKeysManager` component), `vbwd-fe-admin` (default User-edit tab),
 `vbwd-fe-user` (permission-gated "Manage API" page + nav item), `plugins/cms`
 (consumer only).
-**Status:** PLANNED
+**Status:** DONE — 2026-06-07 (owner-confirmed).
 **Supersedes:** the 2026-06-05 draft that built API keys *inside* the cms plugin.
 **Related:** **S50 — Domain vocabulary leaves core** (this sprint conforms to and
 reinforces S50's decision rule; see *Relationship to S50* below).

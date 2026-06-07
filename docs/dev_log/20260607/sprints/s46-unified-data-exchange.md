@@ -2,7 +2,7 @@
 
 **Status:** **LOCKED 2026-06-06** — entity-data exchange across core + plugins. **Plugin-config exchange is explicitly OUT of scope** (secret-leak risk — see R6). Two tabs collapsed to one **General** tab (+ extension-contributed tabs). All 2026-06-02 + 2026-06-06 negotiation points resolved; one implementation dependency flagged (core-settings persistence).
 **Area:** **core** — `vbwd-backend` (core), `vbwd-fe-core`, `vbwd-fe-admin` (core), plus exchanger adapters in plugins `cms`, `subscription`, `booking`, `ghrm`, `shop`, `discount/promotions`.
-**Depends on:** **S50 — specifically S50.1–S50.3** (catalog/SEO/invoice-user seams leave core). S46's `users`/`invoices` exchangers and the per-list controls build on the *post-S50.3* invoice/user admin surface (generic invoice-extra-fields registry + fe-admin injection), so building S46 first would mean reworking it when S50.3 lands. **S50.4 (the money-path event refactor) is independent of S46's surface** — S46 may start once S50.1–S50.3 are locked, without waiting for S50.4.
+**Depends on:** **S50 — DONE & LOCKED (2026-06-06).** The post-S50.3 invoice/user surface S46 builds on is live: `vbwd/services/invoice_extra_fields_registry.py` exists; core is vocabulary-free under the enforcing oracle. Dependency satisfied. (See the **2026-06-07 reality alignment** section below for the two adjustments before coding.)
 **Context:** Today every entity invents its own export/import. CMS pages have a full bulk UI (`CmsImportExport.vue`, sections + `add`/`index`/`drop_all` strategy); Settings→Countries has the cleaner **"VBWD-standard JSON"** envelope (`country_io.py`). Two good patterns, zero reuse. This sprint promotes them to **one core abstraction** so import/export is a platform feature inherited by every list, every plugin, the CLI, and the install recipes.
 
 ## Engineering requirements (BINDING)
@@ -26,7 +26,7 @@
 | **R7** | **Extensions can inject tabs** into the Import/Export page via a new fe-admin `dataExchangeTabs` extension slot. | NEW |
 | **R8** | **Currencies** added as a core exchanger (`vbwd_currency`, key `code`). **UserDetails nested inside the `users` envelope** (1:1, all-PII), not a standalone cluster row. | extends core entities |
 | **R9** | **Clusters** (`sales`, `settings`) are a UI grouping each exchanger declares (the old `group` field → `cluster`). | refines manifest |
-| **R10** | **"general config" = core settings** (Settings→Core: provider info / address / bank). Exchanger key `core_settings`. **Dependency:** core settings are an **in-memory stub today** (`routes/admin/settings.py`) — must be **persisted first** (small DB table or config-store entry) or its export/import is meaningless. | resolves old Q-1 |
+| **R10** | **"general config" = core settings** (Settings→Core: provider info / address / bank). Exchanger key `core_settings`. **DESCOPED from S46 v1 (2026-06-07)** → persistence is **[S57](s57-persist-core-settings.md)** (`var/core/vbwd_settings.json`); the `core_settings` exchanger is an S46 fast-follow once S57 lands. | resolves old Q-1 |
 | **R11** | **Permission granularity:** **sales** entities → per-entity `<entity>.export` / `.import` / `.export.pii`; **settings** cluster → coarse **`settings.view`** (export) / **`settings.manage`** (import). All such permissions are **registered into the permission catalog and appear in the Access Level form** (`/admin/settings/access/<id>`). | resolves old Q-4 |
 | **R12** | **Permission gating (UX), BINDING:** no permission ⇒ **no burger-menu entry AND no page** (route guard → redirect/403). Applies to **fe-admin and fe-user** alike — never render a nav item or route a user can't use. | NEW |
 
@@ -54,6 +54,19 @@
 | ~~plugin config~~ | (2026-06-06 vision floated a Plugins tab.) | **DROPPED → R6** |
 
 No open questions remain. The only sequencing dependency is **R10** (persist core settings before its exchanger).
+
+---
+
+## 2026-06-07 reality alignment (post-S50 / S47 / S55 / S56) — READ BEFORE IMPLEMENTING
+
+Verified against the live codebase. **Verdict: READY to implement S46.0→S46.4 + S46.6 now**, with two adjustments; **S46.5 (CMS) must be re-specced** to the unified model first.
+
+- **Dependency cleared.** S50 is **DONE & LOCKED** (core vocabulary-free; enforcing AST oracle). The generic **`vbwd/services/invoice_extra_fields_registry.py` already exists** (built in S50.3) — the `invoices` exchanger + S46.4's fe-admin invoice injection build directly on it. `permission_catalog.py`, `deletion_dependency_registry`, `checkout_price_adjustment_registry`, the `vbwd_currency` model, and `country_io.py` are all present. `vbwd/services/data_exchange/` does **not** exist yet (clean start).
+- **`core_settings` DESCOPED from S46 v1 (decided 2026-06-07).** `vbwd/routes/admin/settings.py` is still an **in-memory `_settings` dict** (no persistence). Core-settings persistence is now its own sprint — **[S57 — Persist core settings (`var/core/vbwd_settings.json`)](s57-persist-core-settings.md)**. S46 ships the **7 other** core exchangers; the `core_settings` exchanger is an **S46 fast-follow after S57 lands**. Do NOT build `core_settings` in S46 v1.
+- **CMS section is STALE — re-spec S46.5.** S47 unification + S55/S56 changed CMS reality:
+  - Entities are now **`cms_post`** (page/post/custom) + **`cms_term`** (category/tag) + `cms_layout` / `cms_widget` / `cms_style` / `cms_image` — NOT `cms_page` / `cms_category`.
+  - CMS **already implements the VBWD-standard envelope**: `post_import_export_service.py` + `GET /admin/cms/posts/export` / `POST /admin/cms/posts/import` (JSON) **and** `/admin/cms/export` / `/import` (ZIP bundle, `CmsImportExport.vue`, add/index/drop_all). So S46.5 = **"wrap the existing post/term/layout/widget/style/image services in `EntityExchanger`s + rebuild the CMS page on the shared fe-core components"**, NOT "create six exchangers + retire old routes from scratch." The `cms_post` exchanger must also carry **S55** `content_blocks` + `page_assignments`. **CMS is the closest plugin to done** — treat S46.5 as adapter work over existing services.
+- **Accurate & ready as written:** S46.0 (seam), S46.1 (core exchangers, minus `core_settings`), S46.2 (CLI), S46.3 (fe-core), S46.4 (fe-admin), S46.6 (other plugins).
 
 ---
 
@@ -138,7 +151,7 @@ Core owns the contract + the generic surface; each plugin contributes exchangers
 | `access_levels` | ✓ | ✓ | settings | `name` | — | roles + permission grants |
 | `email_templates` | ✓ | ✓ | settings | `key` | — | content-pack candidate |
 | `payment_methods` | ✓ | ✓ | settings | `code` | secret: provider keys | import reuses `seed_payment_methods` |
-| `core_settings` | ✓ | ✓ | settings | (singleton) | secret: bank/API where applicable | **R10 — depends on persisting core settings first** (today an in-memory stub) |
+| ~~`core_settings`~~ | — | — | settings | (singleton) | secret: bank/API | **DESCOPED from v1 → [S57](s57-persist-core-settings.md)** then an S46 fast-follow |
 
 **Generic routes — `vbwd/routes/admin/data_exchange.py`:**
 - `GET  /api/v1/admin/data-exchange/manifest` — clustered, perm+config-filtered, `can_*` flags. Drives the UI.
@@ -224,7 +237,7 @@ Plugin exchangers declare their `cluster` (perms land under that heading) and ma
 ## Sub-sprints
 
 - **S46.0 — core seam** (registry + port + envelope + CSV + ZIP + base exchanger + generic routes + permission auto-registration + row cap). `--full` + oracle green.
-- **S46.1 — core exchangers** (users+details w/ PII split, invoices-exp, payment_methods, access_levels, email_templates, **currencies**) + **migrate countries**. *(Includes the small prerequisite to **persist core settings**, then the `core_settings` exchanger — R10.)*
+- **S46.1 — core exchangers** (users+details w/ PII split, invoices-exp, payment_methods, access_levels, email_templates, **currencies**) + **migrate countries**. *(`core_settings` DESCOPED → [S57](s57-persist-core-settings.md); add its exchanger as an S46 fast-follow once S57 lands.)*
 - **S46.2 — CLI + content packs** (`flask data-exchange …`; countries/currencies/email-template files for `recipes/`).
 - **S46.3 — fe-core components** (`ImportExportPage` w/ General tab + tab slot, `ImportExportControls`, `useDataExchange`, helpers) + build `dist/`.
 - **S46.4 — fe-admin wiring** (Settings tab + per-list controls on core lists + `dataExchangeTabs` slot + row-selection checkboxes + **R12 gating** + PII gating).
