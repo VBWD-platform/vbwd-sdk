@@ -112,7 +112,7 @@ Logging goes **through the FilesystemManager** (not its own `open()`) so it inhe
 - **D1 — Manager is agnostic CORE infrastructure.** Port + impls live in `vbwd/services/filesystem/`, DI-exposed; plugins consume via the container. It routes files, not domains → passes the agnosticism oracle (core never imports a plugin). *(Rejected: a shared library each plugin vendors — re-duplicates today's problem.)*
 - **D2 — Per-namespace write policy, incl. `INPLACE_LOCKED` for bind-mounted manifests.** A single `ATOMIC_REPLACE` everywhere would reintroduce the *"Device or resource busy"* failure on the bind-mounted plugin JSONs. Policy-per-namespace is the narrowest correct model.
 - **D3 — Mandatory path confinement** (realpath-within-namespace, reject `..`/absolute/symlink-escape) on every op.
-- **D4 — `secrets/` namespace = `0600` + optional `TokenCipher` encryption** (reuse `vbwd/utils/crypto.py`). GHRM pem migrates here; **external provisioning stays supported** via `resolve()` for a read-only, pre-placed key. Future bot-base/bot-telegram tokens use this namespace too ([[feedback_plugin_baseline_config_files]]).
+- **D4 — `secrets/` namespace = `0600` + optional `TokenCipher` encryption** (reuse `vbwd/utils/crypto.py`). GHRM pem migrates here; **external provisioning stays supported** via `resolve()` for a read-only, pre-placed key. Future bot-base/bot-telegram tokens use this namespace too ([[feedback_plugin_baseline_config_files]]). **Implementation nuance (58.4):** encryption is **only** for secrets *we* write; an **externally-provisioned plaintext** key (the GHRM pem) is read with `encrypt=False` — forcing `encrypt=True` would attempt to decrypt plaintext and corrupt/raise. So: secrets-perms posture + confinement always; encryption opt-in per file the platform owns.
 - **D5 — Uploads stay at `${UPLOADS_BASE_PATH:-/app/uploads}` as a *managed root*, not physically moved under var.** Moving them would break already-served URLs and on-disk data. The manager registers `uploads` as a root with its own `url_base`; a physical consolidation under `var/uploads` is a **separate, opt-in migration**, out of scope here. *(Rejected: relocate now — needless data migration + URL breakage.)*
 - **D6 — Delete the duplicate `IFileStorage`.** `plugins/cms/src/services/file_storage.py` and `vbwd/interfaces/file_storage.py` collapse into the manager. CMS/shop/booking/meinchat call the `uploads` namespace; a thin `IFileStorage`-shaped adapter over the manager preserves existing call-sites where cheap (DRY without a big-bang rewrite).
 - **D7 — Advisory locking via `fcntl.flock`** (POSIX); a **no-op lock fallback** on platforms without flock (dev single-process) so tests/dev never hang. Cross-container coordination works because the bind-mount shares the host inode.
@@ -142,17 +142,21 @@ Logging goes **through the FilesystemManager** (not its own `open()`) so it inhe
 
 ## Sub-sprints
 
-| # | Sprint | Scope | Gate |
-|---|---|---|---|
-| **58.0** | **FilesystemManager core** | port + `Local`/`InMemory` impls, namespace policies, confinement (D3), write modes (D2), JSON/append helpers, flock (D7), DI registration | core `--full` green; manager unit suite green |
-| **58.1** | Core settings + plugin manifests | route `core_settings_store` + `frontend_plugins` through the manager (`core`=ATOMIC, `plugins`=INPLACE_LOCKED); honour `VBWD_*_JSON` overrides (D8) | core `--full` green; **torn-read race gone** (concurrency test); manifests byte-identical |
-| **58.2** | SEO prerender | `seo_prerender` / `seo_asset_stamp` / `seo_wiring` → `seo` namespace (atomic + slug-safe path) | `--plugin cms --full` green; concurrent-publish no longer truncates |
-| **58.3** | Uploads consolidation (D6) | cms/shop/booking/meinchat → `uploads` namespace; **delete** the duplicate `IFileStorage`; keep served URLs identical | `--plugin cms/meinchat/shop/booking --full` green; upload+serve round-trip unchanged |
-| **58.4** | Secrets namespace (D4) | `secrets` namespace (0600 + optional encrypt); GHRM pem read via manager (external provisioning still works); ready for bot-base/bot-telegram tokens | `--plugin ghrm --full` green; key no longer world-readable |
-| **58.5** | Unified logging (D9) | `VbwdLogRouter` (root handler, scope+stream routing, JSON-lines, redaction, rotation) + `EventLogSubscriber` on the EventBus; install at app boot; per-scope config + TESTING-guarded prune | core `--full` green; logs land under `logs/core/*` + `logs/<plugin>/*`; events.log captures a published event; redaction + rotation covered |
-| **58.6** (opt.) | Migrate stragglers | cms-ai's hardcoded `logs/`/`tmp/log-dev/` onto the unified router + `tmp/` scratch via the manager; drop the bespoke logger | `--plugin cms-ai --full` green |
+> **Status (2026-06-08): COMPLETE — all 7 sub-sprints done & green.** (The 2026-06-08 plan briefly de-scoped 58.2/58.3/58.6 to their plugin tracks; the owner then chose to land them in S58 too, so they're all here.)
 
-**Order:** 58.0 keystone → then 58.1–58.6 independently (each behind the manager, each re-greens only its own gate). 58.5 depends only on 58.0 (the `logs/` namespace) + the EventBus.
+| # | Sprint | Status | Scope | Gate |
+|---|---|---|---|---|
+| **58.0** | **FilesystemManager core** | ✅ **DONE** | port + `Local`/`InMemory` impls, namespace policies, confinement (D3), write modes (D2), JSON/append helpers, flock (D7), DI registration | core `--full` green; 41-test manager suite green |
+| **58.1** | Core settings + plugin manifests | ✅ **DONE** | route `core_settings_store` + `frontend_plugins` through the manager (`core`=ATOMIC, `plugins`=INPLACE_LOCKED); honour `VBWD_*_JSON` overrides (D8) | core `--full` green; **torn-read race RED→GREEN**; manifests byte-identical |
+| **58.5** | Unified logging (D9) | ✅ **DONE** | `VbwdLogRouter` (root handler, scope+stream routing, JSON-lines, redaction, rotation) + `EventLogSubscriber` on the EventBus; TESTING-guarded boot | core `--full` green; logs under `logs/core/*` + `logs/<plugin>/*`; events.log captures a publish; redaction + rotation covered. Dev guide: `vbwd-backend/docs/developer/unified-logging.md` |
+| **58.4** | Secrets namespace (D4) | ✅ **DONE** | GHRM pem read routed through the `secrets`-policy manager (0700/0600 + confinement); legacy + `secrets/` paths both honoured; external plaintext key kept (`encrypt=False`); key never logged | `--plugin ghrm` GREEN (A + 150 unit incl. 6 new + integration 35✓/36 skip/0 fail w/ `GHRM_USE_MOCK_GITHUB=true`) |
+| **58.2** | SEO prerender | ✅ **DONE** | `seo_prerender` / `seo_asset_stamp` / `seo_wiring` → `seo` namespace (atomic; slug→safe-path via confinement) | `--plugin cms --full` green (498 unit / 143 integ); **concurrent-publish truncation RED→GREEN** |
+| **58.3** | Uploads consolidation (D6) | ✅ **DONE** | cms/shop/booking/meinchat → `uploads` namespace via one `ManagerBackedFileStorage`; **duplicate `IFileStorage` deleted**; fixed a double-`uploads/` path bug; URLs byte-identical | `--plugin cms/shop/booking/meinchat --full` all green |
+| **58.6** | cms-ai logger | ✅ **DONE** (lint caveat) | cms-ai bespoke `RotatingFileHandler` + hardcoded `/app/var/tmp/log-dev` removed → `LoggerService` thin stdlib wrapper scoped `cms-ai` | 9 tests green; flake8 red only from **645 pre-existing violations in the vendored `loopai` tree** (gitignored, unrelated to 58.6) |
+
+**Plus:** 10 `taro` `print()`→`logger.exception/warning` swaps (services/routes + `handlers.py`) so taro errors land in `logs/taro/error.log` (the legitimate `bin/` CLI prints left as-is).
+
+**Order shipped:** 58.0 → 58.1 + 58.5 + 58.4 → 58.2 → 58.3 → 58.6 (the cms-touching ones serialized to avoid shared-test-DB collisions).
 
 ## Why this is not overengineering
 

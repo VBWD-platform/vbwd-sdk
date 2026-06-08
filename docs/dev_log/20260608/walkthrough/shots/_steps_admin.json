@@ -1,0 +1,56 @@
+{
+  "steps": [
+    {
+      "n": 1,
+      "title": "Admin login",
+      "note": "Open the admin backoffice (:8081) — it redirects to /admin/login.",
+      "file": "01-admin-login.png",
+      "url": "http://localhost:8081/admin/login?redirect=/"
+    },
+    {
+      "n": 2,
+      "title": "Admin login filled",
+      "note": "Enter the administrator credentials and click Sign In.",
+      "file": "02-admin-login-filled.png",
+      "url": "http://localhost:8081/admin/login?redirect=/"
+    },
+    {
+      "n": 3,
+      "title": "Admin dashboard",
+      "note": "Authenticated — the admin dashboard with KPI cards + sidebar.",
+      "file": "03-admin-dashboard.png",
+      "url": "http://localhost:8081/admin/dashboard"
+    },
+    {
+      "n": 4,
+      "title": "Users list",
+      "note": "Sidebar → Users: the user-management list.",
+      "file": "04-users-list.png",
+      "url": "http://localhost:8081/admin/users"
+    },
+    {
+      "n": 5,
+      "title": "Create user form",
+      "note": "Click \"Create user\" — the new-user form.",
+      "file": "05-create-user-form.png",
+      "url": "http://localhost:8081/admin/users/create"
+    },
+    {
+      "n": 6,
+      "title": "Create user filled",
+      "note": "Fill every field: email, password, first/last name, status, role, billing address, phone.",
+      "file": "06-create-user-filled.png",
+      "url": "http://localhost:8081/admin/users/create"
+    },
+    {
+      "n": 7,
+      "title": "User created",
+      "note": "Submit — the user is created.",
+      "file": "07-user-created.png",
+      "url": "http://localhost:8081/admin/users/5928710a-ec06-48e3-86d2-4ed3cb0147dd"
+    }
+  ],
+  "newEmail": "walkthrough.user.99595@example.com",
+  "uid": "5928710a-ec06-48e3-86d2-4ed3cb0147dd",
+  "finalUrl": "http://localhost:8081/admin/users/5928710a-ec06-48e3-86d2-4ed3cb0147dd"
+}
