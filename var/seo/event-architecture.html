@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Event Architecture — VBWD</title>
+    <meta name="description" content="VBWD runs on a typed event bus — plugins listen instead of importing each other. Decoupled, replayable, testable." data-seo="ssr" />
+    <meta name="keywords" content="vbwd, core, event architecture, self-hosted saas, open source" data-seo="ssr" />
+    <meta name="robots" content="index,follow" data-seo="ssr" />
+    <meta property="og:title" content="Event Architecture — VBWD" data-seo="ssr" />
+    <meta property="og:description" content="VBWD runs on a typed event bus — plugins listen instead of importing each other. Decoupled, replayable, testable." data-seo="ssr" />
+    <meta name="twitter:card" content="summary_large_image" data-seo="ssr" />
+    <meta name="twitter:title" content="Event Architecture — VBWD" data-seo="ssr" />
+    <meta name="twitter:description" content="VBWD runs on a typed event bus — plugins listen instead of importing each other. Decoupled, replayable, testable." data-seo="ssr" />
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Event Architecture — VBWD", "url": null, "description": "VBWD runs on a typed event bus — plugins listen instead of importing each other. Decoupled, replayable, testable."}</script>
+    <!--vbwd:assets-->
+    <script type="module" src="/assets/index.js"></script>
+    <link rel="stylesheet" href="/assets/index.css" />
+    <!--/vbwd:assets-->
+    <style data-seo="ssr-style">*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif);
+  font-size: 16px;
+  line-height: 1.65;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-heading);
+  font-family: var(--font-heading, inherit);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.65em;
+  font-weight: 700;
+}
+h1 { font-size: clamp(2.2rem, 4vw, 3.25rem); font-weight: 800; }
+h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); margin-top: 0.5em; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.1rem; }
+p  { margin: 0 0 1em; color: var(--color-text); }
+a  {
+  color: var(--color-link);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+a:hover { color: var(--color-link-hover); text-decoration: underline; text-underline-offset: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+code, kbd, samp {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-dark);
+  padding: 0.15em 0.45em;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+blockquote {
+  border-left: 4px solid var(--color-accent);
+  margin: 1.5em 0;
+  padding: 0.6em 1.2em;
+  color: var(--color-text-muted);
+  background: var(--color-surface-soft);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+}
+blockquote cite { display: block; font-size: 0.85em; font-style: normal; color: var(--color-text-muted); margin-top: 0.5em; }
+ul, ol { margin: 0 0 1em; padding-left: 1.5em; }
+li { margin-bottom: 0.35em; }
+hr { border: 0; border-top: 1px solid var(--color-border); margin: 2.5rem 0; }
+
+/* Layout */
+.container {
+  max-width: var(--container-max);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+section { padding: clamp(3rem, 6vw, 5rem) 0; }
+header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.75rem 0;
+}
+nav a { color: var(--color-text); font-weight: 500; padding: 0 0.875rem; }
+nav a:hover { color: var(--color-accent); text-decoration: none; }
+
+/* Edge-inset system.
+ *
+ * --edge-inset is the horizontal breathing-room between every top-level
+ * page element (hero, cta-band, nav, breadcrumb, plugin widget) and the
+ * viewport border. Narrow / 1200 themes set it to 0 — the natural
+ * (viewport - container-max) / 2 margin already provides inset. Fullwidth
+ * themes set it to 1.5rem (otherwise widgets would kiss the edge).
+ * At narrow viewports we bump it to 1rem so nothing ever hits the phone
+ * viewport border.
+ *
+ * Every top-level widget wrapper (header-nav, footer-nav, breadcrumb,
+ * generic .cms-widget--vue, .cms-widget--html) and layout areas get the
+ * same max-width + margin:auto + padding:0 var(--edge-inset) geometry,
+ * so the outer-left edge of every widget sits on one vertical line. */
+:root { --edge-inset: 0rem; }
+
+.cms-area--hero,
+.cms-area--cta,
+.cms-widget--header-nav,
+.cms-widget--footer-nav,
+.cms-widget--vue,
+.cms-breadcrumb {
+  max-width: var(--container-max) !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--edge-inset) !important;
+  padding-right: var(--edge-inset) !important;
+  box-sizing: border-box !important;
+}
+
+/* Zero out nested ul + link/crumb left padding so the first link / crumb
+ * sits flush with the wrapper's inner-left edge — which lines up with
+ * the hero's / cta-band's outer-left edge. */
+.cms-widget--header-nav .cms-menu,
+.cms-widget--footer-nav .cms-menu {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+/* All menu items share the default .cms-menu__link padding so the
+ * first one lines up visually with its siblings. Previously the first
+ * link was pinned to padding-left:0 to make it flush with the hero /
+ * cta-band outer edge, but that made item #1 stick out to the left of
+ * items #2..N. Visual consistency inside the menu wins. */
+.cms-widget--header-nav .cms-burger {
+  margin-left: -6px;   /* neutralise the button's own 6px inner padding */
+}
+/* Breadcrumb layout: zero flex gap and use explicit symmetric margins on
+ * the separator so "X / Y" always has identical spacing on both sides of
+ * the "/" glyph. First visible link sits flush with the wrapper's
+ * content-left edge — same vertical line as the burger icon. */
+.cms-breadcrumb { gap: 0 !important; }
+.cms-breadcrumb a,
+.cms-breadcrumb__link,
+.cms-breadcrumb__current {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.cms-breadcrumb__separator {
+  margin: 0 0.5rem !important;
+  padding: 0 !important;
+  display: inline-block;
+  text-align: center;
+}
+.cms-breadcrumb > a:first-of-type,
+.cms-breadcrumb > .cms-breadcrumb__link:first-of-type {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* Plugin-widget inner layout reset: some Vue widgets (e.g. GHRM) add
+ * horizontal padding to inner grid / header / card blocks that shifts
+ * titles right of the menu + breadcrumb outer edge. Zero those out so
+ * the whole page sits on one vertical line. */
+.cms-widget--vue .ghrm-grid,
+.cms-widget--vue .ghrm-list-header,
+.cms-widget--vue .ghrm-category-index,
+.cms-widget--vue .ghrm-category-index__title,
+.cms-widget--vue .ghrm-detail > * { padding-left: 0 !important; padding-right: 0 !important; }
+
+/* Breadcrumb text colors: the breadcrumb widget's config.css hard-codes
+ * mid-gray text which disappears on dark themes. Override with theme
+ * tokens so breadcrumb stays legible across every palette. */
+.cms-breadcrumb { color: var(--color-text-muted) !important; }
+.cms-breadcrumb a,
+.cms-breadcrumb__link { color: var(--color-link, var(--color-accent)) !important; }
+.cms-breadcrumb a:hover,
+.cms-breadcrumb__link:hover { color: var(--color-link-hover, var(--color-accent-dark)) !important; }
+.cms-breadcrumb__current { color: var(--color-heading) !important; font-weight: 500; }
+.cms-breadcrumb__separator { color: var(--color-text-muted) !important; opacity: 0.5; }
+
+footer {
+  background: var(--color-surface-soft);
+  border-top: 1px solid var(--color-border);
+  padding: 2.5rem 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* Buttons — 4 variants, always contrast-safe */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.05s;
+  line-height: 1.2;
+}
+.btn:hover { background: var(--color-surface-soft); border-color: var(--color-text-muted); text-decoration: none; }
+.btn:active { transform: translateY(1px); }
+.btn--accent {
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent);
+}
+.btn--accent:hover { background: var(--color-accent-dark); border-color: var(--color-accent-dark); color: var(--color-accent-fg); }
+.btn--contrast {
+  background: var(--color-contrast-bg);
+  color: var(--color-contrast-fg);
+  border-color: var(--color-contrast-bg);
+}
+.btn--contrast:hover { background: var(--color-contrast-hover-bg); border-color: var(--color-contrast-hover-bg); color: var(--color-contrast-fg); }
+.btn[disabled], .btn.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+/* Buttons inside dark sections (.hero / .cta-band) — re-assert the
+ * standard button contrast. Otherwise `.hero a { color: inherit }`
+ * bleeds into plain `.btn` turning white text on white background. */
+.hero .btn, .cta-band .btn {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-surface);
+}
+.hero .btn:hover, .cta-band .btn:hover {
+  background: var(--color-surface-soft);
+  color: var(--color-text);
+}
+.hero .btn--accent, .cta-band .btn--accent {
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent);
+}
+.hero .btn--contrast, .cta-band .btn--contrast {
+  background: var(--color-contrast-bg);
+  color: var(--color-contrast-fg);
+  border-color: var(--color-contrast-bg);
+}
+
+/* Cards + feature grid */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Hero */
+.hero {
+  background: var(--color-gradient, var(--color-accent));
+  color: var(--color-accent-fg, #fff);
+  padding: clamp(3.5rem, 8vw, 6rem) 1.5rem;
+  text-align: center;
+  border-radius: 22px;
+  margin: 1rem auto 3rem;
+  max-width: var(--container-max);
+  position: relative;
+  overflow: hidden;
+}
+.hero h1, .hero h2, .hero h3, .hero p, .hero a, .hero li { color: inherit; }
+.hero code { color: inherit; background: rgba(255,255,255,0.15); }
+.hero__eyebrow {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.hero__subtitle {
+  max-width: 720px;
+  margin: 0 auto 1.75rem;
+  font-size: 1.15rem;
+  opacity: 0.92;
+}
+.hero__ctas { display: inline-flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+
+/* CTA band */
+.cta-band {
+  background: var(--color-gradient, var(--color-accent));
+  color: var(--color-accent-fg, #fff);
+  padding: clamp(2.5rem, 5vw, 4rem) 1.5rem;
+  text-align: center;
+  border-radius: 18px;
+  margin: 3rem auto;
+  max-width: var(--container-max);
+}
+.cta-band h1, .cta-band h2, .cta-band h3, .cta-band p, .cta-band a, .cta-band li { color: inherit; }
+.cta-band code { color: inherit; background: rgba(255,255,255,0.15); }
+
+/* Columns (2 / 3) */
+.cols-2, .cols-3 { display: grid; gap: 1.5rem; }
+.cols-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.cols-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+/* Carousel (CSS-only scroll-snap) */
+.carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+  margin: 1.5rem 0;
+}
+.carousel > * {
+  flex: 0 0 clamp(240px, 35vw, 320px);
+  scroll-snap-align: start;
+}
+
+/* Testimonial / pull quote */
+.testimonial {
+  text-align: center;
+  max-width: 780px;
+  margin: 2.5rem auto;
+  padding: 2rem 1.5rem;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+.testimonial p { font-size: 1.15rem; font-style: italic; color: var(--color-text); }
+.testimonial cite { display: block; margin-top: 1rem; font-size: 0.9rem; color: var(--color-text-muted); font-style: normal; }
+
+/* Pricing / plan row */
+.plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+.plan { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px; padding: 1.75rem; }
+.plan--highlight { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-soft); }
+.plan__price { font-size: 2.25rem; font-weight: 800; color: var(--color-heading); margin: 0.5rem 0 1rem; }
+.plan ul { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+.plan li { padding: 0.4rem 0; border-bottom: 1px solid var(--color-border); }
+.plan li:last-child { border-bottom: 0; }
+
+/* Responsive tweaks — at narrow viewports bump --edge-inset to 1rem so
+ * nothing kisses the viewport border. Because hero / cta / nav /
+ * breadcrumb all read from --edge-inset, they stay perfectly aligned. */
+@media (max-width: 640px) {
+  :root { --edge-inset: 1rem; }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.4rem; }
+  .container { padding: 0 1rem; }
+  .hero { margin-left: 0; margin-right: 0; border-radius: 14px; }
+  .cta-band { margin-left: 0; margin-right: 0; border-radius: 12px; }
+}
+
+/* palette */
+:root {
+  --color-accent: #2563eb;
+  --color-accent-soft: #dbeafe;
+  --color-accent-dark: #1d4ed8;
+  --color-accent-fg: #ffffff;
+  --color-contrast-bg: #0f172a;
+  --color-contrast-fg: #f8fafc;
+  --color-contrast-hover-bg: #1e293b;
+  --color-link: #1d4ed8;
+  --color-link-hover: #1e40af;
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+  --color-heading: #0b1220;
+  --color-gradient: linear-gradient(135deg, #1d4ed8 0%, #5b21b6 100%);
+}
+
+/* width */
+:root {
+  --container-max: 1100px;
+  --edge-inset: 0rem;
+}
+
+/* header-nav — boxed themes (narrow / 1200):
+ *   ≥ 751 px  → horizontal row, no burger
+ *   ≤ 750 px  → burger drawer (standard mobile behaviour)
+ * Footer-nav stays horizontal at every viewport (its widget CSS forces that).
+ */
+@media (min-width: 751px) {
+  .cms-widget--header-nav .cms-burger { display: none !important; }
+  .cms-widget--header-nav .cms-menu-overlay { display: none !important; }
+  .cms-widget--header-nav .cms-menu {
+    display: flex !important; flex-direction: row !important; flex-wrap: wrap;
+    align-items: center;
+    position: static !important; width: auto; height: auto;
+    background: transparent; padding: 0; box-shadow: none;
+    overflow: visible;
+  }
+  .cms-widget--header-nav .cms-menu__item { position: relative; border-bottom: none; }
+  .cms-widget--header-nav .cms-menu__sub {
+    position: absolute; top: 100%; left: 0;
+    background: var(--color-surface, #fff);
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 8px; min-width: 200px; z-index: 300;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    max-height: none; display: none;
+    padding: 0.35rem 0;
+  }
+  .cms-widget--header-nav .cms-menu__item:hover > .cms-menu__sub,
+  .cms-widget--header-nav .cms-menu__sub--open { display: block !important; }
+}
+@media (max-width: 750px) {
+  .cms-widget--header-nav .cms-burger { display: flex !important; position: relative !important; z-index: 400 !important; }
+  .cms-widget--header-nav .cms-menu {
+    display: flex !important; flex-direction: column !important; align-items: stretch !important;
+    position: fixed !important; top: 0; left: -100%;
+    width: min(320px, 88vw); height: 100dvh;
+    background: var(--color-bg, #fff);
+    padding: 4rem 0 2rem; overflow-y: auto; z-index: 300;
+    transition: left 0.28s ease;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  }
+  .cms-widget--header-nav .cms-menu--open { left: 0 !important; }
+  .cms-widget--header-nav .cms-menu__item { position: static !important; border-bottom: 1px solid var(--color-border, #e5e7eb); }
+  .cms-widget--header-nav .cms-menu__link { padding: 0.9rem 1.5rem !important; font-size: 1rem !important; justify-content: space-between !important; }
+  .cms-widget--header-nav .cms-menu__sub { position: static !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; max-height: 0; overflow: hidden; display: block !important; transition: max-height 0.25s ease; }
+  .cms-widget--header-nav .cms-menu__sub--open { max-height: 600px; }
+  .cms-widget--header-nav .cms-menu__sub .cms-menu__link { padding-left: 2.5rem !important; font-size: 0.9rem !important; opacity: 0.85; }
+}
+
+.vbwd-page {
+  --vbwd-accent: #2563eb;
+  --vbwd-accent-soft: #dbeafe;
+  --vbwd-accent-dark: #1d4ed8;
+  --vbwd-gradient: linear-gradient(135deg, #1d4ed8 0%, #5b21b6 100%);
+  --vbwd-text: #0f172a;
+  --vbwd-text-muted: #475569;
+  --vbwd-surface: #ffffff;
+  --vbwd-surface-soft: #f8fafc;
+  --vbwd-border: #e2e8f0;
+  --vbwd-radius: 14px;
+  --vbwd-radius-lg: 22px;
+  --vbwd-shadow-sm: 0 1px 2px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.08);
+  --vbwd-shadow-md: 0 4px 6px -1px rgba(15,23,42,0.08), 0 2px 4px -2px rgba(15,23,42,0.06);
+  --vbwd-shadow-lg: 0 20px 25px -5px rgba(15,23,42,0.10), 0 8px 10px -6px rgba(15,23,42,0.08);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  color: var(--vbwd-text);
+  line-height: 1.65;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.vbwd-page *, .vbwd-page *::before, .vbwd-page *::after { box-sizing: border-box; }
+.vbwd-page h1, .vbwd-page h2, .vbwd-page h3, .vbwd-page h4 {
+  color: #0b1220;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65em;
+  font-weight: 700;
+}
+.vbwd-page h1 { font-size: clamp(2.2rem, 4vw, 3.25rem); font-weight: 800; }
+.vbwd-page h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); margin-top: 0.4em; }
+.vbwd-page h3 { font-size: 1.2rem; }
+.vbwd-page p  { margin: 0 0 1em; color: var(--vbwd-text); }
+.vbwd-page a  { color: var(--vbwd-accent-dark); text-decoration: none; font-weight: 600; }
+.vbwd-page a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.vbwd-page code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+  padding: 0.15em 0.45em;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.vbwd-page .vbwd-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.vbwd-page .vbwd-hero {
+  background: var(--vbwd-gradient);
+  color: #ffffff;
+  padding: clamp(3.5rem, 8vw, 6rem) 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--vbwd-radius-lg);
+  margin: 0 1rem 3rem;
+}
+.vbwd-page .vbwd-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(255,255,255,0.18), transparent 45%);
+  pointer-events: none;
+}
+.vbwd-page .vbwd-hero__eyebrow {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(4px);
+}
+.vbwd-page .vbwd-hero h1 {
+  color: #fff;
+  margin-bottom: 0.65rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  position: relative;
+}
+.vbwd-page .vbwd-hero__lead {
+  color: rgba(255,255,255,0.95);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+}
+.vbwd-page .vbwd-hero__badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.75rem;
+  position: relative;
+}
+.vbwd-page .vbwd-hero__badge {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+.vbwd-page section { padding: 2.5rem 0; }
+.vbwd-page section + section { border-top: 1px solid var(--vbwd-border); }
+.vbwd-page .vbwd-eyebrow {
+  display: inline-block;
+  color: var(--vbwd-accent-dark);
+  background: var(--vbwd-accent-soft);
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+/* ── Plugin grid ─────────────────────────────────────────────────── */
+.vbwd-page .vbwd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 0;
+}
+.vbwd-page .vbwd-card {
+  background: var(--vbwd-surface);
+  border: 1px solid var(--vbwd-border);
+  border-radius: var(--vbwd-radius);
+  padding: 1.25rem 1.35rem;
+  box-shadow: var(--vbwd-shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+.vbwd-page .vbwd-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--vbwd-accent);
+  opacity: 0.7;
+}
+.vbwd-page .vbwd-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--vbwd-shadow-md);
+  border-color: var(--vbwd-accent);
+}
+.vbwd-page .vbwd-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--vbwd-text);
+  margin-bottom: 0.35rem;
+  font-size: 1.02rem;
+}
+.vbwd-page .vbwd-card__title code {
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+  font-size: 0.88rem;
+}
+.vbwd-page .vbwd-card__desc {
+  color: var(--vbwd-text-muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.vbwd-page .vbwd-card--muted { opacity: 0.95; background: var(--vbwd-surface-soft); }
+.vbwd-page .vbwd-card--muted::before { background: #94a3b8; opacity: 0.6; }
+
+/* ── Feature list ────────────────────────────────────────────────── */
+.vbwd-page ul.vbwd-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.5rem 1.5rem;
+}
+.vbwd-page ul.vbwd-list li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 1.75rem;
+  color: var(--vbwd-text);
+}
+.vbwd-page ul.vbwd-list li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.75rem;
+  width: 0.7rem; height: 0.7rem;
+  border-radius: 3px;
+  background: var(--vbwd-accent);
+  box-shadow: 0 0 0 3px var(--vbwd-accent-soft);
+}
+
+/* ── Payment table ───────────────────────────────────────────────── */
+.vbwd-page .vbwd-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--vbwd-radius);
+  border: 1px solid var(--vbwd-border);
+  margin: 1rem 0 0;
+  background: var(--vbwd-surface);
+  box-shadow: var(--vbwd-shadow-sm);
+}
+.vbwd-page table.vbwd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.vbwd-page table.vbwd-table th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  background: var(--vbwd-surface-soft);
+  color: var(--vbwd-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--vbwd-border);
+}
+.vbwd-page table.vbwd-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--vbwd-border);
+  vertical-align: top;
+}
+.vbwd-page table.vbwd-table tr:last-child td { border-bottom: none; }
+.vbwd-page table.vbwd-table tr:hover td { background: var(--vbwd-accent-soft); }
+.vbwd-page table.vbwd-table .vbwd-method-name {
+  font-weight: 700;
+  color: var(--vbwd-text);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.vbwd-page table.vbwd-table code { font-size: 0.8rem; }
+
+.vbwd-page .vbwd-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.vbwd-page .vbwd-badge--ok {
+  background: #dcfce7;
+  color: #166534;
+}
+.vbwd-page .vbwd-badge--planned {
+  background: #fef3c7;
+  color: #92400e;
+}
+.vbwd-page .vbwd-badge--region {
+  background: var(--vbwd-accent-soft);
+  color: var(--vbwd-accent-dark);
+}
+
+/* ── Stat row ────────────────────────────────────────────────────── */
+.vbwd-page .vbwd-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.vbwd-page .vbwd-stat {
+  text-align: center;
+  padding: 1.25rem 1rem;
+  background: var(--vbwd-surface);
+  border: 1px solid var(--vbwd-border);
+  border-radius: var(--vbwd-radius);
+  box-shadow: var(--vbwd-shadow-sm);
+}
+.vbwd-page .vbwd-stat__number {
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--vbwd-accent-dark);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.vbwd-page .vbwd-stat__label {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--vbwd-text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Callout / CTA ──────────────────────────────────────────────── */
+.vbwd-page .vbwd-callout {
+  background: var(--vbwd-accent-soft);
+  border-left: 4px solid var(--vbwd-accent);
+  border-radius: var(--vbwd-radius);
+  padding: 1.1rem 1.35rem;
+  margin: 1.5rem 0 0;
+  color: var(--vbwd-text);
+}
+.vbwd-page .vbwd-callout p { margin: 0; }
+.vbwd-page .vbwd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.35rem;
+  background: var(--vbwd-accent);
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: var(--vbwd-shadow-md);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.vbwd-page .vbwd-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* Layout chrome (header / breadcrumb / footer) cosmetics — background,
+ * borders, padding, menu gap, link weight/colour — are intentionally NOT
+ * styled here. Those areas are owned by the canonical CMS theme
+ * stylesheet (vbwd-backend/plugins/cms/docs/imports/_build_theme_styles
+ * .py). Re-styling them per-page produced a bordered grey header bar
+ * that diverged from the clean theme header used on /home2.
+ *
+ * The ONLY thing we re-assert is geometry: constrain the header/footer
+ * nav and breadcrumb to the same centred 1100px column as .vbwd-page,
+ * exactly like /home2 (whose theme applies max-width:var(--container-max)
+ * + margin:auto to the same wrappers). Exhibition pages set
+ * use_theme_switcher_styles:false so they never load that theme rule;
+ * without this the menu would sit flush against the viewport edge while
+ * the hero/content stayed centred. No colours, borders or backgrounds —
+ * the menu keeps the clean theme-default look, just aligned. */
+.cms-layout .cms-widget--header-nav,
+.cms-layout .cms-widget--footer-nav,
+.cms-layout .cms-area--vue .cms-breadcrumb {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Every .cms-menu__link carries 16px of intrinsic left padding, so the
+ * header menu's first item ("Home") text sits 16px inside the 1100px
+ * column. The breadcrumb has no per-item padding, so inset it by the
+ * same 16px — its first crumb then lands on the exact same vertical
+ * justification line as the menu's first item (harmonical layout). */
+.cms-layout .cms-area--vue .cms-breadcrumb {
+  padding-left: 16px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .vbwd-page { font-size: 16px; }
+  .vbwd-page .vbwd-hero { margin: 0 0.5rem 2rem; padding: 2.75rem 1rem; }
+  .vbwd-page .vbwd-container { padding: 0 1.1rem; }
+  .vbwd-page ul.vbwd-list { grid-template-columns: 1fr; }
+}</style>
+  </head>
+  <body>
+    <div id="app"><article class="vbwd-page vbwd-page--events">
+          <header class="vbwd-hero">
+  <span class="vbwd-hero__eyebrow">Event System</span>
+  <h1>⚡ VBWD</h1>
+  <p class="vbwd-hero__lead">A sales platform for the digital world — SaaS subscriptions, CMS, shop, booking and a token economy on one self-hosted backend, two Vue front-ends and one plugin contract.</p>
+  <div class="vbwd-hero__badge-row"><span class="vbwd-hero__badge">landing1</span><span class="vbwd-hero__badge">cms</span><span class="vbwd-hero__badge">mainchat</span><span class="vbwd-hero__badge">chat</span><span class="vbwd-hero__badge">theme-switcher</span><span class="vbwd-hero__badge">analytics</span></div>
+</header>
+          <div class="vbwd-container">
+
+            <section>
+              <span class="vbwd-eyebrow">The seam</span>
+              <h2>Plugins don't import each other. They listen.</h2>
+              <p>
+                The event bus is the platform's spinal cord. Every meaningful
+                state change emits a typed domain event; plugins subscribe to
+                what they care about. Email confirmations, analytics, Mailchimp
+                sync, dunning, GHRM access grants — none are wired into the
+                services that triggered them.
+              </p>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Catalogue</span>
+              <h2>Named events shipped</h2>
+              <div class="vbwd-grid">
+                <div class="vbwd-card"><div class="vbwd-card__title">Subscription</div>
+                <p class="vbwd-card__desc"><code>created · activated · cancelled · expired · dunning</code></p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Payment</div>
+                <p class="vbwd-card__desc"><code>authorized · captured · failed · refunded</code> · <code>refund.reversed</code></p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Checkout</div>
+                <p class="vbwd-card__desc"><code>checkout.initiated · completed</code></p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Security</div>
+                <p class="vbwd-card__desc"><code>password_reset.request · execute</code> · <code>login.failed</code></p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Plugins</div>
+                <p class="vbwd-card__desc"><code>plugin.registered · initialized · enabled · disabled</code></p></div>
+                <div class="vbwd-card"><div class="vbwd-card__title">Per-plugin</div>
+                <p class="vbwd-card__desc"><code>chat.tokens.consumed</code>, <code>booking.created</code>, <code>order.fulfilled</code>, <code>lead.captured</code>.</p></div>
+              </div>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Why events</span>
+              <h2>Why the bus is the extension point</h2>
+              <ul class="vbwd-list">
+                <li><strong>Decoupling</strong> — services emit; subscribers proliferate. No service grows tentacles into other plugins.</li>
+                <li><strong>Pluggable side-effects</strong> — add an audit listener, a Slack notifier, a metrics exporter without touching the emitter.</li>
+                <li><strong>Replayability</strong> — events are recorded; "what should have happened after this capture" is a query, not archaeology.</li>
+                <li><strong>Testability</strong> — assert "event X emitted with payload Y" instead of mocking N collaborators.</li>
+              </ul>
+            </section>
+
+            <section>
+              <span class="vbwd-eyebrow">Plugin hook</span>
+              <h2>How a plugin plugs into the bus</h2>
+              <p>
+                A plugin registers handlers via
+                <code>register_event_handlers(bus)</code> and emits its own
+                events for others to consume — cross-plugin coordination with
+                zero direct imports. The same handler signature keeps working
+                when the bus moves to a durable queue.
+              </p>
+              <div class="vbwd-callout">
+                <p><strong>Async path.</strong> Synchronous today (in-process
+                dispatch); async <em>[planned]</em> via a durable queue — a
+                wiring change, not a plugin rewrite.</p>
+              </div>
+            </section>
+
+          </div>
+        </article></div>
+    <script type="application/json" id="__POST__">{"slug": "event-architecture", "title": "Event Architecture — VBWD", "content_html": "<article class=\"vbwd-page vbwd-page--events\">\n          <header class=\"vbwd-hero\">\n  <span class=\"vbwd-hero__eyebrow\">Event System</span>\n  <h1>⚡ VBWD</h1>\n  <p class=\"vbwd-hero__lead\">A sales platform for the digital world — SaaS subscriptions, CMS, shop, booking and a token economy on one self-hosted backend, two Vue front-ends and one plugin contract.</p>\n  <div class=\"vbwd-hero__badge-row\"><span class=\"vbwd-hero__badge\">landing1</span><span class=\"vbwd-hero__badge\">cms</span><span class=\"vbwd-hero__badge\">mainchat</span><span class=\"vbwd-hero__badge\">chat</span><span class=\"vbwd-hero__badge\">theme-switcher</span><span class=\"vbwd-hero__badge\">analytics</span></div>\n</header>\n          <div class=\"vbwd-container\">\n\n            <section>\n              <span class=\"vbwd-eyebrow\">The seam</span>\n              <h2>Plugins don't import each other. They listen.</h2>\n              <p>\n                The event bus is the platform's spinal cord. Every meaningful\n                state change emits a typed domain event; plugins subscribe to\n                what they care about. Email confirmations, analytics, Mailchimp\n                sync, dunning, GHRM access grants — none are wired into the\n                services that triggered them.\n              </p>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Catalogue</span>\n              <h2>Named events shipped</h2>\n              <div class=\"vbwd-grid\">\n                <div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Subscription</div>\n                <p class=\"vbwd-card__desc\"><code>created · activated · cancelled · expired · dunning</code></p></div>\n                <div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Payment</div>\n                <p class=\"vbwd-card__desc\"><code>authorized · captured · failed · refunded</code> · <code>refund.reversed</code></p></div>\n                <div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Checkout</div>\n                <p class=\"vbwd-card__desc\"><code>checkout.initiated · completed</code></p></div>\n                <div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Security</div>\n                <p class=\"vbwd-card__desc\"><code>password_reset.request · execute</code> · <code>login.failed</code></p></div>\n                <div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Plugins</div>\n                <p class=\"vbwd-card__desc\"><code>plugin.registered · initialized · enabled · disabled</code></p></div>\n                <div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Per-plugin</div>\n                <p class=\"vbwd-card__desc\"><code>chat.tokens.consumed</code>, <code>booking.created</code>, <code>order.fulfilled</code>, <code>lead.captured</code>.</p></div>\n              </div>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Why events</span>\n              <h2>Why the bus is the extension point</h2>\n              <ul class=\"vbwd-list\">\n                <li><strong>Decoupling</strong> — services emit; subscribers proliferate. No service grows tentacles into other plugins.</li>\n                <li><strong>Pluggable side-effects</strong> — add an audit listener, a Slack notifier, a metrics exporter without touching the emitter.</li>\n                <li><strong>Replayability</strong> — events are recorded; \"what should have happened after this capture\" is a query, not archaeology.</li>\n                <li><strong>Testability</strong> — assert \"event X emitted with payload Y\" instead of mocking N collaborators.</li>\n              </ul>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Plugin hook</span>\n              <h2>How a plugin plugs into the bus</h2>\n              <p>\n                A plugin registers handlers via\n                <code>register_event_handlers(bus)</code> and emits its own\n                events for others to consume — cross-plugin coordination with\n                zero direct imports. The same handler signature keeps working\n                when the bus moves to a durable queue.\n              </p>\n              <div class=\"vbwd-callout\">\n                <p><strong>Async path.</strong> Synchronous today (in-process\n                dispatch); async <em>[planned]</em> via a durable queue — a\n                wiring change, not a plugin rewrite.</p>\n              </div>\n            </section>\n\n          </div>\n        </article>", "seo": {"robots": "index,follow", "canonical_url": null, "meta_description": "VBWD runs on a typed event bus — plugins listen instead of importing each other. Decoupled, replayable, testable."}}</script>
+  </body>
+</html>
