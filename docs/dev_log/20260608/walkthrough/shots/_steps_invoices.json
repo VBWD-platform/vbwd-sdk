@@ -1,0 +1,32 @@
+{
+  "steps": [
+    {
+      "n": 16,
+      "title": "Admin invoices list",
+      "note": "Sidebar → Invoices: every invoice, newest first (the purchase just made is at the top).",
+      "file": "16-admin-invoices-list.png",
+      "url": "http://localhost:8081/admin/invoices"
+    },
+    {
+      "n": 17,
+      "title": "Invoice detail",
+      "note": "The invoice detail: line items, amounts, and the Subscription info block.",
+      "file": "17-invoice-detail.png",
+      "url": "http://localhost:8081/admin/invoices/078b1ca0-73b9-4f5a-a936-c7c427c838db"
+    },
+    {
+      "n": 18,
+      "title": "Subscription detail",
+      "note": "Open the subscription created by the purchase — status, billing period, payment history.",
+      "file": "18-subscription-detail.png",
+      "url": "http://localhost:8081/admin/subscriptions/4a896994-d4a3-4a7f-91ab-0a2e80e54351"
+    },
+    {
+      "n": 19,
+      "title": "Inside the package",
+      "note": "Open the package (the GHRM plan) — its configuration / pricing.",
+      "file": "19-inside-the-package.png",
+      "url": "http://localhost:8081/admin/plans"
+    }
+  ]
+}

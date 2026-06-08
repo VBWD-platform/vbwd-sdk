@@ -1,0 +1,40 @@
+{
+  "steps": [
+    {
+      "n": 11,
+      "title": "Storefront login as the new user",
+      "note": "On the storefront (:8080) the new user logs in with their email + password.",
+      "file": "11-storefront-login-as-the-new-user.png",
+      "url": "http://localhost:8080/login"
+    },
+    {
+      "n": 12,
+      "title": "Native plans — Choose your plan",
+      "note": "The native pricing page lists the software/plans, each with a price + \"Choose Plan\".",
+      "file": "12-native-plans-choose-your-plan.png",
+      "url": "http://localhost:8080/landing1"
+    },
+    {
+      "n": 13,
+      "title": "Checkout the software",
+      "note": "Checkout for the chosen software (GHRM) — order summary + total, logged in as the buyer.",
+      "file": "13-checkout-the-software.png",
+      "url": "http://localhost:8080/checkout?tarif_plan_id=plugin-ghrm"
+    },
+    {
+      "n": 14,
+      "title": "Accept terms",
+      "note": "Agree to the Terms & Conditions — the activation button enables.",
+      "file": "14-accept-terms.png",
+      "url": "http://localhost:8080/checkout?tarif_plan_id=plugin-ghrm"
+    },
+    {
+      "n": 15,
+      "title": "Software activated",
+      "note": "Confirm — the subscription for the software is activated.",
+      "file": "15-software-activated.png",
+      "url": "http://localhost:8080/checkout/confirmation?invoice_id=078b1ca0-73b9-4f5a-a936-c7c427c838db"
+    }
+  ],
+  "email": "walkthrough.user.99595@example.com"
+}

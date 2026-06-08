@@ -48,6 +48,27 @@
       "note": "Submit — the user is created.",
       "file": "07-user-created.png",
       "url": "http://localhost:8081/admin/users/5928710a-ec06-48e3-86d2-4ed3cb0147dd"
+    },
+    {
+      "n": 8,
+      "title": "Edit user — access levels",
+      "note": "Open \"Edit User\". The Account tab has a \"User Access Levels\" section with Basic / Pro.",
+      "file": "08-edit-user-access-levels.png",
+      "url": "http://localhost:8081/admin/users/5928710a-ec06-48e3-86d2-4ed3cb0147dd/edit"
+    },
+    {
+      "n": 9,
+      "title": "Grant Basic permission",
+      "note": "Tick the \"Basic\" access level to grant the user Basic permissions.",
+      "file": "09-grant-basic-permission.png",
+      "url": "http://localhost:8081/admin/users/5928710a-ec06-48e3-86d2-4ed3cb0147dd/edit"
+    },
+    {
+      "n": 10,
+      "title": "Basic granted saved",
+      "note": "Save Changes — the Basic access level is now granted to the user.",
+      "file": "10-basic-granted-saved.png",
+      "url": "http://localhost:8081/admin/users"
     }
   ],
   "newEmail": "walkthrough.user.99595@example.com",
