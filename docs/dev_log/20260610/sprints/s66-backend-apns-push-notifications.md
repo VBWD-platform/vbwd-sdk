@@ -1,7 +1,6 @@
 # S66 — Backend APNs push notifications for meinchat (+ meinchat-plus)
 
-**Status:** PLANNED — 2026-06-10. Pair sprint with
-[S67 — iOS notifications + badges](s67-ios-notifications-and-badges.md).
+**Status:** PLANNED — 2026-06-10. The **backend half** of the notifications feature = **[S67.1 (BE)](s67-1-be-device-registration-and-push.md)** under the [S67 umbrella](s67-notifications-and-badges.md); **this file stays the canonical detailed backend design** (S66 ≡ S67.1 — implement once). iOS half: [S67.2 (iOS)](s67-ios-notifications-and-badges.md).
 **Repo:** `vbwd-backend` (**core** `vbwd/` for the generic device-token
 mechanism; **plugins/meinchat** for the consumer hook). **Engineering
 requirements (BINDING):** TDD-first · DevOps-first · SOLID · DI · DRY · Liskov ·

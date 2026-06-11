@@ -1,13 +1,14 @@
-# S67 — iOS notifications, side-menu badge, and app-icon badge
+# S67.2 (iOS) — iOS notifications, side-menu badge, and app-icon badge
 
-**Status:** PLANNED — 2026-06-10. Pair sprint with
-[S66 — Backend APNs](s66-backend-apns-push-notifications.md). **Repo:**
+**Parent:** [S67 umbrella](s67-notifications-and-badges.md). **Depends on:** [S67.1 (BE)](s67-1-be-device-registration-and-push.md) green — this sub-sprint calls `POST /api/v1/devices/register` and renders the S67.1 push payload. **Status:** PLANNED — 2026-06-10 (split out as the iOS half 2026-06-11). **Repo:**
 `vbwd-ios` — host app (`VBWD/`), **core** (`Packages/vbwd-ios-core`),
 `Packages/vbwd-ios-plugin-meinchat`, `Packages/vbwd-ios-plugin-meinchat-plus`.
 **Engineering requirements (BINDING):** TDD-first · NO OVERENGINEERING ·
 [`../../20260525/sprints/_engineering-requirements.md`](../../20260525/sprints/_engineering-requirements.md).
 **Quality gate:** `bash scripts/boundary-lint.sh` + `swift run
 VBWDCoreTestsRunner` green + the meinchat package's XCTest suite green.
+
+> **Scope:** the iOS app surfaces only. The backend (`device_token` model, `DeviceTokenService`, `/devices/register`, `ApnsClient`, the meinchat push hook + the push-payload shape) is **S67.1 (BE)** — references below to "the backend" / "S66" mean that sub-sprint. Build against its live wire contract.
 
 ---
 
