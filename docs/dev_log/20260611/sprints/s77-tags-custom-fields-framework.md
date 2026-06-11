@@ -6,6 +6,8 @@
 ## Problem
 "Tagging" and ad-hoc attributes are reinvented per entity via opaque JSONB (`UserDetails.config`, `Product.product_metadata`, plan `features`). Shopware has first-class **tags** and a **custom-fields** framework reusable across entities. vbwd needs the same: a generic, entity-agnostic way to attach **tags** and **typed custom fields** to **users and products** (and, opt-in, plans / booking resources) with admin UI and import/export.
 
+custom fields network shall be abstract for all entities - for tarifs, adoo-on, products, bookings - for any invoice line item
+
 ## Locked decisions
 | # | Decision |
 |---|---|
