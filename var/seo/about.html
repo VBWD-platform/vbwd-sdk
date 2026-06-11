@@ -2,16 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>About — VBWD</title>
-    <meta name="description" content="VBWD: a worked example of running the VBWD platform for software engineers, SaaS builders, digital agencies and smart-app teams." data-seo="ssr" />
-    <meta name="keywords" content="vbwd, core, about, self-hosted saas, open source" data-seo="ssr" />
+    <title>About — VBWD Doctor</title>
+    <meta name="description" content="VBWD Doctor: a worked example of running the VBWD platform for private doctors, dentists, physiotherapists, therapists and small clinics." data-seo="ssr" />
+    <meta name="keywords" content="vbwd, doctor, about, self-hosted saas, open source" data-seo="ssr" />
     <meta name="robots" content="index,follow" data-seo="ssr" />
-    <meta property="og:title" content="About — VBWD" data-seo="ssr" />
-    <meta property="og:description" content="VBWD: a worked example of running the VBWD platform for software engineers, SaaS builders, digital agencies and smart-app teams." data-seo="ssr" />
+    <meta property="og:title" content="About — VBWD Doctor" data-seo="ssr" />
+    <meta property="og:description" content="VBWD Doctor: a worked example of running the VBWD platform for private doctors, dentists, physiotherapists, therapists and small clinics." data-seo="ssr" />
     <meta name="twitter:card" content="summary_large_image" data-seo="ssr" />
-    <meta name="twitter:title" content="About — VBWD" data-seo="ssr" />
-    <meta name="twitter:description" content="VBWD: a worked example of running the VBWD platform for software engineers, SaaS builders, digital agencies and smart-app teams." data-seo="ssr" />
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "About — VBWD", "url": null, "description": "VBWD: a worked example of running the VBWD platform for software engineers, SaaS builders, digital agencies and smart-app teams."}</script>
+    <meta name="twitter:title" content="About — VBWD Doctor" data-seo="ssr" />
+    <meta name="twitter:description" content="VBWD Doctor: a worked example of running the VBWD platform for private doctors, dentists, physiotherapists, therapists and small clinics." data-seo="ssr" />
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "About — VBWD Doctor", "url": null, "description": "VBWD Doctor: a worked example of running the VBWD platform for private doctors, dentists, physiotherapists, therapists and small clinics."}</script>
     <!--vbwd:assets-->
     <script type="module" src="/assets/index.js"></script>
     <link rel="stylesheet" href="/assets/index.css" />
@@ -431,11 +431,29 @@ footer {
   .cms-widget--header-nav .cms-menu__sub .cms-menu__link { padding-left: 2.5rem !important; font-size: 0.9rem !important; opacity: 0.85; }
 }
 
+/* VBWD_EDGE_ALIGN:v1 — header nav, breadcrumb + content on one vertical line. Do not edit by hand. */
+.cms-area--hero, .cms-area--cta,
+.cms-widget--header-nav, .cms-widget--footer-nav, .cms-widget--vue,
+.cms-breadcrumb, .cms-area--content .container {
+  max-width: var(--container-max, 1200px) !important;
+  width: 100% !important;
+  margin-left: auto !important; margin-right: auto !important;
+  padding-left: var(--edge-inset) !important;
+  padding-right: var(--edge-inset) !important;
+  box-sizing: border-box !important;
+}
+.cms-widget--header-nav .cms-menu, .cms-widget--footer-nav .cms-menu { padding-left: 0 !important; margin-left: 0 !important; }
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link { padding-left: 0 !important; }
+.cms-breadcrumb { gap: 0 !important; padding-left: var(--edge-inset) !important; }
+.cms-breadcrumb > a:first-of-type, .cms-breadcrumb > .cms-breadcrumb__link:first-of-type { margin-left: 0 !important; padding-left: 0 !important; }
+@media (max-width: 700px) { :root { --edge-inset: 1rem; } }
+/* /VBWD_EDGE_ALIGN:v1 */
+
 .vbwd-page {
-  --vbwd-accent: #2563eb;
-  --vbwd-accent-soft: #dbeafe;
-  --vbwd-accent-dark: #1d4ed8;
-  --vbwd-gradient: linear-gradient(135deg, #1d4ed8 0%, #5b21b6 100%);
+  --vbwd-accent: #059669;
+  --vbwd-accent-soft: #d1fae5;
+  --vbwd-accent-dark: #047857;
+  --vbwd-gradient: linear-gradient(135deg, #059669 0%, #0891b2 100%);
   --vbwd-text: #0f172a;
   --vbwd-text-muted: #475569;
   --vbwd-surface: #ffffff;
@@ -811,9 +829,9 @@ footer {
     <div id="app"><article class="vbwd-page vbwd-page--about">
           <header class="vbwd-hero">
   <span class="vbwd-hero__eyebrow">About</span>
-  <h1>⚡ VBWD</h1>
-  <p class="vbwd-hero__lead">A sales platform for the digital world — SaaS subscriptions, CMS, shop, booking and a token economy on one self-hosted backend, two Vue front-ends and one plugin contract.</p>
-  <div class="vbwd-hero__badge-row"><span class="vbwd-hero__badge">landing1</span><span class="vbwd-hero__badge">cms</span><span class="vbwd-hero__badge">mainchat</span><span class="vbwd-hero__badge">chat</span><span class="vbwd-hero__badge">theme-switcher</span><span class="vbwd-hero__badge">analytics</span></div>
+  <h1>⚕️ VBWD Doctor</h1>
+  <p class="vbwd-hero__lead">Appointments, billing and a patient portal for private practice.</p>
+  <div class="vbwd-hero__badge-row"><span class="vbwd-hero__badge">cms</span><span class="vbwd-hero__badge">mainchat</span><span class="vbwd-hero__badge">theme-switcher</span><span class="vbwd-hero__badge">stripe</span><span class="vbwd-hero__badge">mollie</span><span class="vbwd-hero__badge">analytics</span></div>
 </header>
           <div class="vbwd-container">
 
@@ -821,19 +839,19 @@ footer {
               <span class="vbwd-eyebrow">The pitch</span>
               <h2>What this instance demonstrates</h2>
               <p>
-                <strong>VBWD</strong> is a worked example of running the VBWD
-                platform for software engineers, SaaS builders, digital agencies and smart-app teams. VBWD core is intentionally agnostic —
+                <strong>VBWD Doctor</strong> is a worked example of running the VBWD
+                platform for private doctors, dentists, physiotherapists, therapists and small clinics. VBWD core is intentionally agnostic —
                 all domain behaviour is delivered by plugins. This instance is
                 nothing more than a chosen constellation of plugins on top of
                 the same core codebase that every other instance runs.
               </p>
               <div class="vbwd-stats">
                 <div class="vbwd-stat">
-                  <span class="vbwd-stat__number">9</span>
+                  <span class="vbwd-stat__number">6</span>
                   <span class="vbwd-stat__label">Plugins enabled</span>
                 </div>
                 <div class="vbwd-stat">
-                  <span class="vbwd-stat__number">3</span>
+                  <span class="vbwd-stat__number">6</span>
                   <span class="vbwd-stat__label">On the roadmap</span>
                 </div>
                 <div class="vbwd-stat">
@@ -853,7 +871,7 @@ footer {
               <p>Every row below is a real plugin — switch it off in
               <code>/admin/settings/plugins</code> and the corresponding
               behaviour disappears cleanly.</p>
-              <div class="vbwd-grid"><div class="vbwd-card"><div class="vbwd-card__title"><code>landing1</code></div><p class="vbwd-card__desc">Embeddable marketing landing with pricing widget.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>cms</code></div><p class="vbwd-card__desc">Pages, categories, image uploads, slug routing.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>mainchat</code></div><p class="vbwd-card__desc">Front-of-house public chat — visitor FAQ, KB-aware, anonymous→identified handoff.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>chat</code></div><p class="vbwd-card__desc">LLM chat with token metering (OpenAI-compatible).</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>theme-switcher</code></div><p class="vbwd-card__desc">Five CSS-var presets with zero regressions when off.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>analytics</code></div><p class="vbwd-card__desc">Active sessions, revenue snapshots, domain-event log.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>stripe</code></div><p class="vbwd-card__desc">Cards, Apple/Google Pay, webhooks, plan sync.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>paypal</code></div><p class="vbwd-card__desc">Orders + capture + webhook flow.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>yookassa</code></div><p class="vbwd-card__desc">Russian-market payment rail.</p></div></div>
+              <div class="vbwd-grid"><div class="vbwd-card"><div class="vbwd-card__title"><code>cms</code></div><p class="vbwd-card__desc">Services, staff bios, consent forms, blog.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>mainchat</code></div><p class="vbwd-card__desc">Patient-facing chat — site-aware, triage + KB, never clinical advice.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>theme-switcher</code></div><p class="vbwd-card__desc">Clinic-branded patient portal.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>stripe</code></div><p class="vbwd-card__desc">Card payments for consultations and products.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>mollie</code></div><p class="vbwd-card__desc">Local EU rails — iDEAL, Bancontact, SEPA.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>analytics</code></div><p class="vbwd-card__desc">Appointment no-show rate, revenue per clinician.</p></div></div>
             </section>
 
             <section>
@@ -876,6 +894,6 @@ footer {
 
           </div>
         </article></div>
-    <script type="application/json" id="__POST__">{"slug": "about", "title": "About — VBWD", "content_html": "<article class=\"vbwd-page vbwd-page--about\">\n          <header class=\"vbwd-hero\">\n  <span class=\"vbwd-hero__eyebrow\">About</span>\n  <h1>⚡ VBWD</h1>\n  <p class=\"vbwd-hero__lead\">A sales platform for the digital world — SaaS subscriptions, CMS, shop, booking and a token economy on one self-hosted backend, two Vue front-ends and one plugin contract.</p>\n  <div class=\"vbwd-hero__badge-row\"><span class=\"vbwd-hero__badge\">landing1</span><span class=\"vbwd-hero__badge\">cms</span><span class=\"vbwd-hero__badge\">mainchat</span><span class=\"vbwd-hero__badge\">chat</span><span class=\"vbwd-hero__badge\">theme-switcher</span><span class=\"vbwd-hero__badge\">analytics</span></div>\n</header>\n          <div class=\"vbwd-container\">\n\n            <section>\n              <span class=\"vbwd-eyebrow\">The pitch</span>\n              <h2>What this instance demonstrates</h2>\n              <p>\n                <strong>VBWD</strong> is a worked example of running the VBWD\n                platform for software engineers, SaaS builders, digital agencies and smart-app teams. VBWD core is intentionally agnostic —\n                all domain behaviour is delivered by plugins. This instance is\n                nothing more than a chosen constellation of plugins on top of\n                the same core codebase that every other instance runs.\n              </p>\n              <div class=\"vbwd-stats\">\n                <div class=\"vbwd-stat\">\n                  <span class=\"vbwd-stat__number\">9</span>\n                  <span class=\"vbwd-stat__label\">Plugins enabled</span>\n                </div>\n                <div class=\"vbwd-stat\">\n                  <span class=\"vbwd-stat__number\">3</span>\n                  <span class=\"vbwd-stat__label\">On the roadmap</span>\n                </div>\n                <div class=\"vbwd-stat\">\n                  <span class=\"vbwd-stat__number\">1,851+</span>\n                  <span class=\"vbwd-stat__label\">Passing tests</span>\n                </div>\n                <div class=\"vbwd-stat\">\n                  <span class=\"vbwd-stat__number\">65+</span>\n                  <span class=\"vbwd-stat__label\">REST endpoints</span>\n                </div>\n              </div>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Constellation</span>\n              <h2>Plugin constellation in this instance</h2>\n              <p>Every row below is a real plugin — switch it off in\n              <code>/admin/settings/plugins</code> and the corresponding\n              behaviour disappears cleanly.</p>\n              <div class=\"vbwd-grid\"><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>landing1</code></div><p class=\"vbwd-card__desc\">Embeddable marketing landing with pricing widget.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>cms</code></div><p class=\"vbwd-card__desc\">Pages, categories, image uploads, slug routing.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>mainchat</code></div><p class=\"vbwd-card__desc\">Front-of-house public chat — visitor FAQ, KB-aware, anonymous→identified handoff.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>chat</code></div><p class=\"vbwd-card__desc\">LLM chat with token metering (OpenAI-compatible).</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>theme-switcher</code></div><p class=\"vbwd-card__desc\">Five CSS-var presets with zero regressions when off.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>analytics</code></div><p class=\"vbwd-card__desc\">Active sessions, revenue snapshots, domain-event log.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>stripe</code></div><p class=\"vbwd-card__desc\">Cards, Apple/Google Pay, webhooks, plan sync.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>paypal</code></div><p class=\"vbwd-card__desc\">Orders + capture + webhook flow.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>yookassa</code></div><p class=\"vbwd-card__desc\">Russian-market payment rail.</p></div></div>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Free with core</span>\n              <h2>Guarantees you inherit</h2>\n              <ul class=\"vbwd-list\">\n                <li>Subscription lifecycle — <code>PENDING → ACTIVE → CANCELLED → EXPIRED</code>.</li>\n                <li>Multi-currency pricing, regional tax, line-item invoicing.</li>\n                <li>Token economy for any metered feature — AI, exports, downloads, bookings.</li>\n                <li>JWT auth with access + refresh, bcrypt hashing, RBAC.</li>\n                <li>Outbound webhooks with retry and delivery logs.</li>\n                <li>Enable / disable plugins without a server restart.</li>\n                <li>1,851+ passing tests, TDD as the development standard.</li>\n                <li>BSL 1.1 — self-host for yourself free; production use needs a licence.</li>\n              </ul>\n              <div class=\"vbwd-callout\">\n                <p>Want the pricing? <a href=\"/pricing-native\" class=\"vbwd-btn\">See plans →</a></p>\n              </div>\n            </section>\n\n          </div>\n        </article>", "seo": {"robots": "index,follow", "canonical_url": null, "meta_description": "VBWD: a worked example of running the VBWD platform for software engineers, SaaS builders, digital agencies and smart-app teams."}}</script>
+    <script type="application/json" id="__POST__">{"slug": "about", "title": "About — VBWD Doctor", "content_html": "<article class=\"vbwd-page vbwd-page--about\">\n          <header class=\"vbwd-hero\">\n  <span class=\"vbwd-hero__eyebrow\">About</span>\n  <h1>⚕️ VBWD Doctor</h1>\n  <p class=\"vbwd-hero__lead\">Appointments, billing and a patient portal for private practice.</p>\n  <div class=\"vbwd-hero__badge-row\"><span class=\"vbwd-hero__badge\">cms</span><span class=\"vbwd-hero__badge\">mainchat</span><span class=\"vbwd-hero__badge\">theme-switcher</span><span class=\"vbwd-hero__badge\">stripe</span><span class=\"vbwd-hero__badge\">mollie</span><span class=\"vbwd-hero__badge\">analytics</span></div>\n</header>\n          <div class=\"vbwd-container\">\n\n            <section>\n              <span class=\"vbwd-eyebrow\">The pitch</span>\n              <h2>What this instance demonstrates</h2>\n              <p>\n                <strong>VBWD Doctor</strong> is a worked example of running the VBWD\n                platform for private doctors, dentists, physiotherapists, therapists and small clinics. VBWD core is intentionally agnostic —\n                all domain behaviour is delivered by plugins. This instance is\n                nothing more than a chosen constellation of plugins on top of\n                the same core codebase that every other instance runs.\n              </p>\n              <div class=\"vbwd-stats\">\n                <div class=\"vbwd-stat\">\n                  <span class=\"vbwd-stat__number\">6</span>\n                  <span class=\"vbwd-stat__label\">Plugins enabled</span>\n                </div>\n                <div class=\"vbwd-stat\">\n                  <span class=\"vbwd-stat__number\">6</span>\n                  <span class=\"vbwd-stat__label\">On the roadmap</span>\n                </div>\n                <div class=\"vbwd-stat\">\n                  <span class=\"vbwd-stat__number\">1,851+</span>\n                  <span class=\"vbwd-stat__label\">Passing tests</span>\n                </div>\n                <div class=\"vbwd-stat\">\n                  <span class=\"vbwd-stat__number\">65+</span>\n                  <span class=\"vbwd-stat__label\">REST endpoints</span>\n                </div>\n              </div>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Constellation</span>\n              <h2>Plugin constellation in this instance</h2>\n              <p>Every row below is a real plugin — switch it off in\n              <code>/admin/settings/plugins</code> and the corresponding\n              behaviour disappears cleanly.</p>\n              <div class=\"vbwd-grid\"><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>cms</code></div><p class=\"vbwd-card__desc\">Services, staff bios, consent forms, blog.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>mainchat</code></div><p class=\"vbwd-card__desc\">Patient-facing chat — site-aware, triage + KB, never clinical advice.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>theme-switcher</code></div><p class=\"vbwd-card__desc\">Clinic-branded patient portal.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>stripe</code></div><p class=\"vbwd-card__desc\">Card payments for consultations and products.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>mollie</code></div><p class=\"vbwd-card__desc\">Local EU rails — iDEAL, Bancontact, SEPA.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>analytics</code></div><p class=\"vbwd-card__desc\">Appointment no-show rate, revenue per clinician.</p></div></div>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Free with core</span>\n              <h2>Guarantees you inherit</h2>\n              <ul class=\"vbwd-list\">\n                <li>Subscription lifecycle — <code>PENDING → ACTIVE → CANCELLED → EXPIRED</code>.</li>\n                <li>Multi-currency pricing, regional tax, line-item invoicing.</li>\n                <li>Token economy for any metered feature — AI, exports, downloads, bookings.</li>\n                <li>JWT auth with access + refresh, bcrypt hashing, RBAC.</li>\n                <li>Outbound webhooks with retry and delivery logs.</li>\n                <li>Enable / disable plugins without a server restart.</li>\n                <li>1,851+ passing tests, TDD as the development standard.</li>\n                <li>BSL 1.1 — self-host for yourself free; production use needs a licence.</li>\n              </ul>\n              <div class=\"vbwd-callout\">\n                <p>Want the pricing? <a href=\"/pricing-native\" class=\"vbwd-btn\">See plans →</a></p>\n              </div>\n            </section>\n\n          </div>\n        </article>", "seo": {"robots": "index,follow", "canonical_url": null, "meta_description": "VBWD Doctor: a worked example of running the VBWD platform for private doctors, dentists, physiotherapists, therapists and small clinics."}}</script>
   </body>
 </html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>Book Now</title>
-    <meta name="robots" content="noindex,nofollow" data-seo="ssr" />
+    <meta name="robots" content="index,follow" data-seo="ssr" />
     <meta property="og:title" content="Book Now" data-seo="ssr" />
     <meta name="twitter:card" content="summary_large_image" data-seo="ssr" />
     <meta name="twitter:title" content="Book Now" data-seo="ssr" />
@@ -425,10 +425,28 @@ footer {
   .cms-widget--header-nav .cms-menu__sub { position: static !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; max-height: 0; overflow: hidden; display: block !important; transition: max-height 0.25s ease; }
   .cms-widget--header-nav .cms-menu__sub--open { max-height: 600px; }
   .cms-widget--header-nav .cms-menu__sub .cms-menu__link { padding-left: 2.5rem !important; font-size: 0.9rem !important; opacity: 0.85; }
-}</style>
+}
+
+/* VBWD_EDGE_ALIGN:v1 — header nav, breadcrumb + content on one vertical line. Do not edit by hand. */
+.cms-area--hero, .cms-area--cta,
+.cms-widget--header-nav, .cms-widget--footer-nav, .cms-widget--vue,
+.cms-breadcrumb, .cms-area--content .container {
+  max-width: var(--container-max, 1200px) !important;
+  width: 100% !important;
+  margin-left: auto !important; margin-right: auto !important;
+  padding-left: var(--edge-inset) !important;
+  padding-right: var(--edge-inset) !important;
+  box-sizing: border-box !important;
+}
+.cms-widget--header-nav .cms-menu, .cms-widget--footer-nav .cms-menu { padding-left: 0 !important; margin-left: 0 !important; }
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link { padding-left: 0 !important; }
+.cms-breadcrumb { gap: 0 !important; padding-left: var(--edge-inset) !important; }
+.cms-breadcrumb > a:first-of-type, .cms-breadcrumb > .cms-breadcrumb__link:first-of-type { margin-left: 0 !important; padding-left: 0 !important; }
+@media (max-width: 700px) { :root { --edge-inset: 1rem; } }
+/* /VBWD_EDGE_ALIGN:v1 */</style>
   </head>
   <body>
     <div id="app"></div>
-    <script type="application/json" id="__POST__">{"slug": "booking-form", "title": "Booking Form", "content_html": "", "seo": {"robots": "noindex,nofollow", "canonical_url": null, "meta_description": null}}</script>
+    <script type="application/json" id="__POST__">{"slug": "booking-form", "title": "Booking Form", "content_html": "", "seo": {"robots": "index,follow", "canonical_url": null, "meta_description": null}}</script>
   </body>
 </html>

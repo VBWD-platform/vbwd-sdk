@@ -390,7 +390,24 @@
   .vbwd-page .vbwd-hero { margin: 0 0.5rem 2rem; padding: 2.75rem 1rem; }
   .vbwd-page .vbwd-container { padding: 0 1.1rem; }
   .vbwd-page ul.vbwd-list { grid-template-columns: 1fr; }
-}</style>
+}
+/* VBWD_EDGE_ALIGN:v1 — header nav, breadcrumb + content on one vertical line. Do not edit by hand. */
+.cms-area--hero, .cms-area--cta,
+.cms-widget--header-nav, .cms-widget--footer-nav, .cms-widget--vue,
+.cms-breadcrumb, .cms-area--content .container {
+  max-width: var(--container-max, 1200px) !important;
+  width: 100% !important;
+  margin-left: auto !important; margin-right: auto !important;
+  padding-left: var(--edge-inset) !important;
+  padding-right: var(--edge-inset) !important;
+  box-sizing: border-box !important;
+}
+.cms-widget--header-nav .cms-menu, .cms-widget--footer-nav .cms-menu { padding-left: 0 !important; margin-left: 0 !important; }
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link { padding-left: 0 !important; }
+.cms-breadcrumb { gap: 0 !important; padding-left: var(--edge-inset) !important; }
+.cms-breadcrumb > a:first-of-type, .cms-breadcrumb > .cms-breadcrumb__link:first-of-type { margin-left: 0 !important; padding-left: 0 !important; }
+@media (max-width: 700px) { :root { --edge-inset: 1rem; } }
+/* /VBWD_EDGE_ALIGN:v1 */</style>
   </head>
   <body>
     <div id="app"><p></p><p></p><img src="/uploads/images/taro-card-reading.jpg" alt=""><p>Building a SaaS product means assembling a lot of moving parts — authentication, payments, bookings, content management, mobile apps.</p><p>VBWD ships all of it as a single, self-hosted full-stack SDK so you can stop gluing tools together and start building your actual product.</p><p>At its core, VBWD is a Python-based backend paired with four frontend SDKs: an admin web interface, a user-facing web interface, iOS, and Android. All four talk to the same self-hosted backend, so there's no fragmented infrastructure to manage and no data leaving your server unless you want it to.</p><p></p><p><strong>Built for performance and developer ownership</strong></p><p></p><p>VBWD is DevOps-first by design. With the right configuration, average response times sit at 24ms — roughly ten times faster than Symfony or Laravel. The entire codebase is 100% tested, built around a plugin system and event bus architecture that makes extending functionality clean and predictable. A single unified plugin protocol means every component behaves consistently, whether you're building on top of it or integrating with it.</p><p></p><p><strong>What ships out of the box</strong></p><p></p><ul><li><p><strong>Subscription plugin</strong> — sell services with recurring payments and 24+ supported payment methods, including digital wallets from markets worldwide</p></li><li><p><strong>Booking plugin</strong> — Calendly-style reservation management with predefined types for hotel rooms, spots in a class or on a bus, and online or offline appointments</p></li><li><p><strong>CMS plugin</strong> — a fully functional multisite content management system with flexible terms and taxonomy configuration</p></li></ul><p>Every component is importable and exportable by default, so your data is always portable.</p><p></p><p></p><p><strong>Compliance and security built in</strong></p><p></p><p>VBWD is GDPR/DSGVO compliant with private data protection at the architecture level — not bolted on as an afterthought. Secure JWT authentication and a consistent API surface across all plugins mean you're not trading developer experience for security.</p><p>If you've outgrown off-the-shelf platforms but don't want to build infrastructure from scratch, VBWD is the foundation you've been looking for.</p></div>

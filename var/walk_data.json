@@ -1,0 +1,164 @@
+{
+  "convo": [
+    {
+      "from": "user",
+      "text": "/tarifs",
+      "choices": []
+    },
+    {
+      "from": "bot",
+      "text": "Choose a tarif plan (a new pick replaces the current one):",
+      "choices": [
+        {
+          "label": "Starter",
+          "action_data": "subscription:plan:7f0ef36f-1332-40f0-b21b-4c946af2f6b3"
+        },
+        {
+          "label": "Pro",
+          "action_data": "subscription:plan:94587599-56f6-4674-8eb3-a16b0409c712"
+        },
+        {
+          "label": "Business",
+          "action_data": "subscription:plan:b3fca61f-fa86-4774-971d-edf09e10494f"
+        }
+      ]
+    },
+    {
+      "from": "user",
+      "text": "Pro",
+      "choices": []
+    },
+    {
+      "from": "bot",
+      "text": "Plan selected.",
+      "choices": []
+    },
+    {
+      "from": "user",
+      "text": "/add-ons",
+      "choices": []
+    },
+    {
+      "from": "bot",
+      "text": "Tap an add-on to add or remove it:",
+      "choices": [
+        {
+          "label": "Priority Support",
+          "action_data": "subscription:addon:60614108-4bfd-4dc0-8eb4-283c38b36acd"
+        },
+        {
+          "label": "Extra Seats (5)",
+          "action_data": "subscription:addon:a63124ec-3edc-4020-8bbb-22803072a184"
+        }
+      ]
+    },
+    {
+      "from": "user",
+      "text": "Priority Support",
+      "choices": []
+    },
+    {
+      "from": "bot",
+      "text": "Add-on updated.",
+      "choices": []
+    },
+    {
+      "from": "user",
+      "text": "/tokens",
+      "choices": []
+    },
+    {
+      "from": "bot",
+      "text": "You have 2535 tokens.\nTap a token bundle to add or remove it:",
+      "choices": [
+        {
+          "label": "1,000 tokens",
+          "action_data": "subscription:bundle:7177bec4-f0fd-43c8-82d1-87be75ca1386"
+        },
+        {
+          "label": "5,000 tokens",
+          "action_data": "subscription:bundle:efe14d47-5ab9-46e5-8d6f-ad8f3792c664"
+        },
+        {
+          "label": "20,000 tokens",
+          "action_data": "subscription:bundle:f2cff848-973b-4ded-871f-e7bc9d98984c"
+        }
+      ]
+    },
+    {
+      "from": "user",
+      "text": "5,000 tokens",
+      "choices": []
+    },
+    {
+      "from": "bot",
+      "text": "Token bundle updated.",
+      "choices": []
+    },
+    {
+      "from": "user",
+      "text": "/checkout",
+      "choices": []
+    },
+    {
+      "from": "bot",
+      "text": "Tap to complete your purchase in the browser:\nhttp://localhost:8080/checkout?draft=Pyxko_tECF2P1TAyFvIcXIE1qOnpRW41",
+      "choices": []
+    }
+  ],
+  "draft_token": "Pyxko_tECF2P1TAyFvIcXIE1qOnpRW41",
+  "checkout_link": "http://localhost:8080/checkout?draft=Pyxko_tECF2P1TAyFvIcXIE1qOnpRW41",
+  "balance": 2535,
+  "user_email": "test@example.com",
+  "catalog": {
+    "plans": [
+      {
+        "name": "Starter",
+        "price": 9.0,
+        "desc": "For trying things out."
+      },
+      {
+        "name": "Pro",
+        "price": 29.0,
+        "desc": "For growing teams."
+      },
+      {
+        "name": "Business",
+        "price": 99.0,
+        "desc": "For scale."
+      }
+    ],
+    "addons": [
+      {
+        "name": "Priority Support",
+        "price": 15.0,
+        "desc": "Faster responses."
+      },
+      {
+        "name": "Extra Seats (5)",
+        "price": 20.0,
+        "desc": "Five more team members."
+      }
+    ],
+    "bundles": [
+      {
+        "name": "1,000 tokens",
+        "price": 5.0,
+        "tokens": 1000,
+        "desc": "Starter pack"
+      },
+      {
+        "name": "5,000 tokens",
+        "price": 20.0,
+        "tokens": 5000,
+        "desc": "Best value"
+      },
+      {
+        "name": "20,000 tokens",
+        "price": 70.0,
+        "tokens": 20000,
+        "desc": "Power user"
+      }
+    ]
+  }
+}

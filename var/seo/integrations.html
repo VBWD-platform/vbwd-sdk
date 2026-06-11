@@ -2,16 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Integrations — VBWD</title>
-    <meta name="description" content="Third-party systems VBWD typically connects to: payment rails, email, calendars, AI, shipping, analytics." data-seo="ssr" />
-    <meta name="keywords" content="vbwd, core, integrations, self-hosted saas, open source" data-seo="ssr" />
+    <title>Integrations — VBWD Doctor</title>
+    <meta name="description" content="Third-party systems VBWD Doctor typically connects to: payment rails, email, calendars, AI, shipping, analytics." data-seo="ssr" />
+    <meta name="keywords" content="vbwd, doctor, integrations, self-hosted saas, open source" data-seo="ssr" />
     <meta name="robots" content="index,follow" data-seo="ssr" />
-    <meta property="og:title" content="Integrations — VBWD" data-seo="ssr" />
-    <meta property="og:description" content="Third-party systems VBWD typically connects to: payment rails, email, calendars, AI, shipping, analytics." data-seo="ssr" />
+    <meta property="og:title" content="Integrations — VBWD Doctor" data-seo="ssr" />
+    <meta property="og:description" content="Third-party systems VBWD Doctor typically connects to: payment rails, email, calendars, AI, shipping, analytics." data-seo="ssr" />
     <meta name="twitter:card" content="summary_large_image" data-seo="ssr" />
-    <meta name="twitter:title" content="Integrations — VBWD" data-seo="ssr" />
-    <meta name="twitter:description" content="Third-party systems VBWD typically connects to: payment rails, email, calendars, AI, shipping, analytics." data-seo="ssr" />
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Integrations — VBWD", "url": null, "description": "Third-party systems VBWD typically connects to: payment rails, email, calendars, AI, shipping, analytics."}</script>
+    <meta name="twitter:title" content="Integrations — VBWD Doctor" data-seo="ssr" />
+    <meta name="twitter:description" content="Third-party systems VBWD Doctor typically connects to: payment rails, email, calendars, AI, shipping, analytics." data-seo="ssr" />
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Integrations — VBWD Doctor", "url": null, "description": "Third-party systems VBWD Doctor typically connects to: payment rails, email, calendars, AI, shipping, analytics."}</script>
     <!--vbwd:assets-->
     <script type="module" src="/assets/index.js"></script>
     <link rel="stylesheet" href="/assets/index.css" />
@@ -431,11 +431,29 @@ footer {
   .cms-widget--header-nav .cms-menu__sub .cms-menu__link { padding-left: 2.5rem !important; font-size: 0.9rem !important; opacity: 0.85; }
 }
 
+/* VBWD_EDGE_ALIGN:v1 — header nav, breadcrumb + content on one vertical line. Do not edit by hand. */
+.cms-area--hero, .cms-area--cta,
+.cms-widget--header-nav, .cms-widget--footer-nav, .cms-widget--vue,
+.cms-breadcrumb, .cms-area--content .container {
+  max-width: var(--container-max, 1200px) !important;
+  width: 100% !important;
+  margin-left: auto !important; margin-right: auto !important;
+  padding-left: var(--edge-inset) !important;
+  padding-right: var(--edge-inset) !important;
+  box-sizing: border-box !important;
+}
+.cms-widget--header-nav .cms-menu, .cms-widget--footer-nav .cms-menu { padding-left: 0 !important; margin-left: 0 !important; }
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link { padding-left: 0 !important; }
+.cms-breadcrumb { gap: 0 !important; padding-left: var(--edge-inset) !important; }
+.cms-breadcrumb > a:first-of-type, .cms-breadcrumb > .cms-breadcrumb__link:first-of-type { margin-left: 0 !important; padding-left: 0 !important; }
+@media (max-width: 700px) { :root { --edge-inset: 1rem; } }
+/* /VBWD_EDGE_ALIGN:v1 */
+
 .vbwd-page {
-  --vbwd-accent: #2563eb;
-  --vbwd-accent-soft: #dbeafe;
-  --vbwd-accent-dark: #1d4ed8;
-  --vbwd-gradient: linear-gradient(135deg, #1d4ed8 0%, #5b21b6 100%);
+  --vbwd-accent: #059669;
+  --vbwd-accent-soft: #d1fae5;
+  --vbwd-accent-dark: #047857;
+  --vbwd-gradient: linear-gradient(135deg, #059669 0%, #0891b2 100%);
   --vbwd-text: #0f172a;
   --vbwd-text-muted: #475569;
   --vbwd-surface: #ffffff;
@@ -811,9 +829,9 @@ footer {
     <div id="app"><article class="vbwd-page vbwd-page--integrations">
           <header class="vbwd-hero">
   <span class="vbwd-hero__eyebrow">Integrations</span>
-  <h1>⚡ VBWD</h1>
-  <p class="vbwd-hero__lead">A sales platform for the digital world — SaaS subscriptions, CMS, shop, booking and a token economy on one self-hosted backend, two Vue front-ends and one plugin contract.</p>
-  <div class="vbwd-hero__badge-row"><span class="vbwd-hero__badge">landing1</span><span class="vbwd-hero__badge">cms</span><span class="vbwd-hero__badge">mainchat</span><span class="vbwd-hero__badge">chat</span><span class="vbwd-hero__badge">theme-switcher</span><span class="vbwd-hero__badge">analytics</span></div>
+  <h1>⚕️ VBWD Doctor</h1>
+  <p class="vbwd-hero__lead">Appointments, billing and a patient portal for private practice.</p>
+  <div class="vbwd-hero__badge-row"><span class="vbwd-hero__badge">cms</span><span class="vbwd-hero__badge">mainchat</span><span class="vbwd-hero__badge">theme-switcher</span><span class="vbwd-hero__badge">stripe</span><span class="vbwd-hero__badge">mollie</span><span class="vbwd-hero__badge">analytics</span></div>
 </header>
           <div class="vbwd-container">
 
@@ -823,7 +841,7 @@ footer {
               <p>
                 VBWD is deliberately open at the edges: any third-party system
                 can be reached through a plugin adapter, outbound webhooks or
-                the REST API. The list below is what <strong>VBWD</strong>
+                the REST API. The list below is what <strong>VBWD Doctor</strong>
                 typically connects to.
               </p>
             </section>
@@ -831,7 +849,7 @@ footer {
             <section>
               <span class="vbwd-eyebrow">Ecosystem</span>
               <h2>Integrations for this vertical</h2>
-              <div class="vbwd-grid"><div class="vbwd-card"><div class="vbwd-card__title">SMTP / Postmark / SendGrid</div><p class="vbwd-card__desc">Transactional email — password resets, invoices, webhook notifications.</p></div><div class="vbwd-card"><div class="vbwd-card__title">Mailchimp</div><p class="vbwd-card__desc">Newsletter sync for onboarded users.</p></div><div class="vbwd-card"><div class="vbwd-card__title">OpenAI-compatible LLMs</div><p class="vbwd-card__desc">OpenAI, Azure OpenAI, local Ollama, LM Studio, vLLM.</p></div><div class="vbwd-card"><div class="vbwd-card__title">S3-compatible storage</div><p class="vbwd-card__desc">Future-proof swap-in for the CMS image store.</p></div><div class="vbwd-card"><div class="vbwd-card__title">GitHub / GitLab</div><p class="vbwd-card__desc">GHRM plugin for OSS publishing, releases, issue tracking.</p></div><div class="vbwd-card"><div class="vbwd-card__title">Zapier / n8n via webhooks</div><p class="vbwd-card__desc">Outbound webhooks on every subscription lifecycle event.</p></div></div>
+              <div class="vbwd-grid"><div class="vbwd-card"><div class="vbwd-card__title">Twilio</div><p class="vbwd-card__desc">SMS reminders — material no-show reduction in every study.</p></div><div class="vbwd-card"><div class="vbwd-card__title">Google Calendar / Outlook</div><p class="vbwd-card__desc">Each clinician keeps their own calendar.</p></div><div class="vbwd-card"><div class="vbwd-card__title">SMTP / Postmark</div><p class="vbwd-card__desc">Appointment confirmations and pre-visit intake forms.</p></div><div class="vbwd-card"><div class="vbwd-card__title">Zoom / Jitsi</div><p class="vbwd-card__desc">Telehealth link auto-generated per online appointment.</p></div><div class="vbwd-card"><div class="vbwd-card__title">DATEV / Lexoffice (DE)</div><p class="vbwd-card__desc">Invoice export for German tax accountants (planned).</p></div><div class="vbwd-card"><div class="vbwd-card__title">Webhooks</div><p class="vbwd-card__desc">Push appointment events into any PMS or EHR.</p></div></div>
             </section>
 
             <section>
@@ -872,6 +890,6 @@ footer {
 
           </div>
         </article></div>
-    <script type="application/json" id="__POST__">{"slug": "integrations", "title": "Integrations — VBWD", "content_html": "<article class=\"vbwd-page vbwd-page--integrations\">\n          <header class=\"vbwd-hero\">\n  <span class=\"vbwd-hero__eyebrow\">Integrations</span>\n  <h1>⚡ VBWD</h1>\n  <p class=\"vbwd-hero__lead\">A sales platform for the digital world — SaaS subscriptions, CMS, shop, booking and a token economy on one self-hosted backend, two Vue front-ends and one plugin contract.</p>\n  <div class=\"vbwd-hero__badge-row\"><span class=\"vbwd-hero__badge\">landing1</span><span class=\"vbwd-hero__badge\">cms</span><span class=\"vbwd-hero__badge\">mainchat</span><span class=\"vbwd-hero__badge\">chat</span><span class=\"vbwd-hero__badge\">theme-switcher</span><span class=\"vbwd-hero__badge\">analytics</span></div>\n</header>\n          <div class=\"vbwd-container\">\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Philosophy</span>\n              <h2>Plug-and-play at the boundary</h2>\n              <p>\n                VBWD is deliberately open at the edges: any third-party system\n                can be reached through a plugin adapter, outbound webhooks or\n                the REST API. The list below is what <strong>VBWD</strong>\n                typically connects to.\n              </p>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Ecosystem</span>\n              <h2>Integrations for this vertical</h2>\n              <div class=\"vbwd-grid\"><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">SMTP / Postmark / SendGrid</div><p class=\"vbwd-card__desc\">Transactional email — password resets, invoices, webhook notifications.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Mailchimp</div><p class=\"vbwd-card__desc\">Newsletter sync for onboarded users.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">OpenAI-compatible LLMs</div><p class=\"vbwd-card__desc\">OpenAI, Azure OpenAI, local Ollama, LM Studio, vLLM.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">S3-compatible storage</div><p class=\"vbwd-card__desc\">Future-proof swap-in for the CMS image store.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">GitHub / GitLab</div><p class=\"vbwd-card__desc\">GHRM plugin for OSS publishing, releases, issue tracking.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Zapier / n8n via webhooks</div><p class=\"vbwd-card__desc\">Outbound webhooks on every subscription lifecycle event.</p></div></div>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Generic</span>\n              <h2>Integration surfaces available everywhere</h2>\n              <div class=\"vbwd-grid\">\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">REST API</div>\n                  <p class=\"vbwd-card__desc\">\n                    65+ endpoints under <code>/api/v1/*</code>. Auth via JWT,\n                    machine-to-machine via API keys (planned).\n                  </p>\n                </div>\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">Outbound webhooks</div>\n                  <p class=\"vbwd-card__desc\">\n                    Fire on every subscription and payment event. Configurable\n                    endpoints per event type, retry with backoff, delivery log.\n                  </p>\n                </div>\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">Plugin adapters</div>\n                  <p class=\"vbwd-card__desc\">\n                    Wrap any third party as a backend plugin under\n                    <code>plugins/&lt;name&gt;/</code>. Follows the\n                    <code>stripe</code> or <code>mollie</code> reference.\n                  </p>\n                </div>\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">Zapier / n8n / Make</div>\n                  <p class=\"vbwd-card__desc\">\n                    Consume webhooks and drive inbound actions through the REST\n                    API without writing code.\n                  </p>\n                </div>\n              </div>\n            </section>\n\n          </div>\n        </article>", "seo": {"robots": "index,follow", "canonical_url": null, "meta_description": "Third-party systems VBWD typically connects to: payment rails, email, calendars, AI, shipping, analytics."}}</script>
+    <script type="application/json" id="__POST__">{"slug": "integrations", "title": "Integrations — VBWD Doctor", "content_html": "<article class=\"vbwd-page vbwd-page--integrations\">\n          <header class=\"vbwd-hero\">\n  <span class=\"vbwd-hero__eyebrow\">Integrations</span>\n  <h1>⚕️ VBWD Doctor</h1>\n  <p class=\"vbwd-hero__lead\">Appointments, billing and a patient portal for private practice.</p>\n  <div class=\"vbwd-hero__badge-row\"><span class=\"vbwd-hero__badge\">cms</span><span class=\"vbwd-hero__badge\">mainchat</span><span class=\"vbwd-hero__badge\">theme-switcher</span><span class=\"vbwd-hero__badge\">stripe</span><span class=\"vbwd-hero__badge\">mollie</span><span class=\"vbwd-hero__badge\">analytics</span></div>\n</header>\n          <div class=\"vbwd-container\">\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Philosophy</span>\n              <h2>Plug-and-play at the boundary</h2>\n              <p>\n                VBWD is deliberately open at the edges: any third-party system\n                can be reached through a plugin adapter, outbound webhooks or\n                the REST API. The list below is what <strong>VBWD Doctor</strong>\n                typically connects to.\n              </p>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Ecosystem</span>\n              <h2>Integrations for this vertical</h2>\n              <div class=\"vbwd-grid\"><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Twilio</div><p class=\"vbwd-card__desc\">SMS reminders — material no-show reduction in every study.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Google Calendar / Outlook</div><p class=\"vbwd-card__desc\">Each clinician keeps their own calendar.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">SMTP / Postmark</div><p class=\"vbwd-card__desc\">Appointment confirmations and pre-visit intake forms.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Zoom / Jitsi</div><p class=\"vbwd-card__desc\">Telehealth link auto-generated per online appointment.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">DATEV / Lexoffice (DE)</div><p class=\"vbwd-card__desc\">Invoice export for German tax accountants (planned).</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\">Webhooks</div><p class=\"vbwd-card__desc\">Push appointment events into any PMS or EHR.</p></div></div>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Generic</span>\n              <h2>Integration surfaces available everywhere</h2>\n              <div class=\"vbwd-grid\">\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">REST API</div>\n                  <p class=\"vbwd-card__desc\">\n                    65+ endpoints under <code>/api/v1/*</code>. Auth via JWT,\n                    machine-to-machine via API keys (planned).\n                  </p>\n                </div>\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">Outbound webhooks</div>\n                  <p class=\"vbwd-card__desc\">\n                    Fire on every subscription and payment event. Configurable\n                    endpoints per event type, retry with backoff, delivery log.\n                  </p>\n                </div>\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">Plugin adapters</div>\n                  <p class=\"vbwd-card__desc\">\n                    Wrap any third party as a backend plugin under\n                    <code>plugins/&lt;name&gt;/</code>. Follows the\n                    <code>stripe</code> or <code>mollie</code> reference.\n                  </p>\n                </div>\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">Zapier / n8n / Make</div>\n                  <p class=\"vbwd-card__desc\">\n                    Consume webhooks and drive inbound actions through the REST\n                    API without writing code.\n                  </p>\n                </div>\n              </div>\n            </section>\n\n          </div>\n        </article>", "seo": {"robots": "index,follow", "canonical_url": null, "meta_description": "Third-party systems VBWD Doctor typically connects to: payment rails, email, calendars, AI, shipping, analytics."}}</script>
   </body>
 </html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Contact (Unified)</title>
+    <meta name="robots" content="index,follow" data-seo="ssr" />
+    <meta property="og:title" content="Contact (Unified)" data-seo="ssr" />
+    <meta name="twitter:card" content="summary_large_image" data-seo="ssr" />
+    <meta name="twitter:title" content="Contact (Unified)" data-seo="ssr" />
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Contact (Unified)", "url": null, "description": null}</script>
+    <!--vbwd:assets-->
+    <script type="module" src="/assets/index.js"></script>
+    <link rel="stylesheet" href="/assets/index.css" />
+    <!--/vbwd:assets-->
+    <style data-seo="ssr-style">*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif);
+  font-size: 16px;
+  line-height: 1.65;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-heading);
+  font-family: var(--font-heading, inherit);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.65em;
+  font-weight: 700;
+}
+h1 { font-size: clamp(2.2rem, 4vw, 3.25rem); font-weight: 800; }
+h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); margin-top: 0.5em; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.1rem; }
+p  { margin: 0 0 1em; color: var(--color-text); }
+a  {
+  color: var(--color-link);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+a:hover { color: var(--color-link-hover); text-decoration: underline; text-underline-offset: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+code, kbd, samp {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-dark);
+  padding: 0.15em 0.45em;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+blockquote {
+  border-left: 4px solid var(--color-accent);
+  margin: 1.5em 0;
+  padding: 0.6em 1.2em;
+  color: var(--color-text-muted);
+  background: var(--color-surface-soft);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+}
+blockquote cite { display: block; font-size: 0.85em; font-style: normal; color: var(--color-text-muted); margin-top: 0.5em; }
+ul, ol { margin: 0 0 1em; padding-left: 1.5em; }
+li { margin-bottom: 0.35em; }
+hr { border: 0; border-top: 1px solid var(--color-border); margin: 2.5rem 0; }
+
+/* Layout */
+.container {
+  max-width: var(--container-max);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+section { padding: clamp(3rem, 6vw, 5rem) 0; }
+header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.75rem 0;
+}
+nav a { color: var(--color-text); font-weight: 500; padding: 0 0.875rem; }
+nav a:hover { color: var(--color-accent); text-decoration: none; }
+
+/* Edge-inset system.
+ *
+ * --edge-inset is the horizontal breathing-room between every top-level
+ * page element (hero, cta-band, nav, breadcrumb, plugin widget) and the
+ * viewport border. Narrow / 1200 themes set it to 0 — the natural
+ * (viewport - container-max) / 2 margin already provides inset. Fullwidth
+ * themes set it to 1.5rem (otherwise widgets would kiss the edge).
+ * At narrow viewports we bump it to 1rem so nothing ever hits the phone
+ * viewport border.
+ *
+ * Every top-level widget wrapper (header-nav, footer-nav, breadcrumb,
+ * generic .cms-widget--vue, .cms-widget--html) and layout areas get the
+ * same max-width + margin:auto + padding:0 var(--edge-inset) geometry,
+ * so the outer-left edge of every widget sits on one vertical line. */
+:root { --edge-inset: 0rem; }
+
+.cms-area--hero,
+.cms-area--cta,
+.cms-widget--header-nav,
+.cms-widget--footer-nav,
+.cms-widget--vue,
+.cms-breadcrumb {
+  max-width: var(--container-max) !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--edge-inset) !important;
+  padding-right: var(--edge-inset) !important;
+  box-sizing: border-box !important;
+}
+
+/* Zero out nested ul + link/crumb left padding so the first link / crumb
+ * sits flush with the wrapper's inner-left edge — which lines up with
+ * the hero's / cta-band's outer-left edge. */
+.cms-widget--header-nav .cms-menu,
+.cms-widget--footer-nav .cms-menu {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+/* All menu items share the default .cms-menu__link padding so the
+ * first one lines up visually with its siblings. Previously the first
+ * link was pinned to padding-left:0 to make it flush with the hero /
+ * cta-band outer edge, but that made item #1 stick out to the left of
+ * items #2..N. Visual consistency inside the menu wins. */
+.cms-widget--header-nav .cms-burger {
+  margin-left: -6px;   /* neutralise the button's own 6px inner padding */
+}
+/* Breadcrumb layout: zero flex gap and use explicit symmetric margins on
+ * the separator so "X / Y" always has identical spacing on both sides of
+ * the "/" glyph. First visible link sits flush with the wrapper's
+ * content-left edge — same vertical line as the burger icon. */
+.cms-breadcrumb { gap: 0 !important; }
+.cms-breadcrumb a,
+.cms-breadcrumb__link,
+.cms-breadcrumb__current {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.cms-breadcrumb__separator {
+  margin: 0 0.5rem !important;
+  padding: 0 !important;
+  display: inline-block;
+  text-align: center;
+}
+.cms-breadcrumb > a:first-of-type,
+.cms-breadcrumb > .cms-breadcrumb__link:first-of-type {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* Plugin-widget inner layout reset: some Vue widgets (e.g. GHRM) add
+ * horizontal padding to inner grid / header / card blocks that shifts
+ * titles right of the menu + breadcrumb outer edge. Zero those out so
+ * the whole page sits on one vertical line. */
+.cms-widget--vue .ghrm-grid,
+.cms-widget--vue .ghrm-list-header,
+.cms-widget--vue .ghrm-category-index,
+.cms-widget--vue .ghrm-category-index__title,
+.cms-widget--vue .ghrm-detail > * { padding-left: 0 !important; padding-right: 0 !important; }
+
+/* Breadcrumb text colors: the breadcrumb widget's config.css hard-codes
+ * mid-gray text which disappears on dark themes. Override with theme
+ * tokens so breadcrumb stays legible across every palette. */
+.cms-breadcrumb { color: var(--color-text-muted) !important; }
+.cms-breadcrumb a,
+.cms-breadcrumb__link { color: var(--color-link, var(--color-accent)) !important; }
+.cms-breadcrumb a:hover,
+.cms-breadcrumb__link:hover { color: var(--color-link-hover, var(--color-accent-dark)) !important; }
+.cms-breadcrumb__current { color: var(--color-heading) !important; font-weight: 500; }
+.cms-breadcrumb__separator { color: var(--color-text-muted) !important; opacity: 0.5; }
+
+footer {
+  background: var(--color-surface-soft);
+  border-top: 1px solid var(--color-border);
+  padding: 2.5rem 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* Buttons — 4 variants, always contrast-safe */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.05s;
+  line-height: 1.2;
+}
+.btn:hover { background: var(--color-surface-soft); border-color: var(--color-text-muted); text-decoration: none; }
+.btn:active { transform: translateY(1px); }
+.btn--accent {
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent);
+}
+.btn--accent:hover { background: var(--color-accent-dark); border-color: var(--color-accent-dark); color: var(--color-accent-fg); }
+.btn--contrast {
+  background: var(--color-contrast-bg);
+  color: var(--color-contrast-fg);
+  border-color: var(--color-contrast-bg);
+}
+.btn--contrast:hover { background: var(--color-contrast-hover-bg); border-color: var(--color-contrast-hover-bg); color: var(--color-contrast-fg); }
+.btn[disabled], .btn.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+/* Buttons inside dark sections (.hero / .cta-band) — re-assert the
+ * standard button contrast. Otherwise `.hero a { color: inherit }`
+ * bleeds into plain `.btn` turning white text on white background. */
+.hero .btn, .cta-band .btn {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-surface);
+}
+.hero .btn:hover, .cta-band .btn:hover {
+  background: var(--color-surface-soft);
+  color: var(--color-text);
+}
+.hero .btn--accent, .cta-band .btn--accent {
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent);
+}
+.hero .btn--contrast, .cta-band .btn--contrast {
+  background: var(--color-contrast-bg);
+  color: var(--color-contrast-fg);
+  border-color: var(--color-contrast-bg);
+}
+
+/* Cards + feature grid */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Hero */
+.hero {
+  background: var(--color-gradient, var(--color-accent));
+  color: var(--color-accent-fg, #fff);
+  padding: clamp(3.5rem, 8vw, 6rem) 1.5rem;
+  text-align: center;
+  border-radius: 22px;
+  margin: 1rem auto 3rem;
+  max-width: var(--container-max);
+  position: relative;
+  overflow: hidden;
+}
+.hero h1, .hero h2, .hero h3, .hero p, .hero a, .hero li { color: inherit; }
+.hero code { color: inherit; background: rgba(255,255,255,0.15); }
+.hero__eyebrow {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.hero__subtitle {
+  max-width: 720px;
+  margin: 0 auto 1.75rem;
+  font-size: 1.15rem;
+  opacity: 0.92;
+}
+.hero__ctas { display: inline-flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+
+/* CTA band */
+.cta-band {
+  background: var(--color-gradient, var(--color-accent));
+  color: var(--color-accent-fg, #fff);
+  padding: clamp(2.5rem, 5vw, 4rem) 1.5rem;
+  text-align: center;
+  border-radius: 18px;
+  margin: 3rem auto;
+  max-width: var(--container-max);
+}
+.cta-band h1, .cta-band h2, .cta-band h3, .cta-band p, .cta-band a, .cta-band li { color: inherit; }
+.cta-band code { color: inherit; background: rgba(255,255,255,0.15); }
+
+/* Columns (2 / 3) */
+.cols-2, .cols-3 { display: grid; gap: 1.5rem; }
+.cols-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.cols-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+/* Carousel (CSS-only scroll-snap) */
+.carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+  margin: 1.5rem 0;
+}
+.carousel > * {
+  flex: 0 0 clamp(240px, 35vw, 320px);
+  scroll-snap-align: start;
+}
+
+/* Testimonial / pull quote */
+.testimonial {
+  text-align: center;
+  max-width: 780px;
+  margin: 2.5rem auto;
+  padding: 2rem 1.5rem;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+.testimonial p { font-size: 1.15rem; font-style: italic; color: var(--color-text); }
+.testimonial cite { display: block; margin-top: 1rem; font-size: 0.9rem; color: var(--color-text-muted); font-style: normal; }
+
+/* Pricing / plan row */
+.plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+.plan { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 14px; padding: 1.75rem; }
+.plan--highlight { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-soft); }
+.plan__price { font-size: 2.25rem; font-weight: 800; color: var(--color-heading); margin: 0.5rem 0 1rem; }
+.plan ul { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+.plan li { padding: 0.4rem 0; border-bottom: 1px solid var(--color-border); }
+.plan li:last-child { border-bottom: 0; }
+
+/* Responsive tweaks — at narrow viewports bump --edge-inset to 1rem so
+ * nothing kisses the viewport border. Because hero / cta / nav /
+ * breadcrumb all read from --edge-inset, they stay perfectly aligned. */
+@media (max-width: 640px) {
+  :root { --edge-inset: 1rem; }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.4rem; }
+  .container { padding: 0 1rem; }
+  .hero { margin-left: 0; margin-right: 0; border-radius: 14px; }
+  .cta-band { margin-left: 0; margin-right: 0; border-radius: 12px; }
+}
+
+/* palette */
+:root {
+  --color-accent: #2563eb;
+  --color-accent-soft: #dbeafe;
+  --color-accent-dark: #1d4ed8;
+  --color-accent-fg: #ffffff;
+  --color-contrast-bg: #0f172a;
+  --color-contrast-fg: #f8fafc;
+  --color-contrast-hover-bg: #1e293b;
+  --color-link: #1d4ed8;
+  --color-link-hover: #1e40af;
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+  --color-heading: #0b1220;
+  --color-gradient: linear-gradient(135deg, #1d4ed8 0%, #5b21b6 100%);
+}
+
+/* width */
+:root {
+  --container-max: 1100px;
+  --edge-inset: 0rem;
+}
+
+/* header-nav — boxed themes (narrow / 1200):
+ *   ≥ 751 px  → horizontal row, no burger
+ *   ≤ 750 px  → burger drawer (standard mobile behaviour)
+ * Footer-nav stays horizontal at every viewport (its widget CSS forces that).
+ */
+@media (min-width: 751px) {
+  .cms-widget--header-nav .cms-burger { display: none !important; }
+  .cms-widget--header-nav .cms-menu-overlay { display: none !important; }
+  .cms-widget--header-nav .cms-menu {
+    display: flex !important; flex-direction: row !important; flex-wrap: wrap;
+    align-items: center;
+    position: static !important; width: auto; height: auto;
+    background: transparent; padding: 0; box-shadow: none;
+    overflow: visible;
+  }
+  .cms-widget--header-nav .cms-menu__item { position: relative; border-bottom: none; }
+  .cms-widget--header-nav .cms-menu__sub {
+    position: absolute; top: 100%; left: 0;
+    background: var(--color-surface, #fff);
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: 8px; min-width: 200px; z-index: 300;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    max-height: none; display: none;
+    padding: 0.35rem 0;
+  }
+  .cms-widget--header-nav .cms-menu__item:hover > .cms-menu__sub,
+  .cms-widget--header-nav .cms-menu__sub--open { display: block !important; }
+}
+@media (max-width: 750px) {
+  .cms-widget--header-nav .cms-burger { display: flex !important; position: relative !important; z-index: 400 !important; }
+  .cms-widget--header-nav .cms-menu {
+    display: flex !important; flex-direction: column !important; align-items: stretch !important;
+    position: fixed !important; top: 0; left: -100%;
+    width: min(320px, 88vw); height: 100dvh;
+    background: var(--color-bg, #fff);
+    padding: 4rem 0 2rem; overflow-y: auto; z-index: 300;
+    transition: left 0.28s ease;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  }
+  .cms-widget--header-nav .cms-menu--open { left: 0 !important; }
+  .cms-widget--header-nav .cms-menu__item { position: static !important; border-bottom: 1px solid var(--color-border, #e5e7eb); }
+  .cms-widget--header-nav .cms-menu__link { padding: 0.9rem 1.5rem !important; font-size: 1rem !important; justify-content: space-between !important; }
+  .cms-widget--header-nav .cms-menu__sub { position: static !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; max-height: 0; overflow: hidden; display: block !important; transition: max-height 0.25s ease; }
+  .cms-widget--header-nav .cms-menu__sub--open { max-height: 600px; }
+  .cms-widget--header-nav .cms-menu__sub .cms-menu__link { padding-left: 2.5rem !important; font-size: 0.9rem !important; opacity: 0.85; }
+}
+
+/* VBWD_EDGE_ALIGN:v1 — header nav, breadcrumb + content on one vertical line. Do not edit by hand. */
+.cms-area--hero, .cms-area--cta,
+.cms-widget--header-nav, .cms-widget--footer-nav, .cms-widget--vue,
+.cms-breadcrumb, .cms-area--content .container {
+  max-width: var(--container-max, 1200px) !important;
+  width: 100% !important;
+  margin-left: auto !important; margin-right: auto !important;
+  padding-left: var(--edge-inset) !important;
+  padding-right: var(--edge-inset) !important;
+  box-sizing: border-box !important;
+}
+.cms-widget--header-nav .cms-menu, .cms-widget--footer-nav .cms-menu { padding-left: 0 !important; margin-left: 0 !important; }
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link { padding-left: 0 !important; }
+.cms-breadcrumb { gap: 0 !important; padding-left: var(--edge-inset) !important; }
+.cms-breadcrumb > a:first-of-type, .cms-breadcrumb > .cms-breadcrumb__link:first-of-type { margin-left: 0 !important; padding-left: 0 !important; }
+@media (max-width: 700px) { :root { --edge-inset: 1rem; } }
+/* /VBWD_EDGE_ALIGN:v1 */</style>
+  </head>
+  <body>
+    <div id="app"><h1>Contact</h1></div>
+    <script type="application/json" id="__POST__">{"slug": "contact-unified", "title": "Contact (Unified)", "content_html": "<h1>Contact</h1>", "seo": {"robots": "index,follow", "canonical_url": null, "meta_description": null}}</script>
+  </body>
+</html>
