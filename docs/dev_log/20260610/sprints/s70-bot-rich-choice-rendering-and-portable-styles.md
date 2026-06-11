@@ -45,6 +45,26 @@ A first-class entity **`BotConversationStyle`** (`bot_meinchat`): `name`, `is_ac
 - 70.2: style CRUD + set-active; the exchanger **exports** the active style and **imports** it into a clean DB (round-trip equality); appears in the data-exchange manifest.
 - 70.3: fe applies the active style vars; storefront menus show only the clean demo set.
 
+## 2026-06-11 scope extension (owner)
+
+Verified the cards render in the real meinchat UI; catalog cleaned to the demo set. Owner asked for the full polish + two additions. **The structured-message vocabulary is generalised:** `BotReply` gains an optional **provider-neutral `meta: dict`** (`{kind, …}`) that each provider's sender translates (meinchat → `message.meta`; Telegram → its own formatting / text fallback). New `meta.kind`s — all rendered by `MessageBubble` and all degrading to the plain `body` on non-rich clients:
+
+- **`bot_choices`** (done in 70.0/70.1) — choice cards. **Add:** `BotChoice.hint` (e.g. `"€29/mo"`) shown right-aligned on the card; `meta.text` (a clean prompt) shown **instead of** the body's numbered fallback on card-clients (the numbered list stays in `body` for non-rich clients like today's iOS).
+- **`bot_menu`** (NEW) — styled command list. The built-in **`/help`** (bot-base) emits `{kind:"bot_menu", commands:[{command, description}]}`; `MessageBubble` renders a tidy list of command rows; tapping a row sends that command. No more run-on `/help` paragraph.
+- **`bot_cart`** (NEW) — styled cart card. New storefront cart commands operate on the **current draft**:
+  - **`/cart`** → `{kind:"bot_cart", items:[{name, quantity, unit_price, line_total}], total, currency}` — a nice cart summary (+ a Checkout affordance). `/checkout` may also append a `bot_cart`. Empty draft → a friendly "your cart is empty" state.
+  - **`/cart-clear`** → empties the draft; replies with the now-empty `bot_cart` (or a confirmation).
+  - **`/cart-edit`** → `bot_choices` titled "Tap any item to remove it" — each draft line is a choice whose `action_data` is a **remove** action (`subscription:remove:<item_type>:<item_id>`); tapping removes that line and replies with the updated edit list (or the empty-cart state). Needs a `remove`-action branch in the storefront `apply_action` + a `clear`/`remove` on the draft service.
+
+**Style application (70.3):** the fe-user fetches `GET /bot-conversation-style/active` and applies the `tokens` as `--vbwd-botchat-*` custom properties (today it only uses the CSS fallbacks). Cards/menus/cart all theme from these vars.
+
+### Extended sub-sprints
+| # | Title | Scope | Gate |
+|---|---|---|---|
+| **70.3** | Rich message kinds (backend) | `BotChoice.hint` + `BotReply.meta` (bot-base, provider-neutral); `/help`→`bot_menu`; storefront price `hint`s + `meta.text` clean prompt; new **`/cart`**→`bot_cart` from the draft; `bot_meinchat` carries `BotReply.meta`→`message.meta` + handles command-row taps; meinchat `meta` validation extended to `bot_menu`/`bot_cart` | `--plugin bot_base/meinchat/bot_meinchat/subscription --full` green |
+| **70.4** | Render kinds + apply style (fe-user) | `MessageBubble` renders `bot_menu` (command rows, tap→send command), `bot_cart` (cart card), `bot_choices` hints + `meta.text`; fetch + apply the active portable style vars | fe-user `--full` + e2e green |
+| **70.5** | Real capture + walkthrough | re-capture the real meinchat UI (cards + menu + cart + checkout) and refresh the walkthrough HTML with genuine screenshots | walkthrough updated |
+
 ## Cross-references
 - Unified data-exchange (S46): the `BaseModelExchanger` + `register_*_exchangers` pattern (shop/cms/discount).
 - [[reference_admin_config_select_static_only]] · [[project_checkout_cart_backed_selections]] · cart-backed checkout.

@@ -1,0 +1,602 @@
+{
+  "booking_resources": [
+    {
+      "availability": {
+        "lead_time_hours": 2,
+        "max_advance_days": 90,
+        "schedule": {
+          "fri": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "mon": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "sat": [],
+          "sun": [],
+          "thu": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "tue": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "wed": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ]
+        }
+      },
+      "capacity": 1,
+      "category_slugs": [
+        "medical"
+      ],
+      "config": {
+        "buffer_minutes": 10,
+        "confirmation_mode": "auto"
+      },
+      "currency": "EUR",
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "required": true,
+          "type": "text"
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "required": false,
+          "type": "string"
+        }
+      ],
+      "description": "General practitioner \u2014 30 minute consultations",
+      "image_url": null,
+      "is_active": true,
+      "name": "Dr. Smith",
+      "price": "50.00",
+      "price_unit": "per_slot",
+      "slot_duration_minutes": 30,
+      "slug": "dr-smith",
+      "sort_order": 0
+    },
+    {
+      "availability": {
+        "lead_time_hours": 2,
+        "max_advance_days": 90,
+        "schedule": {
+          "fri": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "mon": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "sat": [],
+          "sun": [],
+          "thu": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "tue": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "wed": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ]
+        }
+      },
+      "capacity": 1,
+      "category_slugs": [
+        "medical"
+      ],
+      "config": {
+        "buffer_minutes": 15,
+        "confirmation_mode": "auto"
+      },
+      "currency": "EUR",
+      "custom_fields_schema": [
+        {
+          "id": "concern",
+          "label": "Primary Concern",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "description": "Dentist \u2014 45 minute appointments",
+      "image_url": null,
+      "is_active": true,
+      "name": "Dr. Johnson",
+      "price": "75.00",
+      "price_unit": "per_slot",
+      "slot_duration_minutes": 45,
+      "slug": "dr-johnson",
+      "sort_order": 0
+    },
+    {
+      "availability": {
+        "lead_time_hours": 2,
+        "max_advance_days": 90,
+        "schedule": {
+          "fri": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "mon": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "sat": [],
+          "sun": [],
+          "thu": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "tue": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "wed": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ]
+        }
+      },
+      "capacity": 10,
+      "category_slugs": [
+        "workspace"
+      ],
+      "config": {
+        "buffer_minutes": 15,
+        "confirmation_mode": "auto"
+      },
+      "currency": "EUR",
+      "custom_fields_schema": [
+        {
+          "id": "attendees",
+          "label": "Number of Attendees",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "id": "projector",
+          "label": "Need Projector?",
+          "required": false,
+          "type": "boolean"
+        }
+      ],
+      "description": "Conference room for up to 10 people",
+      "image_url": null,
+      "is_active": true,
+      "name": "Meeting Room A",
+      "price": "25.00",
+      "price_unit": "per_hour",
+      "slot_duration_minutes": 60,
+      "slug": "meeting-room-a",
+      "sort_order": 0
+    },
+    {
+      "availability": {
+        "lead_time_hours": 2,
+        "max_advance_days": 90,
+        "schedule": {
+          "fri": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "mon": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "sat": [],
+          "sun": [],
+          "thu": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "tue": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "wed": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ]
+        }
+      },
+      "capacity": 20,
+      "category_slugs": [
+        "events"
+      ],
+      "config": {
+        "buffer_minutes": 30,
+        "confirmation_mode": "auto"
+      },
+      "currency": "EUR",
+      "custom_fields_schema": [],
+      "description": "Group yoga class \u2014 20 spots available",
+      "image_url": null,
+      "is_active": true,
+      "name": "Yoga Studio",
+      "price": "15.00",
+      "price_unit": "per_slot",
+      "slot_duration_minutes": 60,
+      "slug": "yoga-studio",
+      "sort_order": 0
+    },
+    {
+      "availability": {
+        "lead_time_hours": 24,
+        "max_advance_days": 365,
+        "schedule": {
+          "fri": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "mon": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "sat": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "sun": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "thu": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "tue": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "wed": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ]
+        }
+      },
+      "capacity": 5,
+      "category_slugs": [
+        "events"
+      ],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "currency": "EUR",
+      "custom_fields_schema": [
+        {
+          "id": "guests",
+          "label": "Number of Guests",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "id": "breakfast",
+          "label": "Include Breakfast?",
+          "required": false,
+          "type": "boolean"
+        }
+      ],
+      "description": "Standard hotel room \u2014 per night",
+      "image_url": null,
+      "is_active": true,
+      "name": "Hotel Room Standard",
+      "price": "89.00",
+      "price_unit": "per_night",
+      "slot_duration_minutes": null,
+      "slug": "hotel-standard",
+      "sort_order": 0
+    },
+    {
+      "availability": {
+        "lead_time_hours": 24,
+        "max_advance_days": 365,
+        "schedule": {
+          "fri": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "mon": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "sat": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "sun": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "thu": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "tue": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "wed": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ]
+        }
+      },
+      "capacity": 2,
+      "category_slugs": [
+        "events"
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "currency": "EUR",
+      "custom_fields_schema": [
+        {
+          "id": "guests",
+          "label": "Number of Guests",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "id": "breakfast",
+          "label": "Include Breakfast?",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "id": "champagne",
+          "label": "Welcome Champagne?",
+          "required": false,
+          "type": "boolean"
+        }
+      ],
+      "description": "Luxury suite \u2014 per night",
+      "image_url": null,
+      "is_active": true,
+      "name": "Hotel Room Suite",
+      "price": "189.00",
+      "price_unit": "per_night",
+      "slot_duration_minutes": null,
+      "slug": "hotel-suite",
+      "sort_order": 0
+    },
+    {
+      "availability": {
+        "schedule": {
+          "fri": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "mon": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "sat": [],
+          "sun": [],
+          "thu": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "tue": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "wed": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ]
+        }
+      },
+      "capacity": 5,
+      "category_slugs": [],
+      "config": {},
+      "currency": "EUR",
+      "custom_fields_schema": null,
+      "description": null,
+      "image_url": null,
+      "is_active": true,
+      "name": "E2E Playwright Resource",
+      "price": "50.00",
+      "price_unit": "per_slot",
+      "slot_duration_minutes": 30,
+      "slug": "e2e-playwright-resource",
+      "sort_order": 0
+    },
+    {
+      "availability": {
+        "lead_time_hours": 2,
+        "max_advance_days": 90,
+        "schedule": {
+          "fri": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "mon": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "sat": [],
+          "sun": [],
+          "thu": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "tue": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ],
+          "wed": [
+            {
+              "end": "17:00",
+              "start": "09:00"
+            }
+          ]
+        }
+      },
+      "capacity": 10,
+      "category_slugs": [],
+      "config": {},
+      "currency": "EUR",
+      "custom_fields_schema": null,
+      "description": "Free to book",
+      "image_url": null,
+      "is_active": true,
+      "name": "Free Community Room",
+      "price": "0.00",
+      "price_unit": "per_slot",
+      "slot_duration_minutes": 60,
+      "slug": "free-community-room",
+      "sort_order": 0
+    },
+    {
+      "availability": {
+        "lead_time_hours": 2,
+        "max_advance_days": 90,
+        "schedule": {
+          "fri": [],
+          "mon": [
+            {
+              "end": "23:59",
+              "start": "14:00"
+            }
+          ],
+          "sat": [],
+          "sun": [],
+          "thu": [],
+          "tue": [],
+          "wed": []
+        }
+      },
+      "capacity": 3,
+      "category_slugs": [
+        "rt-grand-marina"
+      ],
+      "config": {
+        "amenities": [
+          "wifi",
+          "minibar",
+          "balcony"
+        ],
+        "floor": 4
+      },
+      "currency": "EUR",
+      "custom_fields_schema": {
+        "fields": [
+          {
+            "key": "breakfast",
+            "type": "bool"
+          }
+        ]
+      },
+      "description": "Spacious suite, sea view, balcony, king bed.",
+      "image_url": "https://example.com/suite.jpg",
+      "is_active": true,
+      "name": "RT Deluxe Sea View Suite",
+      "price": "249.99",
+      "price_unit": "per_night",
+      "slot_duration_minutes": 1440,
+      "slug": "rt-deluxe-sea-view",
+      "sort_order": 7
+    }
+  ],
+  "exported_at": "2026-06-11T14:01:08.735504+00:00",
+  "format": "json",
+  "instance": "default",
+  "vbwd_export": "booking_resources",
+  "version": 1
+}
