@@ -85,13 +85,26 @@ jobs:
         working-directory: vbwd-backend
         run: docker compose up -d --build
 
-      # ── 5. Install and activate plugin ────────────────────────────────────
-      - name: Enable plugin
+      # ── 5. Enable ALL present plugins (except the CI-excluded list) ───────
+      # The app boots from the shared plugins.json, so every present plugin
+      # (this one + any cloned dependencies) must be enabled for the full
+      # bridge/registry to wire up. Use 'flask --app vbwd:create_app()' (a bare
+      # 'flask' has no FLASK_APP and fails). Region payment methods that need
+      # live credentials are skipped via core's ci/plugins-enable-exclude.txt.
+      - name: Enable all present plugins
         working-directory: vbwd-backend
         run: |
-          docker compose exec -T api flask plugins enable PLUGIN_NAME \
-            && echo "Plugin PLUGIN_NAME enabled." \
-            || echo "Plugin PLUGIN_NAME already enabled or not registerable — continuing."
+          EXCLUDE_FILE="ci/plugins-enable-exclude.txt"
+          for d in plugins/*/; do
+            name=$(basename "$d")
+            [ -f "${d}__init__.py" ] || continue
+            if [ -f "$EXCLUDE_FILE" ] && grep -qxF "$name" "$EXCLUDE_FILE"; then
+              echo "Skipping CI-excluded plugin: $name"; continue
+            fi
+            docker compose exec -T api flask --app "vbwd:create_app()" plugins enable "$name" \
+              && echo "Plugin $name enabled." \
+              || echo "Plugin $name already enabled or not registerable — continuing."
+          done
 
       # ── 6. Unit tests ──────────────────────────────────────────────────────
       - name: Run unit tests
