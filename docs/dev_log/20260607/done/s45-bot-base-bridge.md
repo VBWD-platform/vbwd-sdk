@@ -1,18 +1,33 @@
 # Sprint 45 — `bot-base` + provider adapters: a provider-neutral bot bridge (umbrella)
 
 **Status:** PLANNED — **D1–D10 decided** (D1–D5 2026-06-02; D6/D7/D9/D10 LOCKED 2026-06-06; D8 PROPOSED → impl in [S53](s53-bot-commerce-storefront.md)).
+
+> **Implementation round — scope confirmed 2026-06-10 (owner):** build **45.0 → 45.5 + S53**, one sub-sprint at a time, each `--plugin … --full` green before the next. **45.6 (Zapier) stays DEFERRED** (no work this round). Pre-implementation clarifications are captured per-sub-sprint in a "## 2026-06-10 clarifications" block.
+>
+> **Clarifications (owner, 2026-06-10):**
+> - **Q1 scope:** 45.0→45.5 + S53; 45.6 deferred.
+> - **Q2 Telegram:** real Telegram smoke test IN scope (owner provides @BotFather token) + the fake-client CI gate; long-poll dev worker required (45.1).
+> - **Q3 meinchat E2E:** the bot is a real **E2E participant with a server-held keypair** (client encrypts to the bot key; server decrypts) — expands 45.5 (see its clarifications).
+> - **Q4 taro:** all taro bot commands **free + anonymous** (free teaser; paid readings web-only).
+> - **Q5 packaging:** **each plugin ships as its own standalone repo** (created + pushed); **nothing committed to the vbwd-sdk-2 monorepo.** Build on-disk in the SDK plugin dirs (needed for the dev stack; gitignored in the monorepo). **Repo creation is BATCHED at the end** (Q-packaging, 2026-06-10): build all of 45.0→45.5+S53 on-disk gate-green first, then create + push all 4 `vbwd-plugin-*` repos in one pass with CI wired consistently (visibility confirmed then).
+>
+> **Progress:** ✅ **45.0 DONE & gate-green** (2026-06-10) — `vbwd-backend/plugins/bot_base/` on disk; SPI (`IMessengerProvider`/`BotCommandProvider` + DTOs) ready; 28 unit + 7 integ + oracles green. ✅ **45.1 DONE & gate-green** (2026-06-10) — `vbwd-backend/plugins/bot_telegram/`; `TelegramProvider` self-registers, encrypted/masked token + `username` deep-link, webhook secret-check, TESTING-guarded long-poll worker; 15 unit + 9 integ + oracles green. *(Minor DRY item: adapters re-assemble `UpdateDispatcher` from bot-base public pieces — consider exposing `container.update_dispatcher` in bot-base before 45.5.)* ✅ **45.2 DONE & gate-green** (2026-06-10) — `chat` consumer (`/hello-llm` + free-text → existing `ChatService`; linked=billed, unlinked=link-prompt); **optional-bridge proven** (lazy imports, no hard dep, bridge-absent test); 14 unit + 2 integ + 81 regression + oracles green; web chat untouched. ✅ **45.3 DONE & gate-green** (2026-06-10) — `taro` consumer (`/draw`+`/reading`, **free+anonymous, zero billing proven**, reuses existing reading service); 293 unit + 10 integ + oracles green; web taro untouched. ✅ **45.4 DONE & gate-green** (2026-06-10) — `bot-telegram-admin` fe-admin companion (`vbwd-fe-admin/plugins/bot-telegram-admin/`; bot CRUD write-only token, set-webhook, 429-aware test-send, provider-generic linked-accounts, R12 gating, 8 locales); fe-admin `--full` green (568 unit + 104 integ) + 4 e2e specs. ✅ **45.5 DONE & gate-green** (2026-06-10) — `bot-meinchat` adapter (in-process via meinchat `IPostSendHook`, auto identity, **adaptive plain/e2e selection**); **plain path fully built, cross-provider parity proven** (same `chat`/`/hello-llm` over meinchat AND Telegram); `--plugin bot_meinchat --full` + `--plugin meinchat --full` + oracles green. **⚠️ 45.5.1 flagged:** meinchat-plus's `e2e_v1` decrypt is `NotImplementedError` → the E2E bot-participant decrypt is deferred until meinchat-plus implements Signal decrypt. ✅ **S53.0 DONE & gate-green** (2026-06-10) — `subscription` bot storefront backend (`/tarifs`/`/add-ons`/`/tokens`/`/checkout`; `subscription_bot_checkout_draft` model+migration; public recompute-from-catalog `/checkout-draft/<token>`, single-use TTL, no charge); optional-bridge + provider-neutrality proven; `--plugin subscription --full` 55 integ + oracles green. ✅ **S53.1 DONE & gate-green** (2026-06-10) — fe-user `PublicCheckoutView` accepts `?draft=<token>` → fetch draft → hydrate fe-core cart → existing checkout (expired-link state; no-draft path unchanged); fe-user `--full` green (796 passed) + e2e spec.
+>
+> **🎉 EPIC COMPLETE (on-disk, gate-green) — 2026-06-10:** 45.0, 45.1, 45.2, 45.3, 45.4, 45.5, S53.0, S53.1 all built + their `--plugin … --full` / fe `--full` gates green; nothing committed. **Deferred:** 45.6 (Zapier, per Q1) · **45.5.1** (meinchat E2E bot-participant decrypt — blocked on meinchat-plus implementing `e2e_v1` Signal decrypt). **Remaining step:** batch-create + push the 4 standalone repos (existing plugin repos are PUBLIC + carry a `tests.yml` CI to replicate).
 **Shape:** this is an **umbrella** sprint, split into small, independently-shippable sub-sprints (one keystone + thin adapters/consumers), following the `s48-*` pattern. Shared architecture, decisions, and security live **here**; each sub-sprint file owns its scope, backend design, TDD plan, and gate.
 
 ## Plugin family (D10)
 
 The bridge is **not** one plugin — it is a `bot-base` core plus thin **adapter plugins**, each an *extension* of `bot-base` (`dependencies=["bot-base"]`, self-registering an `IMessengerProvider`). New providers are added by adding a plugin — never by editing `bot-base` or any consumer (Open/Closed).
 
-| plugin | repo | role | sub-sprint |
+| plugin | repo (2026-06-10: `vbwd-plugin-*` convention) | role | sub-sprint |
 |---|---|---|---|
-| **`bot-base`** | `bot-base-backend` | provider-neutral core: DTOs, `IMessengerProvider` SPI + provider registry, `MessengerService` (outbound), `CommandRegistry`/`UpdateDispatcher` (inbound), conversation mode, `LinkService`, built-in `/hello`·`/start`·`/stop`·`/help` | [45.0](s45-0-bot-base-foundation.md) |
-| **`bot-telegram`** | `bot-telegram` | Telegram adapter: `TelegramProvider`, Bot-API client, encrypted bot-token store, webhook + secret-token, long-poll dev worker, `t.me` deep-link | [45.1](s45-1-bot-telegram-adapter.md) |
-| **`bot-meinchat`** | `bot-meinchat` | meinchat adapter: in-process transport, automatic identity, E2E bot-conversation | [45.5](s45-5-bot-meinchat-adapter.md) |
+| **`bot-base`** | `vbwd-plugin-bot-base` | provider-neutral core: DTOs, `IMessengerProvider` SPI + provider registry, `MessengerService` (outbound), `CommandRegistry`/`UpdateDispatcher` (inbound), conversation mode, `LinkService`, built-in `/hello`·`/start`·`/stop`·`/help` | [45.0](s45-0-bot-base-foundation.md) |
+| **`bot-telegram`** | `vbwd-plugin-bot-telegram` | Telegram adapter: `TelegramProvider`, Bot-API client, encrypted bot-token store, webhook + secret-token, **required** long-poll dev worker, `t.me` deep-link | [45.1](s45-1-bot-telegram-adapter.md) |
+| **`bot-meinchat`** | `vbwd-plugin-bot-meinchat` | meinchat adapter: in-process transport, automatic identity, **E2E bot-participant (server keypair)** bot-conversation | [45.5](s45-5-bot-meinchat-adapter.md) |
 | **`bot-zapier`** | *(deferred)* | Zapier meta-adapter: generic inbound/outbound webhooks → any Zapier-connected channel | [45.6](s45-6-bot-zapier-adapter.md) — **DEFERRED** |
+
+> fe-admin companion repo: **`vbwd-fe-admin-plugin-bot-telegram`** (45.4). Consumers `chat`/`taro`/`subscription` are **existing** repos (`vbwd-plugin-chat`/`-taro`/`-subscription`) — modified, not new.
 
 **Frontend (fe-admin) companions:** only **`fe-admin-bot-telegram`** ships (45.4) — Telegram is the only adapter with real configuration (secret bot tokens, webhook, test-send) + the linked-accounts view. See §Admin / configuration surfaces.
 

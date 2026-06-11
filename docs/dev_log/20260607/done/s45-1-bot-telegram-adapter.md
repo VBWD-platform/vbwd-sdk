@@ -30,6 +30,13 @@ The reference adapter — proves the SPI end-to-end. Implements the Telegram tra
 ### Phase 2 — transport hardening (optional within this sub-sprint)
 Long-poll `getUpdates` dev worker, **TESTING/dev-guarded** (`if not current_app.config.get("TESTING")`, same pattern as the booking/subscription schedulers) so the round-trip is testable with no public HTTPS URL; webhook set-up helper; per-`(provider_id, chat_ref)` inbound rate-limit guard. May ship in a follow-up if 45.1 needs to stay narrow.
 
+## 2026-06-10 clarifications (owner)
+
+- **Real Telegram smoke test IS in scope.** In addition to the fake-client CI gate, `/hello` must round-trip over **real Telegram** on the local dev stack. The owner provides a **@BotFather bot token** (stored encrypted via the admin `POST /admin/bots` flow, never committed).
+- Therefore **Phase 2's long-poll dev worker is REQUIRED, not optional** — it's the transport for the no-public-HTTPS dev smoke test. TESTING/dev-guarded (`if not current_app.config.get("TESTING")`, booking/subscription-scheduler pattern) so CI/tests never start it. Webhook stays the prod path.
+- **`TelegramBot` gains a `username` field** (the bot's `@handle` from BotFather) so `build_link_deeplink` resolves `t.me/<username>?start=<token>` deterministically (the `name` field is the human label, not the deep-link handle).
+- **DoD addition:** a manual smoke note (the exact `/hello` round-trip over the real bot via the dev long-poll worker) recorded in the sub-sprint report.
+
 ## TDD plan (tests FIRST — fake `ITelegramClient`)
 - `TelegramProvider.parse_update`: a text message and a `callback_query` each map to a correct `BotInbound` (command/args/action_data); `send` builds the right payload and renders `choices` as an inline keyboard.
 - `build_link_deeplink` → `t.me/<bot>?start=<token>`.

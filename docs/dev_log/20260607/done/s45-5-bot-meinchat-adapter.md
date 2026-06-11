@@ -20,6 +20,20 @@ No transport models (in-process); optional config (`debug_mode`, `bot_conversati
 
 **No fe-admin companion.** meinchat has no token, no webhook, and automatic identity (no linked accounts), so its only settings — `enabled`, `bot_conversation_id`, `debug_mode` — ride the generic plugin `admin-config.json` surface. A dedicated `fe-admin-bot-meinchat` is **not** built (add one only if meinchat later grows real config). See [umbrella §Admin / configuration surfaces](s45-bot-base-bridge.md).
 
+## 2026-06-10 clarifications (owner)
+
+**E2E mechanism = ADAPTIVE on `meinchat-plus` presence** (refined after discovering base meinchat has a *null* device-directory seam — "meinchat-alone has no device keys"; the real device-key E2E crypto is provided by `meinchat-plus` fe+backend):
+
+- **If `meinchat-plus` is installed (fe + backend) → E2E path.** The bot is a real **E2E participant with a server-held keypair**: registered as a **device** in meinchat-plus's `IDeviceDirectory` for the designated bot conversation, so the client's existing per-device wrapping (`_expected_device_ids`) **automatically wraps each message key to the bot device** (ideally no/minimal fe change). The server holds the bot device's **private key encrypted at rest** (reuse `TokenCipher`/the S58.4 `secrets` policy; never plaintext/in a response) and **decrypts the bot's envelope slot** via the registered `IBodyCodec` before `parse_update`. Outbound `send` produces an `e2e_v1` envelope to the conversation devices. Human↔human chats are never read.
+- **If `meinchat-plus` is NOT installed → plain path.** The designated bot conversation uses meinchat's server-readable **`plain` protocol** (`body` populated, `envelope` NULL). The bot reads `body` directly and replies in plain. (Acceptable because without the plus E2E layer there is no device-key crypto anyway.)
+- **Detection seam:** the adapter selects plain vs e2e from whether a real `IDeviceDirectory`/`IBodyCodec` is registered (i.e. `meinchat-plus` enabled) vs the null fallback — no hard import of meinchat-plus.
+
+**Implementation guidance / scope guard:**
+- **Plain path is the primary deliverable this sub-sprint** — it fully proves cross-provider parity NOW (the same `chat` `/hello-llm` round-trips over meinchat with automatic identity, zero consumer change), independent of any deferred crypto.
+- **E2E path reuses meinchat-plus's existing device-key crypto** (the bot is just another device + a server-held private key); it must NOT invent crypto or weaken E2E. If the meinchat-plus device-key API isn't ready for a clean bot-device registration + server-side decrypt, implement the plain path fully + the e2e path as far as the plus seam allows, and **FLAG the remaining plus/fe wiring as 45.5.1**.
+- Both `--plugin bot_meinchat --full` **and** `--plugin meinchat --full` stay green. The `meinchat` dependency is declared; `meinchat-plus` is an **optional** runtime capability (detected, never hard-imported).
+- **Security:** the bot keypair is treated like a bot token (admin-only, encrypted, masked); compromising it exposes only the **bot** conversation, never human↔human chats.
+
 ## TDD plan (tests FIRST)
 - `MeinchatProvider.parse_update`: a meinchat message in the bot conversation → `BotInbound` with identity resolved from the authenticated sender; a tapped button → `action_data`.
 - `send` posts a meinchat message and renders `choices` natively / falls back to a numbered menu.

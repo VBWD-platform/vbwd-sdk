@@ -13,6 +13,13 @@ A **second independent consumer** on the same seam, proving the bridge serves mo
 - Commands that need **no** billing/identity run in **anonymous** mode (D3c) — no link required. Any billed reading (if applicable) follows the same linked-user rule as chat.
 - If the bridge is disabled, `get_bot_commands()` is never collected; taro's web behavior is untouched.
 
+## 2026-06-10 clarifications (owner)
+
+- **All taro bot commands are anonymous + free** — no link required, **no token billing** over the bot. taro-over-bot is a **free teaser**; paid readings stay **web-only**.
+- **Command set:** `/draw` (single-card pull) and `/reading` (full reading), both backed by taro's **existing** reading service, both free/anonymous. No `BotLink` needed; no `ChatService`-style debit; no identity mutation.
+- A multi-step reading may still use `BotReply.choices` → `handle_action` (D7) for card selection, but it never bills.
+- **DoD addition:** assert **no** token debit occurs on any taro bot command (the test must prove zero billing), and the existing taro web billing is untouched.
+
 ## TDD plan (tests FIRST)
 - `CommandRegistry` collects `taro` only when `bot_enabled=true`.
 - `/draw` (anonymous) returns a reading `BotReply` via taro's existing service with no link required.
