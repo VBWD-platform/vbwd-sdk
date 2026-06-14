@@ -52,7 +52,11 @@ var/core/*.json
 var/assets/
 # GHRM GitHub App private key (and any other secret material under var/) —
 # host-mounted into the backend at /app/var; never commit secrets.
+var/log
+var/logs
+
 var/**/*.pem
 var/ghrm/auth/*.pem
 vbwd-demo-instances
 vbwd-platform
+
