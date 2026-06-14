@@ -106,7 +106,8 @@ nav a:hover { color: var(--color-accent); text-decoration: none; }
 .cms-widget--header-nav,
 .cms-widget--footer-nav,
 .cms-widget--vue,
-.cms-breadcrumb {
+.cms-breadcrumb,
+.cms-area--content .container {
   max-width: var(--container-max) !important;
   width: 100% !important;
   margin-left: auto !important;
@@ -124,11 +125,14 @@ nav a:hover { color: var(--color-accent); text-decoration: none; }
   padding-left: 0 !important;
   margin-left: 0 !important;
 }
-/* All menu items share the default .cms-menu__link padding so the
- * first one lines up visually with its siblings. Previously the first
- * link was pinned to padding-left:0 to make it flush with the hero /
- * cta-band outer edge, but that made item #1 stick out to the left of
- * items #2..N. Visual consistency inside the menu wins. */
+/* The first menu link is pinned to padding-left:0 so its label sits flush
+ * with the wrapper's inner-left edge — the same vertical line as the
+ * hero / cta-band outer edge, the breadcrumb's first crumb, and the main
+ * content. Edge alignment across the whole page wins over per-menu
+ * visual symmetry. */
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link {
+  padding-left: 0 !important;
+}
 .cms-widget--header-nav .cms-burger {
   margin-left: -6px;   /* neutralise the button's own 6px inner padding */
 }
@@ -430,7 +434,6 @@ footer {
   .cms-widget--header-nav .cms-menu__sub--open { max-height: 600px; }
   .cms-widget--header-nav .cms-menu__sub .cms-menu__link { padding-left: 2.5rem !important; font-size: 0.9rem !important; opacity: 0.85; }
 }
-
 /* VBWD_EDGE_ALIGN:v1 — header nav, breadcrumb + content on one vertical line. Do not edit by hand. */
 .cms-area--hero, .cms-area--cta,
 .cms-widget--header-nav, .cms-widget--footer-nav, .cms-widget--vue,
@@ -448,7 +451,6 @@ footer {
 .cms-breadcrumb > a:first-of-type, .cms-breadcrumb > .cms-breadcrumb__link:first-of-type { margin-left: 0 !important; padding-left: 0 !important; }
 @media (max-width: 700px) { :root { --edge-inset: 1rem; } }
 /* /VBWD_EDGE_ALIGN:v1 */
-
 .vbwd-page{--vbwd-accent:#059669;--vbwd-accent-soft:#d1fae5;--vbwd-accent-dark:#047857;--vbwd-gradient:linear-gradient(135deg, #059669 0%, #0891b2 100%);--vbwd-text:#0f172a;--vbwd-text-muted:#475569;--vbwd-surface:#fff;--vbwd-surface-soft:#f8fafc;--vbwd-border:#e2e8f0;--vbwd-radius:14px;--vbwd-radius-lg:22px;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:var(--vbwd-text);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased}.vbwd-page *,.vbwd-page *::before,.vbwd-page *::after{box-sizing:border-box}.vbwd-page h1,.vbwd-page h2,.vbwd-page h3,.vbwd-page h4{color:#0b1220;line-height:1.2;letter-spacing:-0.02em;margin:0 0 .65em;font-weight:700}.vbwd-page h1{font-size:clamp(2.2rem,4vw,3.25rem);font-weight:800}.vbwd-page h2{font-size:clamp(1.5rem,2.4vw,2rem);margin-top:.4em}.vbwd-page h3{font-size:1.2rem}.vbwd-page p{margin:0 0 1em;color:var(--vbwd-text)}.vbwd-page a{color:var(--vbwd-accent-dark);text-decoration:none;font-weight:600}.vbwd-page a:hover{text-decoration:underline;text-underline-offset:3px}.vbwd-page code{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--vbwd-accent-soft);color:var(--vbwd-accent-dark);padding:.15em .45em;border-radius:6px;font-size:.9em;font-weight:500}.vbwd-page .vbwd-container{max-width:1080px;margin:0 auto;padding:0 1.5rem}.vbwd-page .vbwd-hero{background:var(--vbwd-gradient);color:#fff;padding:clamp(3.5rem,8vw,6rem) 1.5rem;text-align:center;position:relative;overflow:hidden;border-radius:var(--vbwd-radius-lg);margin:0 1rem 3rem}.vbwd-page .vbwd-hero__eyebrow{display:inline-block;padding:.35rem .9rem;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.25rem;backdrop-filter:blur(4px)}.vbwd-page .vbwd-hero h1{color:#fff;margin-bottom:.65rem;text-shadow:0 2px 8px rgba(0,0,0,.18)}.vbwd-page .vbwd-hero__lead{color:rgba(255,255,255,.95);font-size:clamp(1.05rem,1.6vw,1.25rem);max-width:720px;margin:0 auto}.vbwd-page section{padding:2.5rem 0}.vbwd-page section+section{border-top:1px solid var(--vbwd-border)}.vbwd-page .vbwd-eyebrow{display:inline-block;color:var(--vbwd-accent-dark);background:var(--vbwd-accent-soft);padding:.25rem .7rem;border-radius:999px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.9rem}.vbwd-page .vbwd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1.25rem 0 0}.vbwd-page .vbwd-card{background:var(--vbwd-surface);border:1px solid var(--vbwd-border);border-radius:var(--vbwd-radius);padding:1.25rem 1.35rem;position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.06),0 1px 3px rgba(15,23,42,.08)}.vbwd-page .vbwd-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--vbwd-accent);opacity:.7}.vbwd-page .vbwd-card__title{font-weight:700;color:var(--vbwd-text);margin-bottom:.35rem;font-size:1.02rem}.vbwd-page .vbwd-card__desc{color:var(--vbwd-text-muted);font-size:.94rem;line-height:1.55;margin:0}.vbwd-page .vbwd-tier{background:var(--vbwd-surface);border:1px solid var(--vbwd-border);border-radius:var(--vbwd-radius);padding:1.5rem;margin-bottom:1rem;position:relative}.vbwd-page .vbwd-tier__name{font-weight:800;font-size:1.15rem;color:var(--vbwd-accent-dark);margin-bottom:.25rem}.vbwd-page .vbwd-tier__price{font-size:1.6rem;font-weight:800;color:#0b1220;margin-bottom:.5rem;line-height:1}.vbwd-page .vbwd-tier__desc{color:var(--vbwd-text-muted);margin-bottom:.75rem}.vbwd-page .vbwd-tier--featured{border-color:var(--vbwd-accent);border-width:2px;box-shadow:0 8px 16px -4px rgba(15,23,42,.10)}.vbwd-page .vbwd-tier--featured::after{content:'Most popular';position:absolute;top:-12px;right:16px;background:var(--vbwd-accent);color:#fff;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.3rem .75rem;border-radius:999px}.vbwd-page .vbwd-callout{background:var(--vbwd-accent-soft);border-left:4px solid var(--vbwd-accent);border-radius:var(--vbwd-radius);padding:1.1rem 1.35rem;margin:1.5rem 0 0;color:var(--vbwd-text)}.vbwd-page .vbwd-callout p{margin:0}.vbwd-page .vbwd-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.35rem;background:var(--vbwd-accent);color:#fff;border-radius:10px;font-weight:700;font-size:.95rem;box-shadow:0 4px 6px -1px rgba(15,23,42,.08)}.vbwd-page .vbwd-btn:hover{filter:brightness(1.08);text-decoration:none}.vbwd-page .vbwd-btn--ghost{background:transparent;color:var(--vbwd-accent-dark);border:1.5px solid var(--vbwd-accent)}.cms-layout .cms-widget--header-nav,.cms-layout .cms-widget--footer-nav,.cms-layout .cms-area--vue .cms-breadcrumb{max-width:1100px;margin-left:auto;margin-right:auto}.cms-layout .cms-area--vue .cms-breadcrumb{padding-left:16px}@media(max-width:640px){.vbwd-page{font-size:16px}.vbwd-page .vbwd-hero{margin:0 .5rem 2rem;padding:2.75rem 1rem}.vbwd-page .vbwd-container{padding:0 1.1rem}}</style>
   </head>
   <body>

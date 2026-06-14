@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>S81 — WP Import walkthrough (RSS → CMS posts)</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, sans-serif; max-width: 1100px; margin: 2rem auto; padding: 0 1rem; color: #1a202c; }
+  h1 { border-bottom: 3px solid #3182ce; padding-bottom: .5rem; }
+  .meta { color: #4a5568; }
+  .step { margin: 2.5rem 0; }
+  .step h2 { color: #2c5282; }
+  .step img { width: 100%; border: 1px solid #cbd5e0; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+  .step.error pre { background: #fff5f5; border: 1px solid #fc8181; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+  code { background: #edf2f7; padding: .1em .3em; border-radius: 3px; }
+</style></head><body>
+<h1>S81 — WP Import walkthrough</h1>
+<p class="meta">Sprint: <code>docs/dev_log/20260611/sprints/s81-import-from-word-press.md</code> ·
+Source: the tokenized redrobot.online RSS feed (token masked per D1a) ·
+Flow: WP Import tab → check feed → import 10 → editor proof (tags + featured image) → fe-user frontend proof.</p>
+
+  <section class="step">
+    <h2>1. WP Import tab</h2>
+    <p>Settings → Import/Export → <b>WP Import</b>: the new tab injected by the <code>wp-import</code> fe-admin plugin via <code>dataExchangeTabs</code> (first consumer of the extension point). Feed URL field, batch-size select, feed stats and the imported-posts table are all plugin-owned.</p>
+    <a href="s81-shots/step-01.png"><img src="s81-shots/step-01.png" alt="WP Import tab" /></a>
+  </section>
+
+  <section class="step">
+    <h2>2. Feed checked — stats</h2>
+    <p>The real tokenized redrobot.online feed URL is set (token visually masked; it is also masked in backend logs and persisted rows per D1a). Batch size <b>10</b>. "Check feed" walked the paged feed and reports: <b>500 never imported · 0 already imported · 500 in feed</b>.</p>
+    <a href="s81-shots/step-02.png"><img src="s81-shots/step-02.png" alt="Feed checked — stats" /></a>
+  </section>
+
+  <section class="step">
+    <h2>3. Import run — 10 posts imported</h2>
+    <p>The import ran in chunks of 10 (D6). Summary: <b>10 post(s) imported</b>. The imported-posts table below lists each post with its categories, tags and import datetime — original WP publish dates land in <code>published_at</code>.</p>
+    <a href="s81-shots/step-03.png"><img src="s81-shots/step-03.png" alt="Import run — 10 posts imported" /></a>
+  </section>
+
+  <section class="step">
+    <h2>4. Imported post in the standard editor</h2>
+    <p>Row click opens the normal post editor (<code>/admin/cms/posts/c2963d47-1d21-4ce8-8267-be344a898f9f/edit</code>) — no special import view. Visible: the imported title (“Investment Idea: Agentic Payment Rails & Machine-to-Machine Finance”), the attached <b>tags and categories</b> (deduplicated via <code>TermService.find_or_create</code>) and the <b>featured image</b> re-hosted under <code>/uploads/</code>.</p>
+    <a href="s81-shots/step-04.png"><img src="s81-shots/step-04.png" alt="Imported post in the standard editor" /></a>
+  </section>
+
+  <section class="step">
+    <h2>5. Frontend rendering (fe-user)</h2>
+    <p>The imported post served publicly at <code>http://localhost:8080/investment-idea-agentic-payment-rails-machine-to-machine-finance</code> — published status, full content with locally re-hosted images.</p>
+    <a href="s81-shots/step-05.png"><img src="s81-shots/step-05.png" alt="Frontend rendering (fe-user)" /></a>
+  </section>
+
+</body></html>

@@ -1,0 +1,26 @@
+[
+  {
+    "n": 1,
+    "file": "step-01.png",
+    "title": "Taxonomy — Categories tab",
+    "caption": "The Taxonomy page now has a select-all header checkbox and a per-row checkbox on every term (Categories tab). 44 real categories are present."
+  },
+  {
+    "n": 2,
+    "file": "step-02.png",
+    "title": "Filtered to the 3 test categories",
+    "caption": "Client-side search \"ZZ Bulk Test\" narrows the list to the 3 throwaway categories (rows shown: 3)."
+  },
+  {
+    "n": 3,
+    "file": "step-03.png",
+    "title": "3 selected — bulk action bar appears",
+    "caption": "The 3 rows are checked and the bulk action bar shows the selection with a Delete action. (3 checkboxes ticked.)"
+  },
+  {
+    "n": 4,
+    "file": "step-04.png",
+    "title": "After bulk delete — the 3 are gone",
+    "caption": "After Delete → confirm, the 3 test categories are removed (filtered rows now: 0); their post associations cascade away at the DB level. The 44 real categories are untouched."
+  }
+]

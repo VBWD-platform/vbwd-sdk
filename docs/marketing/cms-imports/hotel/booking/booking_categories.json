@@ -1,0 +1,59 @@
+{
+  "booking_categories": [
+    {
+      "slug": "grand-marina",
+      "name": "Grand Marina Hotel",
+      "description": "Five-star waterfront hotel with marina views, spa and conference facilities.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 0,
+      "is_active": true
+    },
+    {
+      "slug": "alpine-lodge",
+      "name": "Alpine Lodge Resort",
+      "description": "Mountain resort with ski-in access, wellness sauna and Thai massage.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 1,
+      "is_active": true
+    },
+    {
+      "slug": "seaside-resort",
+      "name": "Seaside Resort & Spa",
+      "description": "Family beach resort with aquapark, spa and sea-view rooms.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 2,
+      "is_active": true
+    },
+    {
+      "slug": "city-center",
+      "name": "City Center Business Hotel",
+      "description": "Downtown business hotel with conference rooms and catering.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 3,
+      "is_active": true
+    },
+    {
+      "slug": "lakeview-retreat",
+      "name": "Lakeview Retreat",
+      "description": "Quiet lakeside retreat for wellness and meditation getaways.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 4,
+      "is_active": true
+    }
+  ],
+  "exported_at": "2026-06-11T00:00:00+00:00",
+  "format": "json",
+  "instance": "default",
+  "vbwd_export": "booking_categories",
+  "version": 1
+}

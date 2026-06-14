@@ -2,16 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Features — VBWD Doctor</title>
-    <meta name="description" content="Every feature in VBWD Doctor is a composable plugin. Toggle from the admin panel, no restart." data-seo="ssr" />
-    <meta name="keywords" content="vbwd, doctor, features, self-hosted saas, open source" data-seo="ssr" />
+    <title>Features</title>
+    <meta name="description" content="Explore the key features of the VBWD platform: billing, user management, plugins, CMS, and more." data-seo="ssr" />
     <meta name="robots" content="index,follow" data-seo="ssr" />
-    <meta property="og:title" content="Features — VBWD Doctor" data-seo="ssr" />
-    <meta property="og:description" content="Every feature in VBWD Doctor is a composable plugin. Toggle from the admin panel, no restart." data-seo="ssr" />
+    <meta property="og:title" content="Features" data-seo="ssr" />
+    <meta property="og:description" content="Explore the key features of the VBWD platform: billing, user management, plugins, CMS, and more." data-seo="ssr" />
     <meta name="twitter:card" content="summary_large_image" data-seo="ssr" />
-    <meta name="twitter:title" content="Features — VBWD Doctor" data-seo="ssr" />
-    <meta name="twitter:description" content="Every feature in VBWD Doctor is a composable plugin. Toggle from the admin panel, no restart." data-seo="ssr" />
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Features — VBWD Doctor", "url": null, "description": "Every feature in VBWD Doctor is a composable plugin. Toggle from the admin panel, no restart."}</script>
+    <meta name="twitter:title" content="Features" data-seo="ssr" />
+    <meta name="twitter:description" content="Explore the key features of the VBWD platform: billing, user management, plugins, CMS, and more." data-seo="ssr" />
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Features", "url": null, "description": "Explore the key features of the VBWD platform: billing, user management, plugins, CMS, and more."}</script>
     <!--vbwd:assets-->
     <script type="module" src="/assets/index.js"></script>
     <link rel="stylesheet" href="/assets/index.css" />
@@ -106,7 +105,8 @@ nav a:hover { color: var(--color-accent); text-decoration: none; }
 .cms-widget--header-nav,
 .cms-widget--footer-nav,
 .cms-widget--vue,
-.cms-breadcrumb {
+.cms-breadcrumb,
+.cms-area--content .container {
   max-width: var(--container-max) !important;
   width: 100% !important;
   margin-left: auto !important;
@@ -124,11 +124,14 @@ nav a:hover { color: var(--color-accent); text-decoration: none; }
   padding-left: 0 !important;
   margin-left: 0 !important;
 }
-/* All menu items share the default .cms-menu__link padding so the
- * first one lines up visually with its siblings. Previously the first
- * link was pinned to padding-left:0 to make it flush with the hero /
- * cta-band outer edge, but that made item #1 stick out to the left of
- * items #2..N. Visual consistency inside the menu wins. */
+/* The first menu link is pinned to padding-left:0 so its label sits flush
+ * with the wrapper's inner-left edge — the same vertical line as the
+ * hero / cta-band outer edge, the breadcrumb's first crumb, and the main
+ * content. Edge alignment across the whole page wins over per-menu
+ * visual symmetry. */
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link {
+  padding-left: 0 !important;
+}
 .cms-widget--header-nav .cms-burger {
   margin-left: -6px;   /* neutralise the button's own 6px inner padding */
 }
@@ -430,7 +433,6 @@ footer {
   .cms-widget--header-nav .cms-menu__sub--open { max-height: 600px; }
   .cms-widget--header-nav .cms-menu__sub .cms-menu__link { padding-left: 2.5rem !important; font-size: 0.9rem !important; opacity: 0.85; }
 }
-
 /* VBWD_EDGE_ALIGN:v1 — header nav, breadcrumb + content on one vertical line. Do not edit by hand. */
 .cms-area--hero, .cms-area--cta,
 .cms-widget--header-nav, .cms-widget--footer-nav, .cms-widget--vue,
@@ -447,457 +449,10 @@ footer {
 .cms-breadcrumb { gap: 0 !important; padding-left: var(--edge-inset) !important; }
 .cms-breadcrumb > a:first-of-type, .cms-breadcrumb > .cms-breadcrumb__link:first-of-type { margin-left: 0 !important; padding-left: 0 !important; }
 @media (max-width: 700px) { :root { --edge-inset: 1rem; } }
-/* /VBWD_EDGE_ALIGN:v1 */
-
-.vbwd-page {
-  --vbwd-accent: #059669;
-  --vbwd-accent-soft: #d1fae5;
-  --vbwd-accent-dark: #047857;
-  --vbwd-gradient: linear-gradient(135deg, #059669 0%, #0891b2 100%);
-  --vbwd-text: #0f172a;
-  --vbwd-text-muted: #475569;
-  --vbwd-surface: #ffffff;
-  --vbwd-surface-soft: #f8fafc;
-  --vbwd-border: #e2e8f0;
-  --vbwd-radius: 14px;
-  --vbwd-radius-lg: 22px;
-  --vbwd-shadow-sm: 0 1px 2px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.08);
-  --vbwd-shadow-md: 0 4px 6px -1px rgba(15,23,42,0.08), 0 2px 4px -2px rgba(15,23,42,0.06);
-  --vbwd-shadow-lg: 0 20px 25px -5px rgba(15,23,42,0.10), 0 8px 10px -6px rgba(15,23,42,0.08);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  color: var(--vbwd-text);
-  line-height: 1.65;
-  font-size: 17px;
-  -webkit-font-smoothing: antialiased;
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.vbwd-page *, .vbwd-page *::before, .vbwd-page *::after { box-sizing: border-box; }
-.vbwd-page h1, .vbwd-page h2, .vbwd-page h3, .vbwd-page h4 {
-  color: #0b1220;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.65em;
-  font-weight: 700;
-}
-.vbwd-page h1 { font-size: clamp(2.2rem, 4vw, 3.25rem); font-weight: 800; }
-.vbwd-page h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); margin-top: 0.4em; }
-.vbwd-page h3 { font-size: 1.2rem; }
-.vbwd-page p  { margin: 0 0 1em; color: var(--vbwd-text); }
-.vbwd-page a  { color: var(--vbwd-accent-dark); text-decoration: none; font-weight: 600; }
-.vbwd-page a:hover { text-decoration: underline; text-underline-offset: 3px; }
-.vbwd-page code {
-  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-  background: var(--vbwd-accent-soft);
-  color: var(--vbwd-accent-dark);
-  padding: 0.15em 0.45em;
-  border-radius: 6px;
-  font-size: 0.9em;
-  font-weight: 500;
-}
-
-.vbwd-page .vbwd-container {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
-
-/* ── Hero ─────────────────────────────────────────────────────────── */
-.vbwd-page .vbwd-hero {
-  background: var(--vbwd-gradient);
-  color: #ffffff;
-  padding: clamp(3.5rem, 8vw, 6rem) 1.5rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--vbwd-radius-lg);
-  margin: 0 1rem 3rem;
-}
-.vbwd-page .vbwd-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 40%),
-    radial-gradient(circle at 80% 90%, rgba(255,255,255,0.18), transparent 45%);
-  pointer-events: none;
-}
-.vbwd-page .vbwd-hero__eyebrow {
-  display: inline-block;
-  padding: 0.35rem 0.9rem;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.18);
-  color: #fff;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 1.25rem;
-  backdrop-filter: blur(4px);
-}
-.vbwd-page .vbwd-hero h1 {
-  color: #fff;
-  margin-bottom: 0.65rem;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
-  position: relative;
-}
-.vbwd-page .vbwd-hero__lead {
-  color: rgba(255,255,255,0.95);
-  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
-  max-width: 720px;
-  margin: 0 auto;
-  position: relative;
-}
-.vbwd-page .vbwd-hero__badge-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-top: 1.75rem;
-  position: relative;
-}
-.vbwd-page .vbwd-hero__badge {
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.25);
-  color: #fff;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  backdrop-filter: blur(4px);
-}
-
-/* ── Sections ─────────────────────────────────────────────────────── */
-.vbwd-page section { padding: 2.5rem 0; }
-.vbwd-page section + section { border-top: 1px solid var(--vbwd-border); }
-.vbwd-page .vbwd-eyebrow {
-  display: inline-block;
-  color: var(--vbwd-accent-dark);
-  background: var(--vbwd-accent-soft);
-  padding: 0.25rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 0.9rem;
-}
-
-/* ── Plugin grid ─────────────────────────────────────────────────── */
-.vbwd-page .vbwd-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-  margin: 1.25rem 0 0;
-}
-.vbwd-page .vbwd-card {
-  background: var(--vbwd-surface);
-  border: 1px solid var(--vbwd-border);
-  border-radius: var(--vbwd-radius);
-  padding: 1.25rem 1.35rem;
-  box-shadow: var(--vbwd-shadow-sm);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-  position: relative;
-  overflow: hidden;
-}
-.vbwd-page .vbwd-card::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--vbwd-accent);
-  opacity: 0.7;
-}
-.vbwd-page .vbwd-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--vbwd-shadow-md);
-  border-color: var(--vbwd-accent);
-}
-.vbwd-page .vbwd-card__title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 700;
-  color: var(--vbwd-text);
-  margin-bottom: 0.35rem;
-  font-size: 1.02rem;
-}
-.vbwd-page .vbwd-card__title code {
-  background: var(--vbwd-accent-soft);
-  color: var(--vbwd-accent-dark);
-  font-size: 0.88rem;
-}
-.vbwd-page .vbwd-card__desc {
-  color: var(--vbwd-text-muted);
-  font-size: 0.94rem;
-  line-height: 1.55;
-  margin: 0;
-}
-.vbwd-page .vbwd-card--muted { opacity: 0.95; background: var(--vbwd-surface-soft); }
-.vbwd-page .vbwd-card--muted::before { background: #94a3b8; opacity: 0.6; }
-
-/* ── Feature list ────────────────────────────────────────────────── */
-.vbwd-page ul.vbwd-list {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 0.5rem 1.5rem;
-}
-.vbwd-page ul.vbwd-list li {
-  position: relative;
-  padding: 0.35rem 0 0.35rem 1.75rem;
-  color: var(--vbwd-text);
-}
-.vbwd-page ul.vbwd-list li::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 0.75rem;
-  width: 0.7rem; height: 0.7rem;
-  border-radius: 3px;
-  background: var(--vbwd-accent);
-  box-shadow: 0 0 0 3px var(--vbwd-accent-soft);
-}
-
-/* ── Payment table ───────────────────────────────────────────────── */
-.vbwd-page .vbwd-table-wrap {
-  overflow-x: auto;
-  border-radius: var(--vbwd-radius);
-  border: 1px solid var(--vbwd-border);
-  margin: 1rem 0 0;
-  background: var(--vbwd-surface);
-  box-shadow: var(--vbwd-shadow-sm);
-}
-.vbwd-page table.vbwd-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95rem;
-}
-.vbwd-page table.vbwd-table th {
-  text-align: left;
-  padding: 0.85rem 1rem;
-  background: var(--vbwd-surface-soft);
-  color: var(--vbwd-text-muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--vbwd-border);
-}
-.vbwd-page table.vbwd-table td {
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid var(--vbwd-border);
-  vertical-align: top;
-}
-.vbwd-page table.vbwd-table tr:last-child td { border-bottom: none; }
-.vbwd-page table.vbwd-table tr:hover td { background: var(--vbwd-accent-soft); }
-.vbwd-page table.vbwd-table .vbwd-method-name {
-  font-weight: 700;
-  color: var(--vbwd-text);
-  display: block;
-  margin-bottom: 0.15rem;
-}
-.vbwd-page table.vbwd-table code { font-size: 0.8rem; }
-
-.vbwd-page .vbwd-badge {
-  display: inline-block;
-  padding: 0.2rem 0.65rem;
-  border-radius: 999px;
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.vbwd-page .vbwd-badge--ok {
-  background: #dcfce7;
-  color: #166534;
-}
-.vbwd-page .vbwd-badge--planned {
-  background: #fef3c7;
-  color: #92400e;
-}
-.vbwd-page .vbwd-badge--region {
-  background: var(--vbwd-accent-soft);
-  color: var(--vbwd-accent-dark);
-}
-
-/* ── Stat row ────────────────────────────────────────────────────── */
-.vbwd-page .vbwd-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  margin: 1.5rem 0;
-}
-.vbwd-page .vbwd-stat {
-  text-align: center;
-  padding: 1.25rem 1rem;
-  background: var(--vbwd-surface);
-  border: 1px solid var(--vbwd-border);
-  border-radius: var(--vbwd-radius);
-  box-shadow: var(--vbwd-shadow-sm);
-}
-.vbwd-page .vbwd-stat__number {
-  display: block;
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: var(--vbwd-accent-dark);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-.vbwd-page .vbwd-stat__label {
-  display: block;
-  margin-top: 0.35rem;
-  color: var(--vbwd-text-muted);
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-/* ── Callout / CTA ──────────────────────────────────────────────── */
-.vbwd-page .vbwd-callout {
-  background: var(--vbwd-accent-soft);
-  border-left: 4px solid var(--vbwd-accent);
-  border-radius: var(--vbwd-radius);
-  padding: 1.1rem 1.35rem;
-  margin: 1.5rem 0 0;
-  color: var(--vbwd-text);
-}
-.vbwd-page .vbwd-callout p { margin: 0; }
-.vbwd-page .vbwd-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.35rem;
-  background: var(--vbwd-accent);
-  color: #fff;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 0.95rem;
-  box-shadow: var(--vbwd-shadow-md);
-  transition: filter 0.15s ease, transform 0.15s ease;
-}
-.vbwd-page .vbwd-btn:hover {
-  filter: brightness(1.08);
-  transform: translateY(-1px);
-  text-decoration: none;
-}
-
-/* Layout chrome (header / breadcrumb / footer) cosmetics — background,
- * borders, padding, menu gap, link weight/colour — are intentionally NOT
- * styled here. Those areas are owned by the canonical CMS theme
- * stylesheet (vbwd-backend/plugins/cms/docs/imports/_build_theme_styles
- * .py). Re-styling them per-page produced a bordered grey header bar
- * that diverged from the clean theme header used on /home2.
- *
- * The ONLY thing we re-assert is geometry: constrain the header/footer
- * nav and breadcrumb to the same centred 1100px column as .vbwd-page,
- * exactly like /home2 (whose theme applies max-width:var(--container-max)
- * + margin:auto to the same wrappers). Exhibition pages set
- * use_theme_switcher_styles:false so they never load that theme rule;
- * without this the menu would sit flush against the viewport edge while
- * the hero/content stayed centred. No colours, borders or backgrounds —
- * the menu keeps the clean theme-default look, just aligned. */
-.cms-layout .cms-widget--header-nav,
-.cms-layout .cms-widget--footer-nav,
-.cms-layout .cms-area--vue .cms-breadcrumb {
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-}
-/* Every .cms-menu__link carries 16px of intrinsic left padding, so the
- * header menu's first item ("Home") text sits 16px inside the 1100px
- * column. The breadcrumb has no per-item padding, so inset it by the
- * same 16px — its first crumb then lands on the exact same vertical
- * justification line as the menu's first item (harmonical layout). */
-.cms-layout .cms-area--vue .cms-breadcrumb {
-  padding-left: 16px;
-}
-
-/* ── Responsive ──────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .vbwd-page { font-size: 16px; }
-  .vbwd-page .vbwd-hero { margin: 0 0.5rem 2rem; padding: 2.75rem 1rem; }
-  .vbwd-page .vbwd-container { padding: 0 1.1rem; }
-  .vbwd-page ul.vbwd-list { grid-template-columns: 1fr; }
-}</style>
+/* /VBWD_EDGE_ALIGN:v1 */</style>
   </head>
   <body>
-    <div id="app"><article class="vbwd-page vbwd-page--features">
-          <header class="vbwd-hero">
-  <span class="vbwd-hero__eyebrow">Features</span>
-  <h1>⚕️ VBWD Doctor</h1>
-  <p class="vbwd-hero__lead">Appointments, billing and a patient portal for private practice.</p>
-  <div class="vbwd-hero__badge-row"><span class="vbwd-hero__badge">cms</span><span class="vbwd-hero__badge">mainchat</span><span class="vbwd-hero__badge">theme-switcher</span><span class="vbwd-hero__badge">stripe</span><span class="vbwd-hero__badge">mollie</span><span class="vbwd-hero__badge">analytics</span></div>
-</header>
-          <div class="vbwd-container">
-
-            <section>
-              <span class="vbwd-eyebrow">Composable</span>
-              <h2>Every feature is a plugin</h2>
-              <p>
-                Toggle any of these from the admin panel at
-                <code>/admin/settings/plugins</code>. No server restart, no
-                code change. Turn a plugin off and every route, menu item,
-                table and webhook it owns disappears cleanly.
-              </p>
-            </section>
-
-            <section>
-              <span class="vbwd-eyebrow">Live</span>
-              <h2>Enabled out of the box</h2>
-              <div class="vbwd-grid"><div class="vbwd-card"><div class="vbwd-card__title"><code>cms</code></div><p class="vbwd-card__desc">Services, staff bios, consent forms, blog.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>mainchat</code></div><p class="vbwd-card__desc">Patient-facing chat — site-aware, triage + KB, never clinical advice.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>theme-switcher</code></div><p class="vbwd-card__desc">Clinic-branded patient portal.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>stripe</code></div><p class="vbwd-card__desc">Card payments for consultations and products.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>mollie</code></div><p class="vbwd-card__desc">Local EU rails — iDEAL, Bancontact, SEPA.</p></div><div class="vbwd-card"><div class="vbwd-card__title"><code>analytics</code></div><p class="vbwd-card__desc">Appointment no-show rate, revenue per clinician.</p></div></div>
-            </section>
-
-            <section>
-              <span class="vbwd-eyebrow">Roadmap</span>
-              <h2>Planned for VBWD Doctor</h2>
-              <div class="vbwd-grid"><div class="vbwd-card vbwd-card--muted"><div class="vbwd-card__title"><code>booking</code></div><p class="vbwd-card__desc">Per-clinician calendars, service durations, buffer times.</p></div><div class="vbwd-card vbwd-card--muted"><div class="vbwd-card__title"><code>calendar-sync</code></div><p class="vbwd-card__desc">Google / Outlook two-way sync for each clinician.</p></div><div class="vbwd-card vbwd-card--muted"><div class="vbwd-card__title"><code>sms-reminders</code></div><p class="vbwd-card__desc">Twilio appointment reminders — reduces no-shows.</p></div><div class="vbwd-card vbwd-card--muted"><div class="vbwd-card__title"><code>sepa</code></div><p class="vbwd-card__desc">Recurring direct debit for care plans and retainers.</p></div><div class="vbwd-card vbwd-card--muted"><div class="vbwd-card__title"><code>paddle</code></div><p class="vbwd-card__desc">Automatic VAT handling across EU jurisdictions.</p></div><div class="vbwd-card vbwd-card--muted"><div class="vbwd-card__title"><code>consent-forms</code></div><p class="vbwd-card__desc">Versioned consent, e-signature, per-visit audit log.</p></div></div>
-            </section>
-
-            <section>
-              <span class="vbwd-eyebrow">Core</span>
-              <h2>Features inherited from VBWD core</h2>
-              <ul class="vbwd-list">
-                <li>Tariff plans with monthly / annual / custom periods and multi-currency pricing.</li>
-                <li>Add-ons — purchasable extras on top of base subscriptions, bound to specific plans.</li>
-                <li>Invoicing with line items per subscription, token bundle and add-on charge.</li>
-                <li>Token economy — credit packs, per-plan daily limits, admin quota reset.</li>
-                <li>User management — register, login, password reset, billing address, RBAC.</li>
-                <li>Admin backoffice — users, plans, subscriptions, invoices, analytics, webhooks.</li>
-                <li>Embeddable pricing widget — drop a <code>&lt;script&gt;</code> tag on any site.</li>
-                <li>Plugin i18n — every plugin owns its own <code>locales/{en,de}.json</code>.</li>
-              </ul>
-            </section>
-
-            <section>
-              <span class="vbwd-eyebrow">Stack</span>
-              <h2>Tech stack</h2>
-              <div class="vbwd-grid">
-                <div class="vbwd-card">
-                  <div class="vbwd-card__title">Backend</div>
-                  <p class="vbwd-card__desc">Python 3.11, Flask 3.0, SQLAlchemy 2.0, PostgreSQL 16, Redis 7.</p>
-                </div>
-                <div class="vbwd-card">
-                  <div class="vbwd-card__title">Frontend</div>
-                  <p class="vbwd-card__desc">Vue 3, TypeScript, Vite, Pinia, Vue Router 4.</p>
-                </div>
-                <div class="vbwd-card">
-                  <div class="vbwd-card__title">Infra</div>
-                  <p class="vbwd-card__desc">Docker, Docker Compose, Nginx, Gunicorn.</p>
-                </div>
-                <div class="vbwd-card">
-                  <div class="vbwd-card__title">Testing</div>
-                  <p class="vbwd-card__desc">pytest, Vitest, Playwright — 1,851+ passing tests.</p>
-                </div>
-              </div>
-            </section>
-
-          </div>
-        </article></div>
-    <script type="application/json" id="__POST__">{"slug": "features", "title": "Features — VBWD Doctor", "content_html": "<article class=\"vbwd-page vbwd-page--features\">\n          <header class=\"vbwd-hero\">\n  <span class=\"vbwd-hero__eyebrow\">Features</span>\n  <h1>⚕️ VBWD Doctor</h1>\n  <p class=\"vbwd-hero__lead\">Appointments, billing and a patient portal for private practice.</p>\n  <div class=\"vbwd-hero__badge-row\"><span class=\"vbwd-hero__badge\">cms</span><span class=\"vbwd-hero__badge\">mainchat</span><span class=\"vbwd-hero__badge\">theme-switcher</span><span class=\"vbwd-hero__badge\">stripe</span><span class=\"vbwd-hero__badge\">mollie</span><span class=\"vbwd-hero__badge\">analytics</span></div>\n</header>\n          <div class=\"vbwd-container\">\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Composable</span>\n              <h2>Every feature is a plugin</h2>\n              <p>\n                Toggle any of these from the admin panel at\n                <code>/admin/settings/plugins</code>. No server restart, no\n                code change. Turn a plugin off and every route, menu item,\n                table and webhook it owns disappears cleanly.\n              </p>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Live</span>\n              <h2>Enabled out of the box</h2>\n              <div class=\"vbwd-grid\"><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>cms</code></div><p class=\"vbwd-card__desc\">Services, staff bios, consent forms, blog.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>mainchat</code></div><p class=\"vbwd-card__desc\">Patient-facing chat — site-aware, triage + KB, never clinical advice.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>theme-switcher</code></div><p class=\"vbwd-card__desc\">Clinic-branded patient portal.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>stripe</code></div><p class=\"vbwd-card__desc\">Card payments for consultations and products.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>mollie</code></div><p class=\"vbwd-card__desc\">Local EU rails — iDEAL, Bancontact, SEPA.</p></div><div class=\"vbwd-card\"><div class=\"vbwd-card__title\"><code>analytics</code></div><p class=\"vbwd-card__desc\">Appointment no-show rate, revenue per clinician.</p></div></div>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Roadmap</span>\n              <h2>Planned for VBWD Doctor</h2>\n              <div class=\"vbwd-grid\"><div class=\"vbwd-card vbwd-card--muted\"><div class=\"vbwd-card__title\"><code>booking</code></div><p class=\"vbwd-card__desc\">Per-clinician calendars, service durations, buffer times.</p></div><div class=\"vbwd-card vbwd-card--muted\"><div class=\"vbwd-card__title\"><code>calendar-sync</code></div><p class=\"vbwd-card__desc\">Google / Outlook two-way sync for each clinician.</p></div><div class=\"vbwd-card vbwd-card--muted\"><div class=\"vbwd-card__title\"><code>sms-reminders</code></div><p class=\"vbwd-card__desc\">Twilio appointment reminders — reduces no-shows.</p></div><div class=\"vbwd-card vbwd-card--muted\"><div class=\"vbwd-card__title\"><code>sepa</code></div><p class=\"vbwd-card__desc\">Recurring direct debit for care plans and retainers.</p></div><div class=\"vbwd-card vbwd-card--muted\"><div class=\"vbwd-card__title\"><code>paddle</code></div><p class=\"vbwd-card__desc\">Automatic VAT handling across EU jurisdictions.</p></div><div class=\"vbwd-card vbwd-card--muted\"><div class=\"vbwd-card__title\"><code>consent-forms</code></div><p class=\"vbwd-card__desc\">Versioned consent, e-signature, per-visit audit log.</p></div></div>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Core</span>\n              <h2>Features inherited from VBWD core</h2>\n              <ul class=\"vbwd-list\">\n                <li>Tariff plans with monthly / annual / custom periods and multi-currency pricing.</li>\n                <li>Add-ons — purchasable extras on top of base subscriptions, bound to specific plans.</li>\n                <li>Invoicing with line items per subscription, token bundle and add-on charge.</li>\n                <li>Token economy — credit packs, per-plan daily limits, admin quota reset.</li>\n                <li>User management — register, login, password reset, billing address, RBAC.</li>\n                <li>Admin backoffice — users, plans, subscriptions, invoices, analytics, webhooks.</li>\n                <li>Embeddable pricing widget — drop a <code>&lt;script&gt;</code> tag on any site.</li>\n                <li>Plugin i18n — every plugin owns its own <code>locales/{en,de}.json</code>.</li>\n              </ul>\n            </section>\n\n            <section>\n              <span class=\"vbwd-eyebrow\">Stack</span>\n              <h2>Tech stack</h2>\n              <div class=\"vbwd-grid\">\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">Backend</div>\n                  <p class=\"vbwd-card__desc\">Python 3.11, Flask 3.0, SQLAlchemy 2.0, PostgreSQL 16, Redis 7.</p>\n                </div>\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">Frontend</div>\n                  <p class=\"vbwd-card__desc\">Vue 3, TypeScript, Vite, Pinia, Vue Router 4.</p>\n                </div>\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">Infra</div>\n                  <p class=\"vbwd-card__desc\">Docker, Docker Compose, Nginx, Gunicorn.</p>\n                </div>\n                <div class=\"vbwd-card\">\n                  <div class=\"vbwd-card__title\">Testing</div>\n                  <p class=\"vbwd-card__desc\">pytest, Vitest, Playwright — 1,851+ passing tests.</p>\n                </div>\n              </div>\n            </section>\n\n          </div>\n        </article>", "seo": {"robots": "index,follow", "canonical_url": null, "meta_description": "Every feature in VBWD Doctor is a composable plugin. Toggle from the admin panel, no restart."}}</script>
+    <div id="app"><h1>Features</h1><ul><li>Subscription billing &amp; tariff plans</li><li>Shop &amp; bookings</li><li>CMS pages, layouts &amp; widgets</li><li>GitHub software marketplace (GHRM)</li><li>Multi-currency, taxes &amp; netto/brutto</li></ul></div>
+    <script type="application/json" id="__POST__">{"slug": "features", "title": "Features", "content_html": "<h1>Features</h1><ul><li>Subscription billing &amp; tariff plans</li><li>Shop &amp; bookings</li><li>CMS pages, layouts &amp; widgets</li><li>GitHub software marketplace (GHRM)</li><li>Multi-currency, taxes &amp; netto/brutto</li></ul>", "seo": {"robots": "index,follow", "canonical_url": null, "meta_description": "Explore the key features of the VBWD platform: billing, user management, plugins, CMS, and more."}}</script>
   </body>
 </html>

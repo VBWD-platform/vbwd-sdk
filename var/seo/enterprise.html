@@ -2,15 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>VBWD for Enterprise</title>
+    <title>VBWD for Enterprise — The SaaS toolkit that adapts to you</title>
     <meta name="description" content="Composable verticals, vendor-neutral payments, plugin-native architecture. Run your shop, hotel, clinic, or SaaS on a single codebase." data-seo="ssr" />
     <meta name="robots" content="index,follow" data-seo="ssr" />
-    <meta property="og:title" content="VBWD for Enterprise" data-seo="ssr" />
+    <meta property="og:title" content="VBWD for Enterprise — The SaaS toolkit that adapts to you" data-seo="ssr" />
     <meta property="og:description" content="Composable verticals, vendor-neutral payments, plugin-native architecture. Run your shop, hotel, clinic, or SaaS on a single codebase." data-seo="ssr" />
     <meta name="twitter:card" content="summary_large_image" data-seo="ssr" />
-    <meta name="twitter:title" content="VBWD for Enterprise" data-seo="ssr" />
+    <meta name="twitter:title" content="VBWD for Enterprise — The SaaS toolkit that adapts to you" data-seo="ssr" />
     <meta name="twitter:description" content="Composable verticals, vendor-neutral payments, plugin-native architecture. Run your shop, hotel, clinic, or SaaS on a single codebase." data-seo="ssr" />
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "VBWD for Enterprise", "url": "", "description": "Composable verticals, vendor-neutral payments, plugin-native architecture. Run your shop, hotel, clinic, or SaaS on a single codebase."}</script>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "VBWD for Enterprise — The SaaS toolkit that adapts to you", "url": null, "description": "Composable verticals, vendor-neutral payments, plugin-native architecture. Run your shop, hotel, clinic, or SaaS on a single codebase."}</script>
     <!--vbwd:assets-->
     <script type="module" src="/assets/index.js"></script>
     <link rel="stylesheet" href="/assets/index.css" />
@@ -105,7 +105,8 @@ nav a:hover { color: var(--color-accent); text-decoration: none; }
 .cms-widget--header-nav,
 .cms-widget--footer-nav,
 .cms-widget--vue,
-.cms-breadcrumb {
+.cms-breadcrumb,
+.cms-area--content .container {
   max-width: var(--container-max) !important;
   width: 100% !important;
   margin-left: auto !important;
@@ -123,11 +124,14 @@ nav a:hover { color: var(--color-accent); text-decoration: none; }
   padding-left: 0 !important;
   margin-left: 0 !important;
 }
-/* All menu items share the default .cms-menu__link padding so the
- * first one lines up visually with its siblings. Previously the first
- * link was pinned to padding-left:0 to make it flush with the hero /
- * cta-band outer edge, but that made item #1 stick out to the left of
- * items #2..N. Visual consistency inside the menu wins. */
+/* The first menu link is pinned to padding-left:0 so its label sits flush
+ * with the wrapper's inner-left edge — the same vertical line as the
+ * hero / cta-band outer edge, the breadcrumb's first crumb, and the main
+ * content. Edge alignment across the whole page wins over per-menu
+ * visual symmetry. */
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link {
+  padding-left: 0 !important;
+}
 .cms-widget--header-nav .cms-burger {
   margin-left: -6px;   /* neutralise the button's own 6px inner padding */
 }
@@ -358,77 +362,65 @@ footer {
 
 /* palette */
 :root {
-  --color-accent: #2563eb;
-  --color-accent-soft: #dbeafe;
-  --color-accent-dark: #1d4ed8;
+  --color-accent: #111827;
+  --color-accent-soft: #e5e7eb;
+  --color-accent-dark: #030712;
   --color-accent-fg: #ffffff;
-  --color-contrast-bg: #0f172a;
-  --color-contrast-fg: #f8fafc;
-  --color-contrast-hover-bg: #1e293b;
-  --color-link: #1d4ed8;
-  --color-link-hover: #1e40af;
-  --color-bg: #ffffff;
+  --color-contrast-bg: #c2410c;
+  --color-contrast-fg: #ffffff;
+  --color-contrast-hover-bg: #9a3412;
+  --color-link: #111827;
+  --color-link-hover: #030712;
+  --color-bg: #fafafa;
   --color-surface: #ffffff;
-  --color-surface-soft: #f8fafc;
-  --color-border: #e2e8f0;
-  --color-text: #0f172a;
-  --color-text-muted: #475569;
-  --color-heading: #0b1220;
-  --color-gradient: linear-gradient(135deg, #1d4ed8 0%, #5b21b6 100%);
+  --color-surface-soft: #f3f4f6;
+  --color-border: #d1d5db;
+  --color-text: #1f2937;
+  --color-text-muted: #4b5563;
+  --color-heading: #030712;
+  --color-gradient: linear-gradient(135deg, #111827 0%, #374151 100%);
 }
 
 /* width */
 :root {
-  --container-max: 1100px;
-  --edge-inset: 0rem;
+  --container-max: 100%;
+  --edge-inset: 1.5rem;
 }
 
-/* header-nav — boxed themes (narrow / 1200):
- *   ≥ 751 px  → horizontal row, no burger
- *   ≤ 750 px  → burger drawer (standard mobile behaviour)
- * Footer-nav stays horizontal at every viewport (its widget CSS forces that).
- */
-@media (min-width: 751px) {
-  .cms-widget--header-nav .cms-burger { display: none !important; }
-  .cms-widget--header-nav .cms-menu-overlay { display: none !important; }
-  .cms-widget--header-nav .cms-menu {
-    display: flex !important; flex-direction: row !important; flex-wrap: wrap;
-    align-items: center;
-    position: static !important; width: auto; height: auto;
-    background: transparent; padding: 0; box-shadow: none;
-    overflow: visible;
-  }
-  .cms-widget--header-nav .cms-menu__item { position: relative; border-bottom: none; }
-  .cms-widget--header-nav .cms-menu__sub {
-    position: absolute; top: 100%; left: 0;
-    background: var(--color-surface, #fff);
-    border: 1px solid var(--color-border, #e5e7eb);
-    border-radius: 8px; min-width: 200px; z-index: 300;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    max-height: none; display: none;
-    padding: 0.35rem 0;
-  }
-  .cms-widget--header-nav .cms-menu__item:hover > .cms-menu__sub,
-  .cms-widget--header-nav .cms-menu__sub--open { display: block !important; }
+/* header-nav: force burger drawer at every viewport */
+.cms-widget--header-nav .cms-burger { display: flex !important; position: relative !important; z-index: 400 !important; }
+.cms-widget--header-nav .cms-menu {
+  display: flex !important; flex-direction: column !important; align-items: stretch !important;
+  position: fixed !important; top: 0; left: -100%;
+  width: min(340px, 88vw); height: 100dvh;
+  background: var(--color-bg, #fff);
+  padding: 4rem 0 2rem; overflow-y: auto; z-index: 300;
+  transition: left 0.28s ease;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
 }
-@media (max-width: 750px) {
-  .cms-widget--header-nav .cms-burger { display: flex !important; position: relative !important; z-index: 400 !important; }
-  .cms-widget--header-nav .cms-menu {
-    display: flex !important; flex-direction: column !important; align-items: stretch !important;
-    position: fixed !important; top: 0; left: -100%;
-    width: min(320px, 88vw); height: 100dvh;
-    background: var(--color-bg, #fff);
-    padding: 4rem 0 2rem; overflow-y: auto; z-index: 300;
-    transition: left 0.28s ease;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-  }
-  .cms-widget--header-nav .cms-menu--open { left: 0 !important; }
-  .cms-widget--header-nav .cms-menu__item { position: static !important; border-bottom: 1px solid var(--color-border, #e5e7eb); }
-  .cms-widget--header-nav .cms-menu__link { padding: 0.9rem 1.5rem !important; font-size: 1rem !important; justify-content: space-between !important; }
-  .cms-widget--header-nav .cms-menu__sub { position: static !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; max-height: 0; overflow: hidden; display: block !important; transition: max-height 0.25s ease; }
-  .cms-widget--header-nav .cms-menu__sub--open { max-height: 600px; }
-  .cms-widget--header-nav .cms-menu__sub .cms-menu__link { padding-left: 2.5rem !important; font-size: 0.9rem !important; opacity: 0.85; }
-}</style>
+.cms-widget--header-nav .cms-menu--open { left: 0 !important; }
+.cms-widget--header-nav .cms-menu__item { position: static !important; border-bottom: 1px solid var(--color-border, #e5e7eb); }
+.cms-widget--header-nav .cms-menu__link { padding: 0.9rem 1.5rem !important; font-size: 1rem !important; justify-content: space-between !important; }
+.cms-widget--header-nav .cms-menu__sub { position: static !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; max-height: 0; overflow: hidden; display: block !important; transition: max-height 0.25s ease; }
+.cms-widget--header-nav .cms-menu__sub--open { max-height: 600px; }
+.cms-widget--header-nav .cms-menu__sub .cms-menu__link { padding-left: 2.5rem !important; font-size: 0.9rem !important; opacity: 0.85; }
+/* VBWD_EDGE_ALIGN:v1 — header nav, breadcrumb + content on one vertical line. Do not edit by hand. */
+.cms-area--hero, .cms-area--cta,
+.cms-widget--header-nav, .cms-widget--footer-nav, .cms-widget--vue,
+.cms-breadcrumb, .cms-area--content .container {
+  max-width: var(--container-max, 1200px) !important;
+  width: 100% !important;
+  margin-left: auto !important; margin-right: auto !important;
+  padding-left: var(--edge-inset) !important;
+  padding-right: var(--edge-inset) !important;
+  box-sizing: border-box !important;
+}
+.cms-widget--header-nav .cms-menu, .cms-widget--footer-nav .cms-menu { padding-left: 0 !important; margin-left: 0 !important; }
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link { padding-left: 0 !important; }
+.cms-breadcrumb { gap: 0 !important; padding-left: var(--edge-inset) !important; }
+.cms-breadcrumb > a:first-of-type, .cms-breadcrumb > .cms-breadcrumb__link:first-of-type { margin-left: 0 !important; padding-left: 0 !important; }
+@media (max-width: 700px) { :root { --edge-inset: 1rem; } }
+/* /VBWD_EDGE_ALIGN:v1 */</style>
   </head>
   <body>
     <div id="app"><section class="hero">
@@ -480,6 +472,6 @@ footer {
 <a class="btn btn--contrast" href="/contact">Book a call</a>
 </section>
 </div>
-    <script type="application/json" id="__POST__">{"slug": "enterprise", "title": "VBWD for Enterprise", "content_html": "<section class=\"hero\">\n<span class=\"hero__eyebrow\">For enterprise teams</span>\n<h1>The SaaS toolkit that adapts to you. Not the other way around.</h1>\n<p class=\"hero__subtitle\">Composable verticals, vendor-neutral payments, plugin-native architecture. Run one shop, one hotel booking engine, one medical intake — or all of them on a single codebase.</p>\n<div class=\"hero__ctas\">\n  <a class=\"btn btn--contrast\" href=\"/contact\">Request a consultation</a>\n  <a class=\"btn\" href=\"/solutions\">Browse solutions</a>\n</div>\n</section>\n\n<section class=\"container\" style=\"text-align:center\">\n<div class=\"cols-3\" style=\"gap:3rem;margin:2rem 0\">\n  <div><div style=\"font-size:2.75rem;font-weight:800;color:var(--color-heading)\">3,500+</div><p>Plugin installs across the network</p></div>\n  <div><div style=\"font-size:2.75rem;font-weight:800;color:var(--color-heading)\">6</div><p>Vertical demos running on one platform</p></div>\n  <div><div style=\"font-size:2.75rem;font-weight:800;color:var(--color-heading)\">BSL-1.1</div><p>Self-hostable, source-available licence</p></div>\n</div>\n</section>\n\n<section class=\"container\">\n<h2>Nine capabilities, built for enterprise</h2>\n<div class=\"cards-grid\" style=\"margin-top:2rem\">\n  <div class=\"card\"><h3>Flexible customisation</h3><p>Every plugin is a standalone repo with its own CI. Build on top, fork, or replace — no vendor lock-in.</p></div>\n  <div class=\"card\"><h3>B2B &amp; B2C pricing</h3><p>Tiered plans, per-customer contracts, addon catalogues, token bundles. The subscription plugin handles all of it.</p></div>\n  <div class=\"card\"><h3>Multi-instance, one codebase</h3><p>Six live demo subdomains today — vbwd.cc, shop, hotel, doctor, ghrm, saas — from the same images, different plugin configs.</p></div>\n  <div class=\"card\"><h3>Headless-ready API</h3><p>Every surface exposes a JSON API before it exposes a Vue component. Swap the front-end without touching the backend.</p></div>\n  <div class=\"card\"><h3>Native integrations</h3><p>Stripe, PayPal, YooKassa out of the box. Each is a plugin you can disable or replace with your own adapter in ~80 lines.</p></div>\n  <div class=\"card\"><h3>Modular extensions</h3><p>Plugins live in individual GitHub repos under VBWD-platform. Install, update, and version them independently.</p></div>\n  <div class=\"card\"><h3>Responsive by default</h3><p>Every theme ships mobile-first. The 6-colour × 2-width matrix covers 12 combinations before any custom CSS.</p></div>\n  <div class=\"card\"><h3>CMS inside</h3><p>Pages, layouts, widgets, styles, menus, and a runtime default-style resolver — no external CMS to integrate.</p></div>\n  <div class=\"card\"><h3>Accelerator kits</h3><p>Pre-built demo instances let you clone a vertical and go live in a day. See <a href=\"/accelerator\">the accelerator page</a>.</p></div>\n</div>\n</section>\n\n<section class=\"container\">\n<h2>Four case studies on a single platform</h2>\n<div class=\"cols-2\" style=\"margin-top:2rem\">\n  <div class=\"card\"><h3>Shop — multi-vendor storefront</h3><p>Booking plugin disabled; shop + discount + stripe active. One catalogue, cart, checkout, coupons.</p><p><a href=\"https://shop.vbwd.cc\">shop.vbwd.cc →</a></p></div>\n  <div class=\"card\"><h3>Hotel — room booking engine</h3><p>Booking plugin active; shop and GHRM inactive. Live availability, instant confirmation.</p><p><a href=\"https://hotel.vbwd.cc\">hotel.vbwd.cc →</a></p></div>\n  <div class=\"card\"><h3>Doctor — clinic intake</h3><p>Same booking plugin as hotel, different vertical framing. Shows composability.</p><p><a href=\"https://doctor.vbwd.cc\">doctor.vbwd.cc →</a></p></div>\n  <div class=\"card\"><h3>Software store — GitHub-backed catalogue</h3><p>GHRM plugin + subscription for metered access. Sell repositories with automatic access provisioning.</p><p><a href=\"https://ghrm.vbwd.cc\">ghrm.vbwd.cc →</a></p></div>\n</div>\n</section>\n\n<section class=\"cta-band\">\n<h2>Ready to evaluate?</h2>\n<p>Request a 30-minute walkthrough. No pricing slides.</p>\n<a class=\"btn btn--contrast\" href=\"/contact\">Book a call</a>\n</section>\n", "seo": {"robots": "index,follow", "canonical_url": "", "meta_description": "Composable verticals, vendor-neutral payments, plugin-native architecture. Run your shop, hotel, clinic, or SaaS on a single codebase."}}</script>
+    <script type="application/json" id="__POST__">{"slug": "enterprise", "title": "VBWD for Enterprise", "content_html": "<section class=\"hero\">\n<span class=\"hero__eyebrow\">For enterprise teams</span>\n<h1>The SaaS toolkit that adapts to you. Not the other way around.</h1>\n<p class=\"hero__subtitle\">Composable verticals, vendor-neutral payments, plugin-native architecture. Run one shop, one hotel booking engine, one medical intake — or all of them on a single codebase.</p>\n<div class=\"hero__ctas\">\n  <a class=\"btn btn--contrast\" href=\"/contact\">Request a consultation</a>\n  <a class=\"btn\" href=\"/solutions\">Browse solutions</a>\n</div>\n</section>\n\n<section class=\"container\" style=\"text-align:center\">\n<div class=\"cols-3\" style=\"gap:3rem;margin:2rem 0\">\n  <div><div style=\"font-size:2.75rem;font-weight:800;color:var(--color-heading)\">3,500+</div><p>Plugin installs across the network</p></div>\n  <div><div style=\"font-size:2.75rem;font-weight:800;color:var(--color-heading)\">6</div><p>Vertical demos running on one platform</p></div>\n  <div><div style=\"font-size:2.75rem;font-weight:800;color:var(--color-heading)\">BSL-1.1</div><p>Self-hostable, source-available licence</p></div>\n</div>\n</section>\n\n<section class=\"container\">\n<h2>Nine capabilities, built for enterprise</h2>\n<div class=\"cards-grid\" style=\"margin-top:2rem\">\n  <div class=\"card\"><h3>Flexible customisation</h3><p>Every plugin is a standalone repo with its own CI. Build on top, fork, or replace — no vendor lock-in.</p></div>\n  <div class=\"card\"><h3>B2B &amp; B2C pricing</h3><p>Tiered plans, per-customer contracts, addon catalogues, token bundles. The subscription plugin handles all of it.</p></div>\n  <div class=\"card\"><h3>Multi-instance, one codebase</h3><p>Six live demo subdomains today — vbwd.cc, shop, hotel, doctor, ghrm, saas — from the same images, different plugin configs.</p></div>\n  <div class=\"card\"><h3>Headless-ready API</h3><p>Every surface exposes a JSON API before it exposes a Vue component. Swap the front-end without touching the backend.</p></div>\n  <div class=\"card\"><h3>Native integrations</h3><p>Stripe, PayPal, YooKassa out of the box. Each is a plugin you can disable or replace with your own adapter in ~80 lines.</p></div>\n  <div class=\"card\"><h3>Modular extensions</h3><p>Plugins live in individual GitHub repos under VBWD-platform. Install, update, and version them independently.</p></div>\n  <div class=\"card\"><h3>Responsive by default</h3><p>Every theme ships mobile-first. The 6-colour × 2-width matrix covers 12 combinations before any custom CSS.</p></div>\n  <div class=\"card\"><h3>CMS inside</h3><p>Pages, layouts, widgets, styles, menus, and a runtime default-style resolver — no external CMS to integrate.</p></div>\n  <div class=\"card\"><h3>Accelerator kits</h3><p>Pre-built demo instances let you clone a vertical and go live in a day. See <a href=\"/accelerator\">the accelerator page</a>.</p></div>\n</div>\n</section>\n\n<section class=\"container\">\n<h2>Four case studies on a single platform</h2>\n<div class=\"cols-2\" style=\"margin-top:2rem\">\n  <div class=\"card\"><h3>Shop — multi-vendor storefront</h3><p>Booking plugin disabled; shop + discount + stripe active. One catalogue, cart, checkout, coupons.</p><p><a href=\"https://shop.vbwd.cc\">shop.vbwd.cc →</a></p></div>\n  <div class=\"card\"><h3>Hotel — room booking engine</h3><p>Booking plugin active; shop and GHRM inactive. Live availability, instant confirmation.</p><p><a href=\"https://hotel.vbwd.cc\">hotel.vbwd.cc →</a></p></div>\n  <div class=\"card\"><h3>Doctor — clinic intake</h3><p>Same booking plugin as hotel, different vertical framing. Shows composability.</p><p><a href=\"https://doctor.vbwd.cc\">doctor.vbwd.cc →</a></p></div>\n  <div class=\"card\"><h3>Software store — GitHub-backed catalogue</h3><p>GHRM plugin + subscription for metered access. Sell repositories with automatic access provisioning.</p><p><a href=\"https://ghrm.vbwd.cc\">ghrm.vbwd.cc →</a></p></div>\n</div>\n</section>\n\n<section class=\"cta-band\">\n<h2>Ready to evaluate?</h2>\n<p>Request a 30-minute walkthrough. No pricing slides.</p>\n<a class=\"btn btn--contrast\" href=\"/contact\">Book a call</a>\n</section>\n", "seo": {"robots": "index,follow", "canonical_url": null, "meta_description": "Composable verticals, vendor-neutral payments, plugin-native architecture. Run your shop, hotel, clinic, or SaaS on a single codebase."}}</script>
   </body>
 </html>

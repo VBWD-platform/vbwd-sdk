@@ -105,7 +105,8 @@ nav a:hover { color: var(--color-accent); text-decoration: none; }
 .cms-widget--header-nav,
 .cms-widget--footer-nav,
 .cms-widget--vue,
-.cms-breadcrumb {
+.cms-breadcrumb,
+.cms-area--content .container {
   max-width: var(--container-max) !important;
   width: 100% !important;
   margin-left: auto !important;
@@ -123,11 +124,14 @@ nav a:hover { color: var(--color-accent); text-decoration: none; }
   padding-left: 0 !important;
   margin-left: 0 !important;
 }
-/* All menu items share the default .cms-menu__link padding so the
- * first one lines up visually with its siblings. Previously the first
- * link was pinned to padding-left:0 to make it flush with the hero /
- * cta-band outer edge, but that made item #1 stick out to the left of
- * items #2..N. Visual consistency inside the menu wins. */
+/* The first menu link is pinned to padding-left:0 so its label sits flush
+ * with the wrapper's inner-left edge — the same vertical line as the
+ * hero / cta-band outer edge, the breadcrumb's first crumb, and the main
+ * content. Edge alignment across the whole page wins over per-menu
+ * visual symmetry. */
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link {
+  padding-left: 0 !important;
+}
 .cms-widget--header-nav .cms-burger {
   margin-left: -6px;   /* neutralise the button's own 6px inner padding */
 }
@@ -428,7 +432,24 @@ footer {
   .cms-widget--header-nav .cms-menu__sub { position: static !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; max-height: 0; overflow: hidden; display: block !important; transition: max-height 0.25s ease; }
   .cms-widget--header-nav .cms-menu__sub--open { max-height: 600px; }
   .cms-widget--header-nav .cms-menu__sub .cms-menu__link { padding-left: 2.5rem !important; font-size: 0.9rem !important; opacity: 0.85; }
-}</style>
+}
+/* VBWD_EDGE_ALIGN:v1 — header nav, breadcrumb + content on one vertical line. Do not edit by hand. */
+.cms-area--hero, .cms-area--cta,
+.cms-widget--header-nav, .cms-widget--footer-nav, .cms-widget--vue,
+.cms-breadcrumb, .cms-area--content .container {
+  max-width: var(--container-max, 1200px) !important;
+  width: 100% !important;
+  margin-left: auto !important; margin-right: auto !important;
+  padding-left: var(--edge-inset) !important;
+  padding-right: var(--edge-inset) !important;
+  box-sizing: border-box !important;
+}
+.cms-widget--header-nav .cms-menu, .cms-widget--footer-nav .cms-menu { padding-left: 0 !important; margin-left: 0 !important; }
+.cms-widget--header-nav .cms-menu > .cms-menu__item:first-child > .cms-menu__link { padding-left: 0 !important; }
+.cms-breadcrumb { gap: 0 !important; padding-left: var(--edge-inset) !important; }
+.cms-breadcrumb > a:first-of-type, .cms-breadcrumb > .cms-breadcrumb__link:first-of-type { margin-left: 0 !important; padding-left: 0 !important; }
+@media (max-width: 700px) { :root { --edge-inset: 1rem; } }
+/* /VBWD_EDGE_ALIGN:v1 */</style>
   </head>
   <body>
     <div id="app"><h1>Privacy Policy</h1><p>Your privacy policy content goes here.</p></div>

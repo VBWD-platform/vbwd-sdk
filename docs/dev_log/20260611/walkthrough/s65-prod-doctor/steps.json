@@ -1,0 +1,96 @@
+[
+  {
+    "n": 1,
+    "file": "step-01.png",
+    "title": "Login — doctor.vbwd.cc",
+    "caption": "Production admin login at <code>https://doctor.vbwd.cc/admin/login</code>.",
+    "data": null
+  },
+  {
+    "n": 2,
+    "file": "step-02.png",
+    "title": "Signed in — doctor.vbwd.cc",
+    "caption": "Authenticated on production <b>doctor.vbwd.cc</b>.",
+    "data": null
+  },
+  {
+    "n": 3,
+    "file": "step-03.png",
+    "title": "Import / Export view",
+    "caption": "The unified Import/Export view on <b>doctor.vbwd.cc</b> (manifest-driven).",
+    "data": null
+  },
+  {
+    "n": 4,
+    "file": "step-04.png",
+    "title": "Booking Categories: file selected",
+    "caption": "Envelope <code>booking_categories.json</code> selected on <b>doctor.vbwd.cc</b> (upsert mode). Nothing written yet.",
+    "data": null
+  },
+  {
+    "n": 5,
+    "file": "step-05.png",
+    "title": "Booking Categories: dry-run preview",
+    "caption": "<b>Preview</b> (dry_run) on <b>doctor.vbwd.cc</b>: <code>booking_categories</code> would create <b>12</b>, update <b>0</b>, errors <b>0</b>.",
+    "data": {
+      "entity": "booking_categories",
+      "created": "12",
+      "updated": "0",
+      "skipped": "0",
+      "errors": "0"
+    }
+  },
+  {
+    "n": 6,
+    "file": "step-06.png",
+    "title": "Booking Categories: import committed",
+    "caption": "<b>Confirm</b> on <b>doctor.vbwd.cc</b>: <code>booking_categories</code> created <b>12</b>, updated <b>0</b>, skipped <b>0</b>, errors <b>0</b>. Rows are now live in production.",
+    "data": {
+      "entity": "booking_categories",
+      "created": "12",
+      "updated": "0",
+      "skipped": "0",
+      "errors": "0"
+    }
+  },
+  {
+    "n": 7,
+    "file": "step-07.png",
+    "title": "Booking Resources: file selected",
+    "caption": "Envelope <code>booking_resources.json</code> selected on <b>doctor.vbwd.cc</b> (upsert mode). Nothing written yet.",
+    "data": null
+  },
+  {
+    "n": 8,
+    "file": "step-08.png",
+    "title": "Booking Resources: dry-run preview",
+    "caption": "<b>Preview</b> (dry_run) on <b>doctor.vbwd.cc</b>: <code>booking_resources</code> would create <b>28</b>, update <b>0</b>, errors <b>0</b>.",
+    "data": {
+      "entity": "booking_resources",
+      "created": "28",
+      "updated": "0",
+      "skipped": "0",
+      "errors": "0"
+    }
+  },
+  {
+    "n": 9,
+    "file": "step-09.png",
+    "title": "Booking Resources: import committed",
+    "caption": "<b>Confirm</b> on <b>doctor.vbwd.cc</b>: <code>booking_resources</code> created <b>28</b>, updated <b>0</b>, skipped <b>0</b>, errors <b>0</b>. Rows are now live in production.",
+    "data": {
+      "entity": "booking_resources",
+      "created": "28",
+      "updated": "0",
+      "skipped": "0",
+      "errors": "0"
+    }
+  },
+  {
+    "n": 10,
+    "file": "step-10.png",
+    "title": "Verify: Resource List — doctor.vbwd.cc",
+    "caption": "The production Booking Resource List now includes the imported catalogue, each resource linked to its category by slug.",
+    "data": null
+  }
+]

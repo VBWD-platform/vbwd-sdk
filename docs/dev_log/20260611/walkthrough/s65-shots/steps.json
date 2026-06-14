@@ -1,0 +1,116 @@
+[
+  {
+    "n": 1,
+    "file": "step-01.png",
+    "title": "Admin login",
+    "caption": "The vbwd admin backoffice login page (<code>http://localhost:8081/admin/login</code>).",
+    "data": null
+  },
+  {
+    "n": 2,
+    "file": "step-02.png",
+    "title": "Signed in — dashboard",
+    "caption": "Authenticated as <code>admin@example.com</code>. The admin dashboard loads with the full backoffice sidebar (Sales, Settings, CMS).",
+    "data": null
+  },
+  {
+    "n": 3,
+    "file": "step-03.png",
+    "title": "Import / Export view",
+    "caption": "Settings → Import/Export. The General tab is manifest-driven: every registered entity (CMS, Sales, Settings clusters) can be exported or imported here. We will import the <b>hotel booking catalogue</b> — first categories, then resources.",
+    "data": null
+  },
+  {
+    "n": 4,
+    "file": "step-04.png",
+    "title": "Booking Categories: file selected",
+    "caption": "The envelope <code>booking_categories.json</code> is selected in the unified Import block. Mode is <b>upsert</b> (match existing rows by slug). No data has been written yet.",
+    "data": null
+  },
+  {
+    "n": 5,
+    "file": "step-05.png",
+    "title": "Booking Categories: dry-run preview",
+    "caption": "Clicking <b>Preview</b> runs a <code>dry_run</code> import — it validates and reports what <i>would</i> happen without writing. Result for <code>booking_categories</code>: created <b>5</b>, updated <b>0</b>, skipped <b>0</b>, errors <b>0</b>.",
+    "data": {
+      "entity": "booking_categories",
+      "created": "5",
+      "updated": "0",
+      "skipped": "0",
+      "errors": "0"
+    }
+  },
+  {
+    "n": 6,
+    "file": "step-06.png",
+    "title": "Booking Categories: import committed",
+    "caption": "Clicking <b>Confirm</b> commits the import. Result for <code>booking_categories</code>: created <b>5</b>, updated <b>0</b>, skipped <b>0</b>, errors <b>0</b>. The rows are now persisted in the database.",
+    "data": {
+      "entity": "booking_categories",
+      "created": "5",
+      "updated": "0",
+      "skipped": "0",
+      "errors": "0"
+    }
+  },
+  {
+    "n": 7,
+    "file": "step-07.png",
+    "title": "Booking Resources: file selected",
+    "caption": "The envelope <code>booking_resources.json</code> is selected in the unified Import block. Mode is <b>upsert</b> (match existing rows by slug). No data has been written yet.",
+    "data": null
+  },
+  {
+    "n": 8,
+    "file": "step-08.png",
+    "title": "Booking Resources: dry-run preview",
+    "caption": "Clicking <b>Preview</b> runs a <code>dry_run</code> import — it validates and reports what <i>would</i> happen without writing. Result for <code>booking_resources</code>: created <b>15</b>, updated <b>0</b>, skipped <b>0</b>, errors <b>0</b>.",
+    "data": {
+      "entity": "booking_resources",
+      "created": "15",
+      "updated": "0",
+      "skipped": "0",
+      "errors": "0"
+    }
+  },
+  {
+    "n": 9,
+    "file": "step-09.png",
+    "title": "Booking Resources: import committed",
+    "caption": "Clicking <b>Confirm</b> commits the import. Result for <code>booking_resources</code>: created <b>15</b>, updated <b>0</b>, skipped <b>0</b>, errors <b>0</b>. The rows are now persisted in the database.",
+    "data": {
+      "entity": "booking_resources",
+      "created": "15",
+      "updated": "0",
+      "skipped": "0",
+      "errors": "0"
+    }
+  },
+  {
+    "n": 10,
+    "file": "step-10.png",
+    "title": "Idempotent re-import (upsert by slug)",
+    "caption": "Re-importing the same resources envelope in <b>upsert</b> mode matches the existing rows by slug: created <b>0</b>, updated <b>15</b>, errors <b>0</b>. No duplicate rows are created — the import is idempotent and safe to re-run.",
+    "data": {
+      "entity": "booking_resources",
+      "created": "0",
+      "updated": "15",
+      "skipped": "0",
+      "errors": "0"
+    }
+  },
+  {
+    "n": 11,
+    "file": "step-11.png",
+    "title": "Verify: Booking dashboard counts",
+    "caption": "The Booking admin dashboard reflects the import: <b>24 Resources</b> (9 original + 15 imported) and <b>9 Categories</b> (4 original + 5 hotel categories). The catalogue grew by exactly what we uploaded.",
+    "data": null
+  },
+  {
+    "n": 12,
+    "file": "step-12.png",
+    "title": "Verify: admin Resource List",
+    "caption": "The Booking → Resources list now shows the imported hotel resources (Superior Deluxe, Deluxe Room Sea View, SPA Full Day, Conference Room A, Family Room, Meditation Session, …), each linked to its hotel category via <code>category_slugs</code>. The catalogue imported through the UI is fully operational — bookable, with availability and pricing intact.",
+    "data": null
+  }
+]

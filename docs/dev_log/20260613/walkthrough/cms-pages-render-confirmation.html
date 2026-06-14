@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>CMS pages render confirmation — blank → real content</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, sans-serif; max-width: 1180px; margin: 2rem auto; padding: 0 1rem; color: #1a202c; }
+  h1 { border-bottom: 3px solid #3182ce; padding-bottom: .4rem; }
+  h2 { color: #2c5282; margin-top: 2.4rem; }
+  .meta { color: #4a5568; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .92rem; }
+  th, td { border: 1px solid #cbd5e0; padding: .4rem .6rem; text-align: left; }
+  th { background: #ebf8ff; }
+  .ok { color: #22543d; font-weight: 600; }
+  .note { color: #744210; }
+  code { background: #edf2f7; padding: .1em .35em; border-radius: 3px; }
+  .shot { margin: 1.4rem 0; }
+  .shot h3 { margin-bottom: .3rem; color: #2c5282; }
+  .shot img { width: 100%; border: 1px solid #cbd5e0; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
+  .pair figcaption { font-size: .85rem; color: #4a5568; margin-top: .2rem; }
+  .lead { background: #f7fafc; border-left: 4px solid #3182ce; padding: .8rem 1rem; border-radius: 4px; }
+</style></head><body>
+
+<h1>CMS pages render confirmation</h1>
+<p class="meta">2026-06-13 · Every previously-blank public CMS page now renders. Verified live on <code>http://localhost:8080</code>; screenshots captured with Playwright.</p>
+
+<div class="lead">
+<b>What was wrong:</b> 16 of 40 published CMS pages rendered as a blank white screen. Their explicitly-assigned layouts (home-v1, ghrm-software-catalogue, booking-*, native-pricing-page, …) had <b>zero widget placements</b> and no <code>content</code> area, so nothing rendered.<br><br>
+<b>Two-part fix:</b>
+<ol>
+<li><b>Graceful fallback (code):</b> a page/post whose assigned layout is <i>unseeded</i> (0 <code>cms_layout_widget</code> rows) now falls back to the active default layout instead of a blank page — <i>"no layout → default; not seeded → default."</i> (<code>--plugin cms --full</code> green.)</li>
+<li><b>Seeded the real placements (data):</b> each layout's widgets are now placed in their areas (hero/features/cta for home, <code>GhrmCatalogueContent</code> for the GHRM catalogue, the booking widgets, <code>NativePricingPlans</code> for native pricing). A page with its <b>own seeded layout uses that layout</b> (it overrides the default).</li>
+</ol>
+</div>
+
+<h2>Per-page result</h2>
+<table>
+<tr><th>Page</th><th>Own layout</th><th>Renders via</th><th>Status</th><th>Content shown</th></tr>
+<tr><td><code>home1</code></td><td>home-v1</td><td>own (seeded)</td><td class="ok">✓ renders</td><td>hero + features + CTA</td></tr>
+<tr><td><code>home2</code></td><td>home-v2</td><td>own (seeded)</td><td class="ok">✓ renders</td><td>hero + pricing + testimonials</td></tr>
+<tr><td><code>landing2</code>, <code>landing3</code></td><td>landing</td><td>own (seeded)</td><td class="ok">✓ renders</td><td>hero + features + CTA + social-proof</td></tr>
+<tr><td><code>ghrm-software-catalogue</code>, <code>software</code>, <code>category</code>, <code>category/*</code></td><td>ghrm-software-catalogue</td><td>own (seeded)</td><td class="ok">✓ renders</td><td>GHRM software catalogue</td></tr>
+<tr><td><code>ghrm-software-detail</code></td><td>ghrm-software-detail</td><td>own (seeded)</td><td class="ok">✓ renders</td><td>GHRM package detail / install</td></tr>
+<tr><td><code>booking</code></td><td>booking-catalogue</td><td>own (seeded)</td><td class="ok">✓ renders</td><td>booking catalogue (full list)</td></tr>
+<tr><td><code>booking-success</code>, <code>booking-cancel</code></td><td>booking-success/cancel</td><td>own (seeded)</td><td class="ok">✓ renders</td><td>payment status</td></tr>
+<tr><td><code>booking-form</code>, <code>booking-resource-detail</code></td><td>booking-form / -detail</td><td>own (seeded)</td><td class="note">✓ widget renders, shows "Resource not found"</td><td>needs a resource in the URL (correct widget behaviour)</td></tr>
+<tr><td><code>pricing-native</code></td><td>native-pricing-page</td><td>own (seeded)</td><td class="ok">✓ renders</td><td>"Choose Your Plan" native pricing</td></tr>
+<tr><td><code>features</code></td><td>content-page</td><td>own (body)</td><td class="ok">✓ renders</td><td>features list (page body added)</td></tr>
+</table>
+
+<h2>Before → after</h2>
+<div class="pair">
+  <figure class="shot"><img src="cms-render-shots/before_home1.png" alt="home1 before"><figcaption><code>/home1</code> — before: blank white</figcaption></figure>
+  <figure class="shot"><img src="cms-render-shots/seeded_home1.png" alt="home1 after"><figcaption><code>/home1</code> — after: hero + features + CTA</figcaption></figure>
+</div>
+<div class="pair">
+  <figure class="shot"><img src="cms-render-shots/before_ghrm-software-catalogue.png" alt="ghrm before"><figcaption><code>/ghrm-software-catalogue</code> — before: blank white</figcaption></figure>
+  <figure class="shot"><img src="cms-render-shots/seeded_ghrm-software-catalogue.png" alt="ghrm after"><figcaption><code>/ghrm-software-catalogue</code> — after: GHRM catalogue</figcaption></figure>
+</div>
+
+<h2>All seeded pages (after)</h2>
+<div class="shot"><h3>/home2 — home-v2 layout</h3><img src="cms-render-shots/seeded_home2.png"></div>
+<div class="shot"><h3>/landing2 — landing layout</h3><img src="cms-render-shots/seeded_landing2.png"></div>
+<div class="shot"><h3>/landing3 — landing layout</h3><img src="cms-render-shots/seeded_landing3.png"></div>
+<div class="shot"><h3>/software — ghrm-software-catalogue layout</h3><img src="cms-render-shots/seeded_software.png"></div>
+<div class="shot"><h3>/category — ghrm-software-catalogue layout</h3><img src="cms-render-shots/seeded_category.png"></div>
+<div class="shot"><h3>/ghrm-software-detail — ghrm-software-detail layout</h3><img src="cms-render-shots/seeded_ghrm-software-detail.png"></div>
+<div class="shot"><h3>/booking — booking-catalogue layout</h3><img src="cms-render-shots/seeded_booking.png"></div>
+<div class="shot"><h3>/booking-form — booking-form layout (Resource-not-found without a resource id)</h3><img src="cms-render-shots/seeded_booking-form.png"></div>
+<div class="shot"><h3>/booking-resource-detail — booking-resource-detail layout</h3><img src="cms-render-shots/seeded_booking-resource-detail.png"></div>
+<div class="shot"><h3>/booking-success — booking-success layout</h3><img src="cms-render-shots/seeded_booking-success.png"></div>
+<div class="shot"><h3>/booking-cancel — booking-cancel layout</h3><img src="cms-render-shots/seeded_booking-cancel.png"></div>
+<div class="shot"><h3>/pricing-native — native-pricing-page layout</h3><img src="cms-render-shots/seeded_pricing-native.png"></div>
+<div class="shot"><h3>/features — content-page layout (body added)</h3><img src="cms-render-shots/seeded_features.png"></div>
+
+<h2>Conclusions</h2>
+<ul>
+<li>All 16 previously-blank pages now render — the widget-driven ones via their <b>own seeded layouts</b> (which override the default once seeded), and <code>features</code> via its page body.</li>
+<li>The <b>unseeded-layout → default</b> fallback remains as the safety net: any future page whose layout has no placements degrades to the default chrome instead of a blank screen.</li>
+<li><code>booking-form</code> / <code>booking-resource-detail</code> show "Resource not found" when visited without a resource in the URL — this is the widget's correct context-required behaviour, not a placement gap.</li>
+<li><b>Durability note:</b> these placements live in the <code>cms_layout_widget</code> table (dev DB). Now that the <code>cms_layouts</code> exchanger round-trips <code>widget_assignments</code>, the placements should be baked into each plugin's layout import files (as done for shop) so a cold-start import reproduces them without manual seeding.</li>
+</ul>
+
+</body></html>

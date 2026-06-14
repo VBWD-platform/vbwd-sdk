@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>S86 — Bot-widget walkthrough (public guest + word-based token economy)</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, sans-serif; max-width: 1100px; margin: 2rem auto; padding: 0 1rem; color: #1a202c; }
+  h1 { border-bottom: 3px solid #3182ce; padding-bottom: .5rem; }
+  .meta { color: #4a5568; }
+  .lead { background: #f7fafc; border-left: 4px solid #3182ce; padding: .8rem 1rem; border-radius: 4px; margin: 1.2rem 0; }
+  .step { margin: 2.5rem 0; }
+  .step h2 { color: #2c5282; }
+  .step img { width: 100%; border: 1px solid #cbd5e0; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+  .step.error pre { background: #fff5f5; border: 1px solid #fc8181; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+  code { background: #edf2f7; padding: .1em .3em; border-radius: 3px; }
+  .ok { color: #22543d; font-weight: 600; }
+</style></head><body>
+<h1>S86 — Bot-widget walkthrough</h1>
+<p class="meta">2026-06-13 · Sprint <code>S86</code> (rooms + bot-widget) · Verified live on the running local stack
+(fe-user <code>:8080</code>, fe-admin <code>:8081</code>, api <code>:5000</code>) with Playwright (headless Chromium).</p>
+
+<div class="lead">
+<b>What S86 delivers (this walkthrough proves it in the browser):</b>
+<ul>
+<li>A reusable <b>MeinchatChatWidget</b> shipped as a CMS <code>vue-component</code> widget
+(<code>slug=meinchat-demo-widget</code>, <code>visibility=public</code>, <code>member_nicknames=['assistant']</code>),
+dropped into a public CMS page's layout area.</li>
+<li>A <b>PUBLIC guest</b> (no login) can name themselves and start a conversation with the existing
+<code>assistant</code> bot via <code>POST /api/v1/messaging/widget/start</code> — which mints a guest access token,
+a room, and an <b>initial token grant</b>.</li>
+<li>The <b>word-based token economy</b>: <b>1 token = 1 word</b> — the guest is debited for the words of their
+question <em>and</em> for the words of the bot's answer; when the balance reaches <b>0</b> the next send is
+refused (<code>HTTP 402 {code:'insufficient_tokens'}</code>) and the widget shows the
+<b>"Buy tokens to continue dialogue"</b> block (links to <code>/tokens</code>).</li>
+</ul>
+<p><b>Numbers observed in this run:</b> initial grant <b>Tokens: 200</b>; first question
+      "<i>What can you do</i>" = 4 words; balance arc start Tokens: 200 →
+      Tokens: 167 → Tokens: 133 → Tokens: 99 → … → <b>buy-block at 0</b>. Console errors: <b>1</b>.</p>
+</div>
+
+  <section class="step">
+    <h2>1. Public page with the chat widget (name prompt)</h2>
+    <p>The published CMS page <code>http://localhost:8080/chat-demo</code> renders the <b>MeinchatChatWidget</b> in its
+      layout's main area (header + footer nav around it). Because the widget is <code>visibility=public</code>,
+      an anonymous visitor sees the <b>"Enter your name to start"</b> prompt + a name field and a
+      <b>Start Conversation</b> button — no login required.</p>
+    <a href="s86-bot-widget-shots/step-01.png"><img src="s86-bot-widget-shots/step-01.png" alt="Public page with the chat widget (name prompt)" /></a>
+  </section>
+
+  <section class="step">
+    <h2>2. After "Start Conversation" — chat pane + initial grant</h2>
+    <p>Entering the name "Alex" and clicking <b>Start Conversation</b> calls
+      <code>POST /api/v1/messaging/widget/start</code> (public, no auth): the backend mints a guest access token
+      + a room and returns the <b>initial token grant</b>. The chat pane opens showing the welcome state and the
+      remaining balance: <b>Tokens: 200</b> (the demo grant <code>guest_initial_tokens</code> was raised to 200 so
+      the multi-exchange arc is visible before the buy-block).</p>
+    <a href="s86-bot-widget-shots/step-02.png"><img src="s86-bot-widget-shots/step-02.png" alt="After "Start Conversation" — chat pane + initial grant" /></a>
+  </section>
+
+  <section class="step">
+    <h2>3. Guest sends a message — the assistant replies</h2>
+    <p>The guest sends "<b>What can you do</b>" (4 words). The send debits the question's words server-side,
+      and the <code>assistant</code> bot answers in the room with its help-menu (<code>/hello</code>,
+      <code>/start</code>, <code>/stop</code>, <code>/help</code>, <code>/hello-llm</code>). Both bubbles are
+      visible — the guest's question (right) and the bot's answer (left). The answer's words are charged too, so
+      after this turn the balance is <b>Tokens: 167</b> (the verbose help-menu answer is exactly why one turn costs
+      ~35 words: 5 question + ~30 answer).</p>
+    <a href="s86-bot-widget-shots/step-03.png"><img src="s86-bot-widget-shots/step-03.png" alt="Guest sends a message — the assistant replies" /></a>
+  </section>
+
+  <section class="step">
+    <h2>4. More exchanges — the token balance decreases</h2>
+    <p>Each further turn (question words + the bot answer's words) keeps draining the balance — the live arc
+      observed: start <b>Tokens: 200</b> → <b>Tokens: 167</b> → <b>Tokens: 133</b> → <b>Tokens: 99</b>. The displayed balance is refreshed from
+      the backend's authoritative count after every send and every bot answer (the 402 gate is the real stop).</p>
+    <a href="s86-bot-widget-shots/step-04.png"><img src="s86-bot-widget-shots/step-04.png" alt="More exchanges — the token balance decreases" /></a>
+  </section>
+
+  <section class="step">
+    <h2>5. Balance exhausted → "Buy tokens to continue dialogue"</h2>
+    <p>Once the balance reaches 0 the next send is refused by the backend with
+      <code>HTTP 402 {code:'insufficient_tokens'}</code>. The widget catches this and renders the
+      <b>"Buy tokens to continue dialogue"</b> block, which links to <code>/tokens</code> — the guest can no
+      longer send until they top up. This is the word-based economy's hard stop, proven in the browser.</p>
+    <a href="s86-bot-widget-shots/step-05.png"><img src="s86-bot-widget-shots/step-05.png" alt="Balance exhausted → "Buy tokens to continue dialogue"" /></a>
+  </section>
+
+  <section class="step">
+    <h2>6. fe-admin — the MeinchatChatWidget editor (bonus)</h2>
+    <p>The same widget in the fe-admin CMS widget editor: a <code>vue-component</code> widget
+          (<b>Name</b> "Meinchat Demo Widget", <b>Slug</b> <code>meinchat-demo-widget</code>, <b>Type</b>
+          "Vue Component") whose <b>Component</b> field is <code>MeinchatChatWidget</code>. The stored config also
+          carries <code>member_nicknames=['assistant']</code> and <code>visibility=public</code>. An admin drops
+          this widget into any layout area to place a bot-widget on a public page.</p>
+    <a href="s86-bot-widget-shots/step-06.png"><img src="s86-bot-widget-shots/step-06.png" alt="fe-admin — the MeinchatChatWidget editor (bonus)" /></a>
+  </section>
+
+<section class="step"><h2>Verified</h2>
+<p class="ok">✓ A public, unauthenticated visitor named themselves, started a conversation with the
+<code>assistant</code> bot, exchanged several messages (assistant replied with the help-menu), watched the
+token balance fall by exactly the word count of each turn, and — once the balance hit 0 — was correctly
+gated by the <b>Buy tokens to continue dialogue</b> block instead of being able to send. No console errors;
+the widget rendered live from the fe-user Vite dev source.</p></section>
+</body></html>

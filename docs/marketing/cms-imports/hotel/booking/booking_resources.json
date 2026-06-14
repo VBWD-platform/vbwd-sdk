@@ -1,0 +1,999 @@
+{
+  "booking_resources": [
+    {
+      "slug": "grand-marina-standard-room",
+      "name": "Standard Room",
+      "description": "Cosy standard room, city view.",
+      "category_slugs": [
+        "grand-marina"
+      ],
+      "price": "120.00",
+      "currency": "EUR",
+      "price_unit": "per_night",
+      "capacity": 12,
+      "slot_duration_minutes": 1440,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "tue": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "wed": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "thu": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "fri": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sat": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sun": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "grand-marina-deluxe-sea-view",
+      "name": "Deluxe Room Sea View",
+      "description": "Spacious deluxe room overlooking the marina.",
+      "category_slugs": [
+        "grand-marina"
+      ],
+      "price": "240.00",
+      "currency": "EUR",
+      "price_unit": "per_night",
+      "capacity": 3,
+      "slot_duration_minutes": 1440,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "tue": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "wed": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "thu": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "fri": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sat": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sun": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "grand-marina-spa-full-day",
+      "name": "SPA Full Day",
+      "description": "Full-day access to spa, pool and sauna.",
+      "category_slugs": [
+        "grand-marina"
+      ],
+      "price": "89.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 30,
+      "slot_duration_minutes": 480,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sat": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sun": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 2
+    },
+    {
+      "slug": "grand-marina-conference-a",
+      "name": "Conference Room A",
+      "description": "Large conference room for up to 300 guests.",
+      "category_slugs": [
+        "grand-marina"
+      ],
+      "price": "950.00",
+      "currency": "EUR",
+      "price_unit": "per_day",
+      "capacity": 300,
+      "slot_duration_minutes": 480,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 3
+    },
+    {
+      "slug": "alpine-lodge-superior-deluxe",
+      "name": "Superior Deluxe",
+      "description": "Superior deluxe room with mountain balcony.",
+      "category_slugs": [
+        "alpine-lodge"
+      ],
+      "price": "210.00",
+      "currency": "EUR",
+      "price_unit": "per_night",
+      "capacity": 8,
+      "slot_duration_minutes": 1440,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "tue": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "wed": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "thu": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "fri": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sat": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sun": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "alpine-lodge-massage-thai",
+      "name": "Massage Thai",
+      "description": "Traditional Thai massage, 60 minutes.",
+      "category_slugs": [
+        "alpine-lodge"
+      ],
+      "price": "75.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 60,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sat": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sun": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "alpine-lodge-steam-sauna",
+      "name": "Steam Sauna Aufguss",
+      "description": "Steam sauna event with Aufguss ritual.",
+      "category_slugs": [
+        "alpine-lodge"
+      ],
+      "price": "35.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 12,
+      "slot_duration_minutes": 45,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sat": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sun": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 2
+    },
+    {
+      "slug": "seaside-resort-family-room",
+      "name": "Family Room",
+      "description": "Family room sleeping four, sea view.",
+      "category_slugs": [
+        "seaside-resort"
+      ],
+      "price": "180.00",
+      "currency": "EUR",
+      "price_unit": "per_night",
+      "capacity": 4,
+      "slot_duration_minutes": 1440,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "tue": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "wed": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "thu": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "fri": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sat": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sun": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "seaside-resort-spa-3h",
+      "name": "SPA 3 Hours",
+      "description": "Three-hour spa and thermal circuit.",
+      "category_slugs": [
+        "seaside-resort"
+      ],
+      "price": "49.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 20,
+      "slot_duration_minutes": 180,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sat": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sun": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "seaside-resort-aquapark",
+      "name": "Aquapark Day Pass",
+      "description": "Full-day aquapark access for all ages.",
+      "category_slugs": [
+        "seaside-resort"
+      ],
+      "price": "29.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 200,
+      "slot_duration_minutes": 600,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sat": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sun": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 2
+    },
+    {
+      "slug": "city-center-standard-room",
+      "name": "Standard Room",
+      "description": "Business standard room with desk.",
+      "category_slugs": [
+        "city-center"
+      ],
+      "price": "130.00",
+      "currency": "EUR",
+      "price_unit": "per_night",
+      "capacity": 20,
+      "slot_duration_minutes": 1440,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "tue": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "wed": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "thu": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "fri": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sat": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sun": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "city-center-conference-b",
+      "name": "Conference Room B",
+      "description": "Boardroom for up to 50 guests.",
+      "category_slugs": [
+        "city-center"
+      ],
+      "price": "400.00",
+      "currency": "EUR",
+      "price_unit": "per_day",
+      "capacity": 50,
+      "slot_duration_minutes": 480,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "city-center-catering",
+      "name": "Catering Service",
+      "description": "Per-event catering for meetings.",
+      "category_slugs": [
+        "city-center"
+      ],
+      "price": "25.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 300,
+      "slot_duration_minutes": 120,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 2
+    },
+    {
+      "slug": "lakeview-retreat-deluxe-room",
+      "name": "Deluxe Lake Room",
+      "description": "Deluxe room with panoramic lake view.",
+      "category_slugs": [
+        "lakeview-retreat"
+      ],
+      "price": "195.00",
+      "currency": "EUR",
+      "price_unit": "per_night",
+      "capacity": 6,
+      "slot_duration_minutes": 1440,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "tue": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "wed": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "thu": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "fri": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sat": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ],
+          "sun": [
+            {
+              "start": "00:00",
+              "end": "23:59"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "lakeview-retreat-meditation",
+      "name": "Meditation Session",
+      "description": "Guided lakeside meditation, 90 minutes.",
+      "category_slugs": [
+        "lakeview-retreat"
+      ],
+      "price": "40.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 15,
+      "slot_duration_minutes": 90,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sat": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ],
+          "sun": [
+            {
+              "start": "10:00",
+              "end": "20:00"
+            }
+          ]
+        },
+        "lead_time_hours": 2,
+        "max_advance_days": 365
+      },
+      "custom_fields_schema": [],
+      "config": {
+        "confirmation_mode": "auto"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    }
+  ],
+  "exported_at": "2026-06-11T00:00:00+00:00",
+  "format": "json",
+  "instance": "default",
+  "vbwd_export": "booking_resources",
+  "version": 1
+}

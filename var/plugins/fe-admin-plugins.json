@@ -59,6 +59,12 @@
       "version": "1.0.0",
       "installedAt": "2026-05-05T11:30:00.000Z",
       "source": "local"
+    },
+    "wp-import": {
+      "enabled": true,
+      "version": "1.0.0",
+      "installedAt": "2026-06-12T00:00:00.000Z",
+      "source": "local"
     }
   }
 }

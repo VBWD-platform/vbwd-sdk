@@ -1,0 +1,129 @@
+{
+  "booking_categories": [
+    {
+      "slug": "cardiology",
+      "name": "Cardiology",
+      "description": "Heart and cardiovascular consultations.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 0,
+      "is_active": true
+    },
+    {
+      "slug": "urology",
+      "name": "Urology",
+      "description": "Urinary tract and male reproductive health.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 1,
+      "is_active": true
+    },
+    {
+      "slug": "neurology",
+      "name": "Neurology",
+      "description": "Nervous system disorders.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 2,
+      "is_active": true
+    },
+    {
+      "slug": "dermatology",
+      "name": "Dermatology",
+      "description": "Skin, hair and nail conditions.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 3,
+      "is_active": true
+    },
+    {
+      "slug": "orthopedics",
+      "name": "Orthopedics",
+      "description": "Bones, joints and musculoskeletal care.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 4,
+      "is_active": true
+    },
+    {
+      "slug": "gastroenterology",
+      "name": "Gastroenterology",
+      "description": "Digestive system consultations.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 5,
+      "is_active": true
+    },
+    {
+      "slug": "ophthalmology",
+      "name": "Ophthalmology",
+      "description": "Eye and vision care.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 6,
+      "is_active": true
+    },
+    {
+      "slug": "endocrinology",
+      "name": "Endocrinology",
+      "description": "Hormonal and metabolic disorders.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 7,
+      "is_active": true
+    },
+    {
+      "slug": "pulmonology",
+      "name": "Pulmonology",
+      "description": "Respiratory and lung health.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 8,
+      "is_active": true
+    },
+    {
+      "slug": "gynecology",
+      "name": "Gynecology",
+      "description": "Women's reproductive health.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 9,
+      "is_active": true
+    },
+    {
+      "slug": "pediatrics",
+      "name": "Pediatrics",
+      "description": "Child and adolescent health.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "slug": "oncology",
+      "name": "Oncology",
+      "description": "Cancer diagnosis and consultations.",
+      "image_url": null,
+      "config": {},
+      "parent_slug": null,
+      "sort_order": 11,
+      "is_active": true
+    }
+  ],
+  "exported_at": "2026-06-11T00:00:00+00:00",
+  "format": "json",
+  "instance": "default",
+  "vbwd_export": "booking_categories",
+  "version": 1
+}

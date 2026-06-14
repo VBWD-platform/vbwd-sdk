@@ -1,0 +1,1997 @@
+{
+  "booking_resources": [
+    {
+      "slug": "cardiology-heart-center-berlin",
+      "name": "Heart Center Berlin",
+      "description": "Heart Center Berlin \u2014 Cardiology consultation.",
+      "category_slugs": [
+        "cardiology"
+      ],
+      "price": "120.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "cardiology-cardiocare-munich",
+      "name": "CardioCare Munich",
+      "description": "CardioCare Munich \u2014 Cardiology consultation.",
+      "category_slugs": [
+        "cardiology"
+      ],
+      "price": "120.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "cardiology-pulse-clinic-hamburg",
+      "name": "Pulse Clinic Hamburg",
+      "description": "Pulse Clinic Hamburg \u2014 Cardiology consultation.",
+      "category_slugs": [
+        "cardiology"
+      ],
+      "price": "120.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 2
+    },
+    {
+      "slug": "urology-urohealth-berlin",
+      "name": "UroHealth Berlin",
+      "description": "UroHealth Berlin \u2014 Urology consultation.",
+      "category_slugs": [
+        "urology"
+      ],
+      "price": "100.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "urology-renal-care-cologne",
+      "name": "Renal Care Cologne",
+      "description": "Renal Care Cologne \u2014 Urology consultation.",
+      "category_slugs": [
+        "urology"
+      ],
+      "price": "100.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "urology-uroclinic-frankfurt",
+      "name": "UroClinic Frankfurt",
+      "description": "UroClinic Frankfurt \u2014 Urology consultation.",
+      "category_slugs": [
+        "urology"
+      ],
+      "price": "100.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 2
+    },
+    {
+      "slug": "neurology-neurocenter-berlin",
+      "name": "NeuroCenter Berlin",
+      "description": "NeuroCenter Berlin \u2014 Neurology consultation.",
+      "category_slugs": [
+        "neurology"
+      ],
+      "price": "140.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "neurology-braincare-munich",
+      "name": "BrainCare Munich",
+      "description": "BrainCare Munich \u2014 Neurology consultation.",
+      "category_slugs": [
+        "neurology"
+      ],
+      "price": "140.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "neurology-nerve-clinic-stuttgart",
+      "name": "Nerve Clinic Stuttgart",
+      "description": "Nerve Clinic Stuttgart \u2014 Neurology consultation.",
+      "category_slugs": [
+        "neurology"
+      ],
+      "price": "140.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 2
+    },
+    {
+      "slug": "dermatology-skincare-berlin",
+      "name": "SkinCare Berlin",
+      "description": "SkinCare Berlin \u2014 Dermatology consultation.",
+      "category_slugs": [
+        "dermatology"
+      ],
+      "price": "90.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "dermatology-dermaclinic-munich",
+      "name": "DermaClinic Munich",
+      "description": "DermaClinic Munich \u2014 Dermatology consultation.",
+      "category_slugs": [
+        "dermatology"
+      ],
+      "price": "90.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "dermatology-derma-center-hamburg",
+      "name": "Derma Center Hamburg",
+      "description": "Derma Center Hamburg \u2014 Dermatology consultation.",
+      "category_slugs": [
+        "dermatology"
+      ],
+      "price": "90.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 2
+    },
+    {
+      "slug": "orthopedics-orthoclinic-berlin",
+      "name": "OrthoClinic Berlin",
+      "description": "OrthoClinic Berlin \u2014 Orthopedics consultation.",
+      "category_slugs": [
+        "orthopedics"
+      ],
+      "price": "110.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "orthopedics-joint-care-munich",
+      "name": "Joint Care Munich",
+      "description": "Joint Care Munich \u2014 Orthopedics consultation.",
+      "category_slugs": [
+        "orthopedics"
+      ],
+      "price": "110.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "gastroenterology-gastrocenter-berlin",
+      "name": "GastroCenter Berlin",
+      "description": "GastroCenter Berlin \u2014 Gastroenterology consultation.",
+      "category_slugs": [
+        "gastroenterology"
+      ],
+      "price": "105.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "gastroenterology-digestive-clinic-cologne",
+      "name": "Digestive Clinic Cologne",
+      "description": "Digestive Clinic Cologne \u2014 Gastroenterology consultation.",
+      "category_slugs": [
+        "gastroenterology"
+      ],
+      "price": "105.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "ophthalmology-eyecare-berlin",
+      "name": "EyeCare Berlin",
+      "description": "EyeCare Berlin \u2014 Ophthalmology consultation.",
+      "category_slugs": [
+        "ophthalmology"
+      ],
+      "price": "85.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "ophthalmology-vision-clinic-munich",
+      "name": "Vision Clinic Munich",
+      "description": "Vision Clinic Munich \u2014 Ophthalmology consultation.",
+      "category_slugs": [
+        "ophthalmology"
+      ],
+      "price": "85.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "endocrinology-endo-center-berlin",
+      "name": "Endo Center Berlin",
+      "description": "Endo Center Berlin \u2014 Endocrinology consultation.",
+      "category_slugs": [
+        "endocrinology"
+      ],
+      "price": "115.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "endocrinology-metabolic-clinic-hamburg",
+      "name": "Metabolic Clinic Hamburg",
+      "description": "Metabolic Clinic Hamburg \u2014 Endocrinology consultation.",
+      "category_slugs": [
+        "endocrinology"
+      ],
+      "price": "115.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "pulmonology-lungcare-berlin",
+      "name": "LungCare Berlin",
+      "description": "LungCare Berlin \u2014 Pulmonology consultation.",
+      "category_slugs": [
+        "pulmonology"
+      ],
+      "price": "100.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "pulmonology-respiratory-clinic-munich",
+      "name": "Respiratory Clinic Munich",
+      "description": "Respiratory Clinic Munich \u2014 Pulmonology consultation.",
+      "category_slugs": [
+        "pulmonology"
+      ],
+      "price": "100.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "gynecology-womens-health-berlin",
+      "name": "Women's Health Berlin",
+      "description": "Women's Health Berlin \u2014 Gynecology consultation.",
+      "category_slugs": [
+        "gynecology"
+      ],
+      "price": "95.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "gynecology-gynclinic-cologne",
+      "name": "GynClinic Cologne",
+      "description": "GynClinic Cologne \u2014 Gynecology consultation.",
+      "category_slugs": [
+        "gynecology"
+      ],
+      "price": "95.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "pediatrics-kidscare-berlin",
+      "name": "KidsCare Berlin",
+      "description": "KidsCare Berlin \u2014 Pediatrics consultation.",
+      "category_slugs": [
+        "pediatrics"
+      ],
+      "price": "80.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "pediatrics-pediatric-clinic-munich",
+      "name": "Pediatric Clinic Munich",
+      "description": "Pediatric Clinic Munich \u2014 Pediatrics consultation.",
+      "category_slugs": [
+        "pediatrics"
+      ],
+      "price": "80.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    },
+    {
+      "slug": "oncology-onco-center-berlin",
+      "name": "Onco Center Berlin",
+      "description": "Onco Center Berlin \u2014 Oncology consultation.",
+      "category_slugs": [
+        "oncology"
+      ],
+      "price": "160.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 0
+    },
+    {
+      "slug": "oncology-cancer-clinic-hamburg",
+      "name": "Cancer Clinic Hamburg",
+      "description": "Cancer Clinic Hamburg \u2014 Oncology consultation.",
+      "category_slugs": [
+        "oncology"
+      ],
+      "price": "160.00",
+      "currency": "EUR",
+      "price_unit": "per_slot",
+      "capacity": 1,
+      "slot_duration_minutes": 30,
+      "availability": {
+        "schedule": {
+          "mon": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "tue": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "wed": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "thu": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "fri": [
+            {
+              "start": "08:00",
+              "end": "18:00"
+            }
+          ],
+          "sat": [],
+          "sun": []
+        },
+        "lead_time_hours": 4,
+        "max_advance_days": 90
+      },
+      "custom_fields_schema": [
+        {
+          "id": "symptoms",
+          "label": "Symptoms",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "insurance",
+          "label": "Insurance ID",
+          "type": "text",
+          "required": false
+        }
+      ],
+      "config": {
+        "confirmation_mode": "manual"
+      },
+      "image_url": null,
+      "is_active": true,
+      "sort_order": 1
+    }
+  ],
+  "exported_at": "2026-06-11T00:00:00+00:00",
+  "format": "json",
+  "instance": "default",
+  "vbwd_export": "booking_resources",
+  "version": 1
+}
