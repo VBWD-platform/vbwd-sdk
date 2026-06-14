@@ -55,6 +55,7 @@ var/assets/
 var/log
 var/logs
 
+var/seo/*
 var/**/*.pem
 var/ghrm/auth/*.pem
 vbwd-demo-instances
